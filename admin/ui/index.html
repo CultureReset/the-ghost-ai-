@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet Console</title>
+<!-- No CDN. This console is opened on a dock office laptop and on the box
+     itself; a stylesheet that has to reach the internet is a console that
+     is blank on exactly the day the network is the problem. Plex is used
+     when the machine already has it and the system stack otherwise. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230E1113'/%3E%3Ccircle cx='8' cy='8' r='3' fill='%23E8A33D'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0E1113; --panel:#161A1D; --panel-2:#1D2327; --rail:#111517;
+    --ink:#E6EAE8; --ink-2:#A9B5B2; --muted:#75837F;
+    --line:#242B2F; --line-2:#323B40;
+    --amber:#E8A33D;   /* needs you */
+    --ok:#4FB286; --bad:#E06C5A; --warn:#D9A441; --info:#6C9CE0;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"IBM Plex Sans","Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.45;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace}
+
+  /* ---------- masthead ---------- */
+  header{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    padding:14px 20px;border-bottom:1px solid var(--line);background:var(--rail)}
+  .brand{font-weight:700;letter-spacing:.16em;font-size:12px;text-transform:uppercase}
+  .brand b{color:var(--amber)}
+  header .now{margin-left:auto;font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:11px;
+    color:var(--muted)}
+  header .now button{background:none;border:1px solid var(--line-2);color:var(--ink-2);
+    font:inherit;padding:3px 9px;border-radius:3px;cursor:pointer;margin-left:10px}
+  header .now button:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* ---------- summary ---------- */
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+    gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+  .tile{background:var(--panel);padding:12px 16px}
+  .tile .n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:1.85rem;font-weight:600;
+    line-height:1;font-variant-numeric:tabular-nums}
+  .tile .l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-top:6px}
+  .tile.hot{background:#1E1710}
+  .tile.hot .n{color:var(--amber)}
+  .tile.bad .n{color:var(--bad)}
+
+  /* ---------- tabs ---------- */
+  nav{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line);
+    background:var(--rail);scrollbar-width:thin;
+    scrollbar-color:var(--line-2) transparent}
+  nav::-webkit-scrollbar{height:3px}
+  nav::-webkit-scrollbar-thumb{background:var(--line-2)}
+  nav button{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;
+    color:var(--muted);font:inherit;font-weight:500;padding:11px 16px;cursor:pointer;
+    white-space:nowrap}
+  nav button:hover{color:var(--ink)}
+  nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+  nav button .c{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:11px;
+    color:var(--muted);margin-left:7px}
+  nav button[aria-selected="true"] .c{color:var(--amber)}
+
+  main{padding:18px 20px 60px}
+  .lede{color:var(--ink-2);font-size:13px;max-width:76ch;margin-bottom:16px}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* ---------- table ---------- */
+  .wrap{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--panel)}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);
+    vertical-align:top}
+  thead th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;background:var(--panel-2);
+    border-bottom:1px solid var(--line-2);white-space:nowrap;position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:var(--panel-2)}
+  td.m{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12px;white-space:nowrap}
+  td.num{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;text-align:right;
+    font-variant-numeric:tabular-nums}
+  .sev{border-left:3px solid transparent}
+  .sev.hi{border-left-color:var(--bad)}
+  .sev.md{border-left-color:var(--amber)}
+  .sev.lo{border-left-color:var(--line-2)}
+
+  .pill{display:inline-block;font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:10px;
+    font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:2px;
+    white-space:nowrap;border:1px solid}
+  .p-ok  {color:var(--ok);   border-color:#1E4034; background:#132520}
+  .p-bad {color:var(--bad);  border-color:#48241E; background:#251512}
+  .p-warn{color:var(--warn); border-color:#443417; background:#241D10}
+  .p-info{color:var(--info); border-color:#1F3350; background:#121B29}
+  .p-dim {color:var(--muted);border-color:var(--line-2)}
+
+  button.act{background:none;border:1px solid var(--line-2);color:var(--ink-2);
+    font:inherit;font-size:12px;padding:4px 10px;border-radius:3px;cursor:pointer}
+  button.act:hover{border-color:var(--amber);color:var(--amber)}
+  button.act.go:hover{border-color:var(--ok);color:var(--ok)}
+  button.act.no:hover{border-color:var(--bad);color:var(--bad)}
+  button.act+button.act{margin-left:6px}
+
+  .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:13px}
+  .empty b{display:block;color:var(--ink-2);font-size:15px;margin-bottom:6px;font-weight:600}
+  .tree{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">A NEXT<b>&nbsp;</b>GENT &middot; Fleet Console</span>
+  <span class="now"><span id="stamp">—</span><button id="refresh">Refresh</button></span>
+</header>
+
+<div class="tiles" id="tiles"></div>
+<nav id="tabs"></nav>
+<main id="view"></main>
+
+<script>
+// Every tab's badge is the number of rows behind it. A badge that counts
+// something narrower than the table it opens is a badge that lies.
+const VIEWS = [
+  ["drift",        "Drift"],
+  ["approvals",    "Approvals"],
+  ["fleet",        "Fleet"],
+  ["inconsistent", "Inconsistent"],
+  ["actions",      "Actions"],
+  ["businesses",   "Entities"],
+  ["content",      "Content"],
+];
+let DATA = {}, CURRENT = "drift";
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c =>
+  ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const pill = (t, k) => `<span class="pill p-${k}">${esc(t)}</span>`;
+// "today" is the wrong resolution for a fleet. A box last seen four hours ago
+// and a box last seen four minutes ago are two different Tuesdays.
+const ago = s => { if(!s) return "never";
+  const m = Math.floor((Date.now() - new Date(s.replace(" ","T")+"Z")) / 60000);
+  if (m < 1)    return "just now";
+  if (m < 60)   return m + " min";
+  if (m < 1440) return Math.floor(m/60) + " hr";
+  const d = Math.floor(m/1440);
+  return d === 1 ? "1 day" : d + " days"; };
+
+function tiles(s){
+  const t = [
+    ["drift_unfixed","drift unfixed",  s.drift_unfixed > 0 ? "hot" : ""],
+    ["approvals",    "need your OK",   s.approvals    > 0 ? "hot" : ""],
+    ["contradicted", "contradicted",   s.contradicted > 0 ? "bad" : ""],
+    ["boxes_down",   "boxes unwell",   s.boxes_down   > 0 ? "bad" : ""],
+    ["boxes",        "boxes",          ""],
+    ["businesses",   "businesses",     ""],
+    ["failed_today", "failed 24h",     s.failed_today > 0 ? "bad" : ""],
+    ["denied_today", "you said no 24h", ""],
+  ];
+  document.getElementById("tiles").innerHTML = t.map(([k, l, c]) =>
+    `<div class="tile ${c}"><div class="n">${s[k] ?? 0}</div><div class="l">${l}</div></div>`
+  ).join("");
+}
+
+function tabs(){
+  document.getElementById("tabs").innerHTML = VIEWS.map(([k, label]) => {
+    const n = DATA[k]?.length ?? 0;
+    return `<button data-v="${k}" aria-selected="${k === CURRENT}">${label}` +
+           (n ? `<span class="c">${n}</span>` : "") + `</button>`;
+  }).join("");
+  document.querySelectorAll("nav button").forEach(b =>
+    b.onclick = () => { CURRENT = b.dataset.v; tabs(); render(); });
+}
+
+const table = (cols, body) =>
+  `<div class="wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead>
+   <tbody>${body}</tbody></table></div>`;
+
+const empty = (h, p) => `<div class="empty"><b>${h}</b>${p}</div>`;
+
+function render(){
+  const v = document.getElementById("view");
+  const d = DATA[CURRENT] || [];
+
+  if (CURRENT === "drift") {
+    v.innerHTML = `<p class="lede">An app or a vendor changed and something
+      <b>refused to act</b> rather than guessing. Nothing was written. Re-map once
+      here and every box has the fix.</p>` +
+      (d.length ? table(
+        ["", "What changed", "Capability", "Map written for", "Seen out there",
+         "Hits", "Businesses", "First seen", "State", ""],
+        d.map(r => {
+          const sev = r.businesses > 3 ? "hi" : r.businesses > 0 ? "md" : "lo";
+          return `<tr class="sev ${sev}"><td></td>
+            <td><b>${esc(r.subject)}</b><br><span class="pill p-dim">${esc(r.kind)}</span></td>
+            <td class="m">${esc(r.capability || "—")}</td>
+            <td class="m">${esc(r.expected || "—")}</td>
+            <td class="m">${esc(r.seen || "—")}</td>
+            <td class="num">${r.occurrences}</td>
+            <td class="num">${r.businesses}</td>
+            <td class="m">${ago(r.first_seen_at)}</td>
+            <td>${pill(r.state, r.state === "open" ? "bad" : "warn")}</td>
+            <td><button class="act" onclick="setDrift('${r.id}','mapping')">Re-mapping</button>
+                <button class="act go" onclick="setDrift('${r.id}','fixed')">Fixed</button></td>
+          </tr>`;
+        }).join(""))
+        : empty("Nothing drifted", "Every map matches what is on the devices."));
+
+  } else if (CURRENT === "approvals") {
+    v.innerHTML = `<p class="lede">Held because the capability is risky or the
+      business's constitution says a person decides. <b>Nothing runs until you
+      answer.</b></p>` +
+      (d.length ? table(["Business", "Capability", "Arguments", "Asked by", "Waiting", ""],
+        d.map(r => `<tr class="sev md">
+          <td>${esc(r.business || "—")}</td>
+          <td class="m">${esc(r.capability)}</td>
+          <td class="m">${esc(r.args)}</td>
+          <td>${esc(r.requested_by || "—")}</td>
+          <td class="m">${ago(r.requested_at)}</td>
+          <td><button class="act go" onclick="decide('${r.id}','approve')">Approve</button>
+              <button class="act no" onclick="decide('${r.id}','deny')">Deny</button></td>
+        </tr>`).join(""))
+        : empty("Nothing waiting", "No action is held for a person."));
+
+  } else if (CURRENT === "fleet") {
+    v.innerHTML = `<p class="lede">Every box, what it is running and when it last
+      spoke. <b>A box that has gone quiet is the one to look at</b> — it cannot
+      tell you it is broken.</p>` +
+      (d.length ? table(["Box", "Business", "OS", "Channel", "Content", "Health", "Last seen"],
+        d.map(r => {
+          const k = { ok:"ok", degraded:"warn", down:"bad", unknown:"dim" }[r.health];
+          return `<tr class="sev ${r.health==="down"?"hi":r.health==="ok"?"lo":"md"}">
+            <td><b>${esc(r.label || r.id)}</b><br><span class="mono" style="font-size:11px;color:var(--muted)">${esc(r.serial || "")}</span></td>
+            <td>${esc(r.business || "—")}</td>
+            <td class="m">${esc(r.os_version || "—")}</td>
+            <td class="m">${esc(r.channel)}</td>
+            <td class="m">${esc(r.content || "—")}</td>
+            <td>${pill(r.health, k)}</td>
+            <td class="m">${ago(r.last_seen_at)}</td></tr>`;
+        }).join(""))
+        : empty("No boxes enrolled", "Nothing has been provisioned yet."));
+
+  } else if (CURRENT === "inconsistent") {
+    v.innerHTML = `<p class="lede">Where a business's surfaces disagree with what
+      it believes is true. <b>A contradiction is two competing realities</b> and
+      the customer is reading one of them.</p>` +
+      (d.length ? table(["Business", "Field", "Should be", "Surface", "Actually says", "Verdict", "Checked"],
+        d.map(r => `<tr class="sev ${r.verdict === "CONTRADICTED" ? "hi" : "md"}">
+          <td>${esc(r.business || r.entity_id)}</td>
+          <td class="m">${esc(r.field)}</td>
+          <td class="m">${esc(r.canonical_value ?? "—")}</td>
+          <td class="m">${esc(r.surface)}</td>
+          <td class="m">${esc(r.observed ?? "—")}</td>
+          <td>${pill(r.verdict, r.verdict === "CONTRADICTED" ? "bad" : "dim")}</td>
+          <td class="num">${r.days_stale ?? "—"}d</td></tr>`).join(""))
+        : empty("Everything agrees", "No surface contradicts a canonical value."));
+
+  } else if (CURRENT === "actions") {
+    v.innerHTML = `<p class="lede">Both dimensions of state. <b>Finished is not a
+      result</b> — the verdict beside it is. A denial is shown as a denial, not
+      as a failure: nothing was attempted and nothing broke.</p>` +
+      (d.length ? table(["Action", "Business", "Capability", "Lifecycle", "Verification", "Surfaces", "When"],
+        d.map(r => {
+          const k = { VERIFIED:"ok", PARTIALLY_VERIFIED:"warn", CONTRADICTED:"bad",
+                      FAILED:"bad", NOT_YET_VERIFIABLE:"dim" }[r.verification] || "dim";
+          const sev = r.denied ? "lo" : k==="bad" ? "hi" : k==="warn" ? "md" : "lo";
+          return `<tr class="sev ${sev}">
+            <td class="m">${esc(r.id)}</td>
+            <td>${esc(r.business || "—")}</td>
+            <td class="m">${esc(r.capability)}</td>
+            <td>${pill(r.lifecycle, r.lifecycle === "FINISHED" ? "dim" : "info")}</td>
+            <td>${r.denied ? pill("DENIED", "dim")
+                            : r.verification ? pill(r.verification, k) : "—"}</td>
+            <td class="num">${r.surfaces_ok ?? 0}/${r.surfaces_total ?? 0}</td>
+            <td class="m">${ago(r.requested_at)}</td></tr>`;
+        }).join(""))
+        : empty("No actions yet", "Nothing has been requested."));
+
+  } else if (CURRENT === "businesses") {
+    v.innerHTML = `<p class="lede">The entity graph. <b>A business is not one
+      row</b> — each operating unit owns or inherits its own hours, prices and
+      availability.</p>` +
+      (d.length ? table(["Name", "Kind", "Vertical", "Units", "Boxes", "Apps"],
+        d.map(r => `<tr class="sev lo">
+          <td>${r.depth ? `<span class="tree">${"\u00a0\u00a0".repeat(r.depth - 1)}└─ </span>` : ""}<b>${esc(r.name)}</b></td>
+          <td>${pill(r.kind, "dim")}</td>
+          <td class="m">${esc(r.vertical || "—")}</td>
+          <td class="num">${r.children}</td>
+          <td class="num">${r.devices}</td>
+          <td class="num">${r.apps}</td></tr>`).join(""))
+        : empty("No businesses", "Nothing enrolled yet."));
+
+  } else if (CURRENT === "content") {
+    v.innerHTML = `<p class="lede">Maps in the field. <b>A candidate never runs
+      against a customer</b> — promotion is deliberate.</p>` +
+      (d.length ? table(["App", "App version", "Map", "Capability", "Executor", "State", "Runs", "Not OK"],
+        d.map(r => `<tr class="sev ${r.bad > 0 ? "md" : "lo"}">
+          <td class="m">${esc(r.subject)}</td>
+          <td class="m">${esc(r.app_version)}</td>
+          <td class="num">v${r.map_version}</td>
+          <td class="m">${esc(r.capability)}</td>
+          <td class="m">${esc(r.executor)}</td>
+          <td>${pill(r.state, r.state === "promoted" ? "ok" : r.state === "canary" ? "warn" : "dim")}</td>
+          <td class="num">${r.runs}</td>
+          <td class="num">${r.bad}</td></tr>`).join(""))
+        : empty("No maps recorded", "Nothing has run yet."));
+  }
+}
+
+async function load(){
+  const r = await fetch("/api/all");
+  DATA = await r.json();
+  tiles(DATA.summary || {});
+  tabs(); render();
+  document.getElementById("stamp").textContent =
+    new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+async function setDrift(id, state){
+  await fetch("/api/drift/state", { method:"POST",
+    body: JSON.stringify({ id, state }) });
+  load();
+}
+async function decide(id, decision){
+  await fetch("/api/approval", { method:"POST",
+    body: JSON.stringify({ id, decision, by: "console" }) });
+  load();
+}
+document.getElementById("refresh").onclick = load;
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

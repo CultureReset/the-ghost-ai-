@@ -12,6 +12,7 @@ executor   -> nothing
 node       -> nothing
 sdk        -> nothing
 appliance  -> nothing
+admin      -> nothing
 ```
 
 No module imports another. There is no shared library, no `common/`, no base
@@ -28,14 +29,16 @@ export ANEXTGENT_CONTRACTS=/bundle/contracts
 export ANEXTGENT_APPMAPS=/bundle/appmaps
 export ANEXTGENT_MAPS=/bundle/vendormaps
 
-python3 schema/migrate.py n.sqlite        # 60 tables, 6 views
+python3 schema/migrate.py n.sqlite        # 64 tables, 7 views
 python3 -m ingest.run  --db n.sqlite ...  # parsed 1
 python3 -m executor.run --db n.sqlite ... # VERIFIED 4/4
 python3 node/api.py    --db n.sqlite      # {"ok": true, "capabilities": 6}
+python3 admin/server.py n.sqlite         # admin on http://127.0.0.1:8090
 ```
 
-All four, in separate repositories, against content published from a third
-place.
+All five, in separate repositories, against content published from a third
+place. `admin` takes a database path and nothing else — it holds no opinion
+about where the rest of the system lives, and it cannot execute anything.
 
 **This did not work before the audit.** `node` and `executor` found `contracts`
 by walking up the directory tree, which silently required them to be siblings
@@ -81,7 +84,7 @@ the audit above already runs them apart.
 
 ## Where this is not Red Hat yet
 
-Red Hat's structure is five things. Two exist.
+Red Hat's structure is five things. Two and a half exist.
 
 | | |
 |---|---|
@@ -89,10 +92,12 @@ Red Hat's structure is five things. Two exist.
 | **Factory** | build, scan, sign, publish — **absent** |
 | **Distribution** | registry, channels, mirror, staged rollout — **absent** |
 | **Entitlement** | which box may pull what, today — **absent**. `grant_scope` is per-app, not per-box |
-| **Fleet** | what version is on which machine — **absent** |
+| **Fleet** | what version is on which machine — **present** (`device`, `device_content`, `heartbeat`, `drift`), read by `admin` |
 
-The gap is one sentence: **content is pullable but nothing publishes it and
-nothing pulls it.** A box can be told where its maps live; there is no channel
+The gap is one sentence: **content is pullable and the fleet is now legible, but
+nothing publishes content and nothing pulls it.** A box's version is recorded
+because something wrote it there, not because the box reported in over a
+channel that exists. A box can be told where its maps live; there is no channel
 to fetch them from, no signature to check, no entitlement to satisfy, and no
 record of which box ended up on which version.
 
