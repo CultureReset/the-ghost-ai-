@@ -1,0 +1,25 @@
+[Unit]
+Description=Ghost node — the private half
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=quay.io/anextgent/node:2026.09.1
+ContainerName=ghost-node
+Network=ghost.network
+Volume=/var/lib/anextgent/db:/data:Z
+Volume=/var/lib/anextgent/evidence:/evidence:Z
+Volume=/var/lib/anextgent/maps:/maps:Z
+# The Android handset, passed straight through.
+AddDevice=/dev/bus/usb
+Environment=ANEXTGENT_DB=/data/node.sqlite
+Environment=ANEXTGENT_CONTRACTS=/usr/lib/anextgent/contracts
+HealthCmd=/usr/bin/curl -fsS http://localhost:8080/healthz
+HealthInterval=30s
+HealthRetries=3
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

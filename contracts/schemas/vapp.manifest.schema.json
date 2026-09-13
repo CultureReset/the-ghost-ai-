@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anextgent.io/schemas/vapp/1.0.0",
+  "title": "VAPP manifest",
+  "description": "An installable capability. Rides inside an Agent Plugins 1.0.0 plugin.json under extensions['io.anextgent'] — the published spec states it has no capability or permission system, and this is that layer.",
+  "type": "object",
+  "required": ["id","name","version","vertical","targets","reads","writes"],
+  "additionalProperties": false,
+  "properties": {
+    "id":       { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$" },
+    "name":     { "type": "string" },
+    "version":  { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "publisher":{ "type": "string" },
+    "license":  { "type": "string" },
+    "vertical": { "type": "array", "items": { "enum": ["restaurant","charter","marina","trades","artist","any"] } },
+    "source_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$",
+      "description": "Full commit hash. A tag can be moved; forty characters cannot." },
+    "targets": {
+      "type": "object",
+      "description": "Three halves. A VAPP may ship any subset.",
+      "additionalProperties": false,
+      "properties": {
+        "node":   { "type": "object", "properties": { "entry": { "type": "string" }, "runtime": { "enum": ["wasm","container"] } } },
+        "public": { "type": "object", "properties": { "sections": { "type": "array", "items": { "type": "string" } } } },
+        "owner":  { "type": "object", "properties": { "entry": { "type": "string" }, "surfaces": { "type": "array", "items": { "enum": ["tv","desktop","tablet","phone","kiosk","dashboard"] } } } }
+      }
+    },
+    "reads":  { "type": "array", "items": { "type": "string" },
+      "description": "Capability names only. No table names, no direct database access, ever." },
+    "writes": { "type": "array", "items": { "type": "string" } },
+    "events": { "type": "array", "items": { "type": "string" } },
+    "settings": { "type": "object" },
+    "requires": {
+      "type": "object",
+      "properties": {
+        "ingest":   { "type": "array", "items": { "enum": ["pos","booking","email","sms"] } },
+        "hardware": { "type": "array", "items": { "enum": ["android","printer","display"] } }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "description": "What this VAPP exposes. Public is answerable by any agent; private never leaves the node.",
+      "properties": {
+        "public":  { "type": "array", "items": { "type": "string" } },
+        "private": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

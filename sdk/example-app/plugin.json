@@ -1,0 +1,36 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "qr-menu",
+  "version": "1.0.0",
+  "description": "QR menu with verified item ratings and one-tap 86.",
+  "author": "A NEXT GENT",
+  "license": "Apache-2.0",
+  "homepage": "https://anextgent.io/apps/qr-menu",
+  "repository": "https://github.com/CultureReset/vapp-qr-menu",
+  "keywords": ["restaurant", "menu", "qr"],
+  "extensions": {
+    "io.anextgent": {
+      "id": "io.anextgent.qr-menu",
+      "name": "QR Menu",
+      "version": "1.0.0",
+      "publisher": "A NEXT GENT",
+      "license": "Apache-2.0",
+      "vertical": ["restaurant"],
+      "source_sha": "0000000000000000000000000000000000000000",
+      "targets": {
+        "node":   { "entry": "node/main.wasm", "runtime": "wasm" },
+        "public": { "sections": ["menu", "hours", "reviews"] },
+        "owner":  { "entry": "owner/index.html", "surfaces": ["phone", "tablet", "dashboard"] }
+      },
+      "reads":  ["availability.read"],
+      "writes": ["menu.eightysix_item", "menu.update_price"],
+      "events": ["table.scanned", "ticket.closed"],
+      "settings": { "show_ratings": true, "min_orders_to_show": 5 },
+      "requires": { "ingest": ["pos"] },
+      "mcp": {
+        "public":  ["availability.read"],
+        "private": []
+      }
+    }
+  }
+}

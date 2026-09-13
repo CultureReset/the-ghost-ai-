@@ -1,0 +1,19 @@
+{
+  "name": "menu.eightysix_item",
+  "version": "1.0.0",
+  "title": "86 an item",
+  "mode": "write",
+  "risk": "low",
+  "args": { "item_id": { "type": "string", "required": true },
+            "available": { "type": "boolean", "required": true } },
+  "postcondition": {
+    "subject":   "menu_item{item_id}",
+    "predicate": "available == {available}",
+    "surfaces":  ["own", "qr_menu", "website", "delivery"]
+  },
+  "executors": ["api", "android"],
+  "verify": { "by": ["browser"], "settle_seconds": 20, "retries": 2 },
+  "on_partial": "drive_forward",
+  "approval": "none",
+  "idempotent": true
+}

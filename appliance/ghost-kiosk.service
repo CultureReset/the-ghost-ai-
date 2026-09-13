@@ -1,0 +1,20 @@
+[Unit]
+Description=Ghost kiosk — one application, fullscreen, no way out
+After=systemd-user-sessions.service ghost-node.service
+Wants=ghost-node.service
+
+[Service]
+Type=simple
+User=ghost
+PAMName=login
+TTYPath=/dev/tty1
+StandardInput=tty
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+# cage runs exactly one client fullscreen. There is no desktop to fall out of,
+# no file manager, no terminal reachable by a dropped tray.
+ExecStart=/usr/bin/cage -d -- /usr/lib/anextgent/shell
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

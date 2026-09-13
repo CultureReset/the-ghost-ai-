@@ -1,0 +1,40 @@
+{
+  "name": "review.reply",
+  "version": "1.0.0",
+  "title": "Reply to a review",
+  "mode": "write",
+  "risk": "high",
+  "args": {
+    "review_id": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "postcondition": {
+    "subject": "review{review_id}",
+    "predicate": "reply is published",
+    "surfaces": [
+      "google",
+      "facebook",
+      "own"
+    ]
+  },
+  "executors": [
+    "android",
+    "api"
+  ],
+  "verify": {
+    "by": [
+      "browser"
+    ],
+    "settle_seconds": 60,
+    "retries": 3
+  },
+  "on_partial": "escalate",
+  "approval": "required",
+  "idempotent": false
+}

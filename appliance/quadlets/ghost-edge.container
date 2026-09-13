@@ -1,0 +1,21 @@
+[Unit]
+Description=Ghost edge — the public half, write-incapable by construction
+After=ghost-node.service
+
+[Container]
+Image=quay.io/anextgent/edge:2026.09.1
+ContainerName=ghost-edge
+Network=ghost-public.network
+# Read-only mount of the signed projection only. There is no route from here
+# back into the node: not a permission, an absence.
+Volume=/var/lib/anextgent/projection:/srv:ro
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+PublishPort=8443:8443
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

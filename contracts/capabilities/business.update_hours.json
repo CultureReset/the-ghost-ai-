@@ -1,0 +1,24 @@
+{
+  "name": "business.update_hours",
+  "version": "1.0.0",
+  "title": "Change opening hours",
+  "mode": "write",
+  "risk": "medium",
+  "args": {
+    "weekday": { "type": "string", "required": true,
+                 "enum": ["sun","mon","tue","wed","thu","fri","sat"] },
+    "opens":   { "type": "time" },
+    "closes":  { "type": "time" },
+    "closed":  { "type": "boolean" }
+  },
+  "postcondition": {
+    "subject":   "entity{id}",
+    "predicate": "hours[weekday] == {opens..closes}",
+    "surfaces":  ["own", "website", "google", "facebook"]
+  },
+  "executors": ["android", "api"],
+  "verify": { "by": ["browser"], "settle_seconds": 120, "retries": 4 },
+  "on_partial": "drive_forward",
+  "approval": "notify",
+  "idempotent": true
+}

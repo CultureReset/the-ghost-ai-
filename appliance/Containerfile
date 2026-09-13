@@ -1,0 +1,59 @@
+# A NEXT GENT appliance — the whole operating system as one signed image.
+#
+# Not a base image plus a setup script. The build output IS the machine:
+# one version number, byte-identical on every box. `bootc upgrade` replaces
+# it wholesale and greenboot puts it back if the new one doesn't come up.
+#
+#   podman build -t quay.io/anextgent/ghost-os:2026.09.1 appliance/
+#   podman run --rm -it -v ./out:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
+#     --privileged quay.io/centos-bootc/bootc-image-builder:latest \
+#     --type raw quay.io/anextgent/ghost-os:2026.09.1
+
+FROM quay.io/centos-bootc/centos-bootc:stream10
+
+ARG VERSION=dev
+LABEL org.opencontainers.image.title="A NEXT GENT — Ghost OS" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.vendor="A NEXT GENT" \
+      io.anextgent.channel="stable"
+
+# --- packages -------------------------------------------------------------
+# Everything the node needs at runtime. No out-of-tree drivers: an out-of-tree
+# module is the one thing that breaks image-based updates and the lifecycle
+# promise, which is why this is an AMD/in-tree box.
+RUN dnf -y install \
+      podman containers-common \
+      greenboot greenboot-default-health-checks \
+      cage wayland-utils \
+      android-tools \
+      sqlite \
+      python3 python3-pip \
+      firewalld openssl \
+      fwupd \
+      tpm2-tools \
+      restic \
+      chrony \
+ && dnf -y clean all \
+ && rm -rf /var/cache/dnf
+
+# --- layout ---------------------------------------------------------------
+# /usr is read-only at runtime. State lives in /var only.
+RUN mkdir -p /usr/lib/anextgent /var/lib/anextgent/{db,evidence,maps,models} \
+ && mkdir -p /etc/anextgent
+
+COPY quadlets/   /usr/share/containers/systemd/
+COPY greenboot/  /usr/lib/greenboot/check/required.d/
+COPY ghost-kiosk.service /usr/lib/systemd/system/
+RUN chmod +x /usr/lib/greenboot/check/required.d/*.sh
+
+# The schema ships inside the image so a box can build its own database on
+# first boot with no network.
+COPY schema/ /usr/lib/anextgent/schema/
+COPY contracts/ /usr/lib/anextgent/contracts/
+
+RUN systemctl enable ghost-kiosk.service podman.socket firewalld chronyd \
+ && systemctl mask sshd.service
+# sshd is masked deliberately. There is no remote access path into a customer
+# box; "we cannot see your data" is a property of the build, not a promise.
+
+RUN bootc container lint

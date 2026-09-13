@@ -1,0 +1,19 @@
+{
+  "name": "customer.notify_opening",
+  "version": "1.0.0",
+  "title": "Text the waiting list about a cancellation",
+  "mode": "write",
+  "risk": "medium",
+  "args": { "slot_id": { "type": "string", "required": true },
+            "seats": { "type": "integer", "required": true } },
+  "postcondition": {
+    "subject":   "waitlist{slot_id}",
+    "predicate": "matching people are messaged once",
+    "surfaces":  ["sms"]
+  },
+  "executors": ["android"],
+  "verify": { "by": ["api"], "settle_seconds": 15, "retries": 2 },
+  "on_partial": "escalate",
+  "approval": "notify",
+  "idempotent": true
+}

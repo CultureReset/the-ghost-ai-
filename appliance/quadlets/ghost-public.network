@@ -1,0 +1,6 @@
+[Unit]
+Description=Ghost public network — the edge only
+
+[Network]
+NetworkName=ghost-public
+Subnet=10.89.1.0/24

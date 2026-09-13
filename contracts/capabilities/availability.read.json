@@ -1,0 +1,15 @@
+{
+  "name": "availability.read",
+  "version": "1.0.0",
+  "title": "Open seats for a slot",
+  "mode": "read",
+  "risk": "low",
+  "args": { "trip_id": { "type": "string" }, "on": { "type": "date", "required": true } },
+  "postcondition": {
+    "subject":   "slot{trip_id,on}",
+    "predicate": "open_seats is known",
+    "surfaces":  ["own"]
+  },
+  "executors": ["api"],
+  "verify": { "by": ["api"], "settle_seconds": 0, "retries": 0 }
+}

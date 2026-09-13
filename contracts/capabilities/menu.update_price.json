@@ -1,0 +1,21 @@
+{
+  "name": "menu.update_price",
+  "version": "1.0.0",
+  "title": "Change an item price",
+  "mode": "write",
+  "risk": "high",
+  "args": {
+    "item_id": { "type": "string", "required": true },
+    "price":   { "type": "money",  "required": true }
+  },
+  "postcondition": {
+    "subject":   "menu_item{item_id}",
+    "predicate": "price == {price}",
+    "surfaces":  ["own", "qr_menu", "website", "google", "delivery"]
+  },
+  "executors": ["android", "api"],
+  "verify": { "by": ["browser"], "settle_seconds": 90, "retries": 3 },
+  "on_partial": "rollback",
+  "approval": "required",
+  "idempotent": true
+}

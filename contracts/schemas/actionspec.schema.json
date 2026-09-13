@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anextgent.io/schemas/actionspec/1.0.0",
+  "title": "ActionSpec",
+  "description": "The structured request. Natural language becomes this; this is what gets authorised, routed, executed, verified and recorded. Two dimensions of state, never one.",
+  "type": "object",
+  "required": ["id","entity_id","capability","args","idempotency_key","lifecycle"],
+  "additionalProperties": false,
+  "properties": {
+    "id":              { "type": "string" },
+    "entity_id":       { "type": "string", "description": "A node in the graph, not 'the business'." },
+    "capability":      { "type": "string" },
+    "args":            { "type": "object" },
+    "idempotency_key": { "type": "string", "minLength": 8,
+                          "description": "A retry must not double-post, double-charge or double-book." },
+    "requested_by":    { "type": "string" },
+    "constitution_version": { "type": "string",
+      "description": "Bound at creation and carried to completion, even if the owner amends mid-task." },
+    "lifecycle":    { "enum": ["REQUESTED","PLANNED","AWAITING_APPROVAL","EXECUTING","VERIFYING","FINISHED"] },
+    "verification": { "enum": ["VERIFIED","PARTIALLY_VERIFIED","NOT_YET_VERIFIABLE","CONTRADICTED","FAILED"] },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["surface","verdict"],
+        "properties": {
+          "surface":  { "type": "string" },
+          "expected": {},
+          "observed": {},
+          "verdict":  { "enum": ["VERIFIED","CONTRADICTED","NOT_YET_VERIFIABLE"] },
+          "evidence_id": { "type": "string" }
+        }
+      }
+    },
+    "executor_used": { "type": "string" },
+    "map_id":        { "type": "string" }
+  },
+  "allOf": [{
+    "if":   { "properties": { "lifecycle": { "const": "FINISHED" } }, "required": ["lifecycle"] },
+    "then": { "required": ["verification"],
+              "description": "FINISHED alone cannot say what happened." }
+  }]
+}

@@ -1,0 +1,7 @@
+[Unit]
+Description=Ghost private network
+
+[Network]
+NetworkName=ghost
+Subnet=10.89.0.0/24
+Internal=true
