@@ -153,41 +153,120 @@
     .money{gap:14px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* grouped picker */
+  .picker-in{align-items:stretch}
+  .grp{flex:0 0 auto;display:flex;align-items:center;padding:0 13px 0 4px;
+    font-family:"IBM Plex Mono",monospace;font-size:.6rem;font-weight:600;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+    border-left:1px solid var(--rule);margin-left:8px}
+  .grp:first-child{border-left:0;margin-left:0}
+
+  /* index */
+  .idx-h{padding-block:44px 6px}
+  .idx-h h1{font-family:Oswald,sans-serif;font-size:clamp(2.1rem,6vw,3.3rem);font-weight:700;
+    letter-spacing:-.01em;max-width:18ch}
+  .idx-h .promise{margin-top:16px}
+  .idx-sec{margin-top:38px}
+    .idx-sec .lbl{font-family:"IBM Plex Mono",monospace;font-size:.64rem;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--teal);
+    padding-bottom:9px;border-bottom:2px solid var(--ink);display:block}
+  .card .who2{min-height:1.6em}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));
+    gap:10px;margin-top:12px}
+  .card{background:var(--sheet);padding:16px 17px;text-align:left;cursor:pointer;
+    border:1px solid var(--rule);border-radius:2px;
+    font:inherit;color:inherit;display:flex;flex-direction:column;gap:6px}
+  .card:hover{background:var(--sheet-2);border-color:var(--rule-strong)}
+  .card:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+  .card .who2{font-family:"IBM Plex Mono",monospace;font-size:.58rem;font-weight:600;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .card .nm{font-family:Oswald,sans-serif;font-size:1.14rem;font-weight:600;line-height:1.15}
+  .card .ln{font-size:.9rem;line-height:1.42;color:var(--ink-2)}
+  .card .amt2{font-family:Oswald,sans-serif;font-size:1.05rem;font-weight:700;color:var(--signal);
+    margin-top:2px}
+
+  /* hierarchy list */
+  .tree{margin-top:24px;font-family:"IBM Plex Mono",monospace;font-size:.86rem;
+    line-height:1.85;color:var(--ink-2);background:var(--sheet);border:1px solid var(--rule);
+    padding:18px 20px;overflow-x:auto;white-space:pre}
+  .tree b{color:var(--ink);font-weight:600}
+  .tree i{color:var(--signal);font-style:normal;font-weight:600}
 </style>
 
 <header class="top"><div class="wrap top-in">
   <span class="mark">A NEXT<span>&nbsp;</span>GENT</span>
-  <span class="top-note">Sell sheets &middot; nine offers</span>
+  <span class="top-note">Sell sheets &middot; sixteen offers</span>
 </div></header>
 
 <nav class="picker" aria-label="Sell sheets"><div class="wrap picker-in" role="tablist">
-  <button class="tab" role="tab" aria-selected="true"  data-s="s1">Real Availability</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s2">Book Direct</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s3">One Update</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s4">The Menu</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s5">Real Reviews</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s6">Your Number</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s7">Found by AI</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s8">The Box</button>
-  <button class="tab" role="tab" aria-selected="false" data-s="s9">It Grows</button>
+  <button class="tab" role="tab" aria-selected="true" data-s="s0">All sheets</button>
+  <span class="grp">Who it's for</span>
+  <button class="tab" role="tab" aria-selected="false" data-s="s1">Real Availability</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s2">The Menu</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s3">Your Stage</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s4">Your Trucks</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s5">Your Docks</button>
+  <span class="grp">What it does</span>
+  <button class="tab" role="tab" aria-selected="false" data-s="s6">Your Customers</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s7">Seats That Expire</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s8">One Update</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s9">Where You're Wrong</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s10">Real Reviews</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s11">The Reply Desk</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s12">Your Number</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s13">Found by AI</button>
+  <span class="grp">The terms</span>
+  <button class="tab" role="tab" aria-selected="false" data-s="s14">Zero Percent</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s15">The Box</button>
+  <button class="tab" role="tab" aria-selected="false" data-s="s16">Build Your Own</button>
 </div></nav>
 
 <main class="wrap">
 
-<!-- ============ 1 ============ -->
-<section class="sheet" id="s1" role="tabpanel">
+<section class="sheet" id="s0" role="tabpanel">
+  <div class="idx-h">
+    <span class="who">Sixteen sheets &middot; one page each</span>
+    <h1>Everything there is to sell, and who to sell it to.</h1>
+    <p class="promise">Five sheets open a door with a specific kind of business. Eight explain
+      what the thing actually does. Three close on terms. Pick the one that matches who is
+      sitting in front of you.</p>
+  </div>
+  <div class="idx-sec"><span class="lbl">Who it's for</span><div class="cards">
+<button class="card" data-s="s1"><span class="who2">Charters · Rentals · Tours</span><span class="nm">Real Availability</span><span class="ln">Your site shows what's actually open, across every platform at once.</span><span class="amt2">$24,000</span></button>
+<button class="card" data-s="s2"><span class="who2">Restaurants · Bars</span><span class="nm">The Menu</span><span class="ln">Say it once and the grouper is off every screen before the next table scans.</span><span class="amt2">86'd</span></button>
+<button class="card" data-s="s3"><span class="who2">Musicians · Bands · DJs</span><span class="nm">Your Stage</span><span class="ln">The QR code on your stage earns more than the merch table.</span><span class="amt2">$10</span></button>
+<button class="card" data-s="s4"><span class="who2">Electricians · Plumbers · Trades</span><span class="nm">Your Trucks</span><span class="ln">Every quote request in one place, answered before the other guy calls back.</span><span class="amt2">4 min</span></button>
+<button class="card" data-s="s5"><span class="who2">Marinas · Resorts · Multi-concept</span><span class="nm">Your Docks</span><span class="ln">Five operations, five sets of hours and prices, one account.</span><span class="amt2">1 login</span></button>
+</div></div>
+<div class="idx-sec"><span class="lbl">What it does</span><div class="cards">
+<button class="card" data-s="s6"><span class="who2">Every business</span><span class="nm">Your Customers</span><span class="ln">Find out who booked you — not just that somebody did.</span><span class="amt2">100%</span></button>
+<button class="card" data-s="s7"><span class="who2">Charters · Rentals · Restaurants</span><span class="nm">Seats That Expire</span><span class="ln">One cancellation, one text, three seats sold.</span><span class="amt2">$267</span></button>
+<button class="card" data-s="s8"><span class="who2">Every business</span><span class="nm">One Update</span><span class="ln">Change your hours once. And find out if one of them didn't take.</span><span class="amt2">5 places</span></button>
+<button class="card" data-s="s9"><span class="who2">Every business</span><span class="nm">Where You're Wrong</span><span class="ln">Your price is $349. Facebook still says $399.</span><span class="amt2">3 of 4</span></button>
+<button class="card" data-s="s10"><span class="who2">Restaurants · Charters</span><span class="nm">Real Reviews</span><span class="ln">Reviews from the person who actually ordered the shrimp scampi.</span><span class="amt2">Verified</span></button>
+<button class="card" data-s="s11"><span class="who2">Every business</span><span class="nm">The Reply Desk</span><span class="ln">Answer every review without signing into anything.</span><span class="amt2">0 logins</span></button>
+<button class="card" data-s="s12"><span class="who2">Every business</span><span class="nm">Your Number</span><span class="ln">Your business line answers itself, from your own SIM.</span><span class="amt2">$0</span></button>
+<button class="card" data-s="s13"><span class="who2">Every business</span><span class="nm">Found by AI</span><span class="ln">Ask any AI who has crab legs nearby. It can't tell you.</span><span class="amt2">“?”</span></button>
+</div></div>
+<div class="idx-sec"><span class="lbl">The terms</span><div class="cards">
+<button class="card" data-s="s14"><span class="who2">Every business</span><span class="nm">Zero Percent</span><span class="ln">We take nothing from what you sell. Flat fee, forever.</span><span class="amt2">0%</span></button>
+<button class="card" data-s="s15"><span class="who2">The hardware</span><span class="nm">The Box</span><span class="ln">A computer that works for you, not for an AI company.</span><span class="amt2">Yours</span></button>
+<button class="card" data-s="s16"><span class="who2">The platform</span><span class="nm">Build Your Own</span><span class="ln">Don't buy five hundred features you'll never use.</span><span class="amt2">6 of 60</span></button>
+</div></div>
+</section>
+
+<section class="sheet" id="s1" role="tabpanel" hidden>
   <span class="who">Charters &middot; Rentals &middot; Tours</span>
   <h1>Your own website can finally show what's actually open.</h1>
   <p class="promise">Right now the only place a customer can see a real opening is the site
     charging you twenty percent. That ends the day you plug this in.</p>
-
   <div class="money">
     <div class="fig">$24,000</div>
     <p class="fig-note">What a charter doing <b>$400,000 a year</b> through a 20% booking site
-      keeps by moving just <b>three out of ten</b> bookings to their own website. Not a
-      projection &mdash; arithmetic off your own statements.</p>
+      keeps by moving just <b>three out of ten</b> bookings to their own website. Arithmetic off
+      your own statements, not a projection.</p>
   </div>
-
   <div class="math">
     <div class="math-h">The math, on a $400k charter</div>
     <div class="math-row"><span>Booked through FareHarbor at 20%</span><span class="v">&minus;$80,000</span></div>
@@ -195,192 +274,336 @@
     <div class="math-row"><span>What this costs you for the year</span><span class="v">&minus;$3,588</span></div>
     <div class="math-row tot"><span>Net, first year</span><span class="v">+$20,412</span></div>
   </div>
-
   <h2 class="sec">How it knows</h2>
-  <p class="body">Every booking platform you're on sends you an email the second someone books.
-    FareHarbor does. Booking.com does. Airbnb does. Peek, Square, Toast &mdash; all of them.
-    <b>They cannot turn that off without breaking their own product.</b></p>
-  <p class="body">We read those emails. That's the whole mechanism. No API to apply for, no
-    partnership to get approved, nobody's permission to ask for.</p>
-
+  <p class="body">Every booking platform emails you the second someone books. FareHarbor does.
+    Booking.com does. Airbnb, Peek, Square, Toast &mdash; all of them. <b>They cannot turn that
+    off without breaking their own product.</b></p>
+  <p class="body">We read those emails. No API to apply for, no partnership to get approved,
+    nobody's permission to ask for.</p>
   <div class="flow">
     <div><span class="mono">YOU DECLARE</span> &nbsp;6 jet skis</div>
     <div><span class="mono">FAREHARBOR</span> &nbsp;2 booked, 10:00&ndash;12:00 &nbsp;&rarr;&nbsp; <b>4 left</b></div>
     <div><span class="mono">BOOKING.COM</span> &nbsp;1 booked, 10:30&ndash;12:30 &nbsp;&rarr;&nbsp; <b>3 left</b></div>
     <div><span class="mono">CANCELLATION</span> &nbsp;1 released &nbsp;&rarr;&nbsp; <b>4 left</b></div>
   </div>
-
-  <div class="kill">FareHarbor doesn't know about your Booking.com reservation.
-    Booking.com doesn't know about FareHarbor. You're the only one who sees all of it at once
-    &mdash; and now so does your website.</div>
-
-  <h2 class="sec">Works the same for</h2>
-  <div class="beats">
-    <div class="beat"><div class="bh">Tables</div><p>Six tops at 7:30, two left. On your own page, not just on the reservation app.</p></div>
-    <div class="beat"><div class="bh">Rooms &amp; condos</div><p>Across every OTA you list on, reconciled into one honest number.</p></div>
-    <div class="beat"><div class="bh">Chairs &amp; slots</div><p>Salon, charter, tee time, pontoon. Anything with a capacity and a calendar.</p></div>
-  </div>
-
+  <div class="kill">FareHarbor doesn't know about your Booking.com reservation. Booking.com
+    doesn't know about FareHarbor. You're the only one who sees all of it &mdash; and now so does
+    your website.</div>
+  <h2 class="sec">Run more than one thing?</h2>
+  <p class="body">Pontoons, jet skis, dolphin cruises, parasailing and charters each get their
+    own availability, their own prices and their own booking link &mdash; under one account.
+    <b>See the Docks sheet.</b></p>
   <div class="close">
     <div class="price"><div class="amt">$299</div><div class="per">per month</div></div>
-    <div class="cta">
-      <div class="line">Bring one statement to the first meeting.</div>
+    <div class="cta"><div class="line">Bring one statement to the first meeting.</div>
       <p>Your commission line for last year. We do the subtraction together. If the number
-        doesn't beat what this costs, don't buy it.</p>
-    </div>
+        doesn't beat what this costs, don't buy it.</p></div>
   </div>
-
   <div class="say"><span class="lbl">The one sentence that sells it</span>
-    <q>Your website shows what's actually available, right now, across every platform you're
-    on &mdash; so people can book you direct instead of through the site taking twenty percent.</q></div>
+    <q>Your website shows what's actually available, right now, across every platform you're on
+    &mdash; so people can book you direct instead of through the site taking twenty percent.</q></div>
 </section>
 
-<!-- ============ 2 ============ -->
 <section class="sheet" id="s2" role="tabpanel" hidden>
-  <span class="who">Every business &middot; The pricing promise</span>
-  <h1>We take zero percent of your bookings.</h1>
-  <p class="promise">Not a discounted rate. Not a lower rate than theirs. Zero. Keep your
-    booking platform, keep your calendar, keep your customers.</p>
-
-  <div class="money">
-    <div class="fig">0%</div>
-    <p class="fig-note">Our cut of what you sell &mdash; forever. You pay a flat monthly fee for the
-      software and nothing else. <b>A busy month costs the same as a slow one.</b></p>
-  </div>
-
-  <h2 class="sec">Why nobody else does this</h2>
-  <p class="body">Because a percentage is how they make their money, and it scales with your
-    success instead of with their cost. The better your season, the more you owe them.</p>
-  <p class="body">Ours doesn't scale with your revenue because <b>our cost doesn't either.</b>
-    Serving your hundredth booking costs us the same as your first: nothing.</p>
-
-  <div class="beats">
-    <div class="beat"><div class="bh">Keep FareHarbor</div><p>Or Toast, or Square, or Peek, or whatever you already run. We're not replacing it and we're not asking you to switch.</p></div>
-    <div class="beat"><div class="bh">Flat, not metered</div><p>No per-booking fee, no per-message fee, no surprise bill in July because you had a good week.</p></div>
-    <div class="beat"><div class="bh">Cancel and keep working</div><p>Stop paying and the machine keeps running exactly as it is. It just stops getting new things.</p></div>
-  </div>
-
-  <div class="kill">Every other platform in your life makes more money when you do.
-    We make the same. That's the whole difference, and it's why we can tell you to
-    keep the tools you already have.</div>
-
-  <div class="close">
-    <div class="price"><div class="amt">$299</div><div class="per">per month &middot; flat</div></div>
-    <div class="cta">
-      <div class="line">Ask them what their number is.</div>
-      <p>Every competitor in this category takes a percentage, a per-seat fee, or both.
-        Make them say it out loud next to ours.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3 ============ -->
-<section class="sheet" id="s3" role="tabpanel" hidden>
-  <span class="who">Every business &middot; The core of it</span>
-  <h1>Change your hours once. Not five times.</h1>
-  <p class="promise">Google, your website, Facebook, the booking site, the POS. One place,
-    one time, and it lands everywhere &mdash; verified.</p>
-
-  <div class="money">
-    <div class="fig">5&nbsp;min</div>
-    <p class="fig-note">What it takes you today to update a holiday closing in five places,
-      assuming you remember all five. <b>Most owners forget at least one, and the one they
-      forget is the one the customer checks.</b></p>
-  </div>
-
-  <h2 class="sec">And the part that actually costs you money</h2>
-  <p class="body">Every app you use redesigns itself. Toast moves a button. Google changes a
-    screen. The automation you set up last spring quietly stops working and <b>nobody tells
-    you</b> &mdash; you find out when a customer shows up to a closed door.</p>
-  <p class="body">When that happens, we already know. Every night, every flow on every machine
-    checks that the screens it expects are still there. <b>When one changes we fix it once, and
-    the fix is on every customer's machine by morning.</b></p>
-
-  <div class="kill">You are not buying software. You're buying the fact that we absorb every
-    app redesign, forever, so you never have to think about it again. <em>That</em> is what
-    the monthly fee is for.</div>
-
-  <h2 class="sec">What it will do for you</h2>
-  <div class="beats">
-    <div class="beat"><div class="bh">Hours</div><p>Holiday closings, seasonal changes, the day you close early for a wedding.</p></div>
-    <div class="beat"><div class="bh">Prices</div><p>Menu prices, rates, packages. Every place they're listed, at once.</p></div>
-    <div class="beat"><div class="bh">Posts</div><p>Tonight's special, the catch of the day, the band on Friday.</p></div>
-    <div class="beat"><div class="bh">Photos</div><p>New menu, new boat, new room. Uploaded everywhere it belongs.</p></div>
-  </div>
-
-  <h2 class="sec">How it works, plainly</h2>
-  <p class="body">A real Android phone sits in a dock on your counter. <b>Your SIM card, your
-    logins, your apps</b> &mdash; the same ones you use now. It's remote-controlled at human
-    speed. It taps the same buttons you would.</p>
-  <p class="body">Then it checks. After it changes your hours on Toast, it goes and looks at
-    your public page in a browser to confirm the change is really there &mdash; a different way
-    in than the one it used to write. <b>You get a screenshot, not a promise.</b></p>
-
-  <div class="close">
-    <div class="price"><div class="amt">$299</div><div class="per">per month</div></div>
-    <div class="cta">
-      <div class="line">Text it and watch.</div>
-      <p>First demo: you text "change Friday to 9 to 5." We hand you the phone and you watch
-        it happen, then you check Google yourself.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 4 ============ -->
-<section class="sheet" id="s4" role="tabpanel" hidden>
   <span class="who">Restaurants &middot; Bars &middot; Beach clubs</span>
   <h1>A menu that is never wrong, on every screen it appears.</h1>
-  <p class="promise">The QR code on the table, your website, Google, the delivery apps.
-    One menu behind all of them, and it's the one you actually printed.</p>
-
+  <p class="promise">The QR code on the table, your website, Google, the delivery apps. One menu
+    behind all of them, and it's the one you actually printed.</p>
   <div class="money">
     <div class="fig">86&rsquo;d</div>
     <p class="fig-note">The word your kitchen already uses. Say it once at 6&nbsp;p.m. and the
-      grouper comes off the QR menu, the website and the delivery listings
-      <b>before the next table scans it.</b></p>
+      grouper comes off the QR menu, the website and the delivery listings <b>before the next
+      table scans it.</b></p>
   </div>
-
   <h2 class="sec">What it kills</h2>
   <div class="beats">
-    <div class="beat"><div class="bh">The PDF</div><p>The one from 2023 that's still on your website with the old prices. It's gone.</p></div>
-    <div class="beat"><div class="bh">The reprint</div><p>Change a price without a trip to the printer, and without a sticker over the old one.</p></div>
+    <div class="beat"><div class="bh">The PDF</div><p>The one from 2023 still on your website with the old prices. Gone.</p></div>
+    <div class="beat"><div class="bh">The reprint</div><p>Change a price without a trip to the printer or a sticker over the old one.</p></div>
     <div class="beat"><div class="bh">The apology</div><p>"Sorry, we're out of that" &mdash; after they already decided they wanted it.</p></div>
   </div>
-
-  <h2 class="sec">Then it does something no menu has ever done</h2>
-  <p class="body">Because the QR scan happens at a table, at a time, and the check closes on
-    the same ticket, the menu knows <b>what that table actually ordered.</b> Not "someone
-    visited the menu" &mdash; the shrimp scampi, at 7:42, table nine.</p>
+  <h2 class="sec">Then it does something no menu has done</h2>
+  <p class="body">The QR scan happens at a table, at a time, and the check closes on the same
+    ticket. So the menu knows <b>what that table actually ordered</b> &mdash; the shrimp scampi,
+    at 7:42, table nine.</p>
   <p class="body">That's what turns a menu into the most valuable thing on the table. It feeds
-    the review system on the next sheet, and neither one works without it.</p>
-
+    the review system, and that doesn't work without it.</p>
   <div class="kill">Every other QR menu is a PDF with extra steps. Yours is the only one that
     closes the loop between what a guest looked at and what they actually ate.</div>
-
   <div class="close">
     <div class="price"><div class="amt">Included</div><div class="per">in the monthly</div></div>
-    <div class="cta">
-      <div class="line">Bring the current menu to the first meeting.</div>
-      <p>We'll have it live on a QR code before you leave, and you can change a price from
-        your phone while we're sitting there.</p>
-    </div>
+    <div class="cta"><div class="line">Bring the current menu to the first meeting.</div>
+      <p>We'll have it live on a QR code before you leave, and you can change a price from your
+        phone while we're sitting there.</p></div>
   </div>
 </section>
 
-<!-- ============ 5 ============ -->
+<section class="sheet" id="s3" role="tabpanel" hidden>
+  <span class="who">Musicians &middot; Bands &middot; DJs</span>
+  <h1>The QR code on your stage is worth more than your merch table.</h1>
+  <p class="promise">One code. Requests, tips, your list, your shows, your merch. The crowd
+    already has their phone out.</p>
+  <div class="money">
+    <div class="fig">$10</div>
+    <p class="fig-note">A request with a shout-out, paid straight to you &mdash; cash app,
+      Venmo, however you already get paid. <b>Twenty of those in a four-hour set is a second
+      night's pay</b>, from people who were going to yell the song at you anyway.</p>
+  </div>
+  <h2 class="sec">What they see when they scan</h2>
+  <div class="flow">
+    <div><b>Request a song</b> &nbsp;&mdash;&nbsp; search your list, send it up, tip if they want</div>
+    <div><b>Tonight's set</b> &nbsp;&mdash;&nbsp; what you're playing, what's left</div>
+    <div><b>Upcoming shows</b> &nbsp;&mdash;&nbsp; every venue, every date, always current</div>
+    <div><b>Join the list</b> &nbsp;&mdash;&nbsp; a phone number you own, not a follower count</div>
+    <div><b>Merch</b> &nbsp;&mdash;&nbsp; without leaving the table</div>
+  </div>
+  <h2 class="sec">The part that matters after the show</h2>
+  <p class="body">A follower on a platform isn't yours &mdash; the platform decides who sees
+    your post. <b>A phone number is yours.</b> Play the same town in six weeks and you can text
+    the people who were actually in the room last time.</p>
+  <p class="body">And the venue sees a band that fills the room and brings its own crowd. That's
+    how you get rebooked at a better rate.</p>
+  <div class="kill">Every request app takes a cut and keeps the fans. This one takes nothing and
+    hands you the list.</div>
+  <div class="close">
+    <div class="price"><div class="amt">$29</div><div class="per">per month &middot; artist</div></div>
+    <div class="cta"><div class="line">Play one show with it.</div>
+      <p>Print one code, tape it to the monitor, and count the requests and the numbers at the
+        end of the night.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s4" role="tabpanel" hidden>
+  <span class="who">Electricians &middot; Plumbers &middot; HVAC &middot; Trades</span>
+  <h1>Every quote request in one place, answered before the other guy calls back.</h1>
+  <p class="promise">You're under a house. The phone rings. They call the next name on the list.
+    That's the whole business problem.</p>
+  <div class="money">
+    <div class="fig">4 min</div>
+    <p class="fig-note">Roughly how long a homeowner with a real problem waits before calling
+      somebody else. <b>Whoever answers first usually wins the job</b>, and it is almost never
+      about price.</p>
+  </div>
+  <h2 class="sec">What gets installed</h2>
+  <div class="beats">
+    <div class="beat"><div class="bh">Quote requests</div><p>One form, one inbox, one place. Photos from the customer, so you can price it before you drive.</p></div>
+    <div class="beat"><div class="bh">Service areas</div><p>What you cover and what you don't, so you stop getting calls forty miles out.</p></div>
+    <div class="beat"><div class="bh">Emergency callout</div><p>A different path, a different rate, and it reaches you differently after hours.</p></div>
+    <div class="beat"><div class="bh">Scheduling</div><p>They pick a window you actually have open. No back-and-forth voicemail.</p></div>
+    <div class="beat"><div class="bh">Job photos</div><p>Before and after, on the job, straight to the customer and to your own page.</p></div>
+    <div class="beat"><div class="bh">Reviews</div><p>Asked automatically, from the person whose panel you actually replaced.</p></div>
+  </div>
+  <h2 class="sec">It answers when you can't</h2>
+  <p class="body">A request comes in at 2:40 while you're in a crawlspace. It goes back
+    immediately from your own number: <b>"Got it &mdash; I can be there Thursday morning or
+    Friday afternoon, which is better?"</b></p>
+  <p class="body">You look at your phone at four o'clock and the job is already scheduled.</p>
+  <div class="kill">You are not buying software. You are buying the jobs you currently lose
+    between 8 a.m. and 5 p.m. because both hands are busy.</div>
+  <div class="close">
+    <div class="price"><div class="amt">$299</div><div class="per">per month</div></div>
+    <div class="cta"><div class="line">Count last month.</div>
+      <p>How many missed calls, and how many of those called somebody else? That number is the
+        whole pitch.</p></div>
+  </div>
+</section>
+
 <section class="sheet" id="s5" role="tabpanel" hidden>
+  <span class="who">Marinas &middot; Resorts &middot; Multi-concept</span>
+  <h1>Five businesses under one roof. Five sets of hours. One login.</h1>
+  <p class="promise">Every listing service on earth treats you as one business with one phone
+    number and one set of hours. You are not one business and you never were.</p>
+  <div class="money">
+    <div class="fig">1 login</div>
+    <p class="fig-note">For however many operations you actually run. Each one with its own
+      hours, prices, availability, booking link and reviews &mdash; <b>and each one inheriting
+      the things that really are shared</b>, so you set the address once.</p>
+  </div>
+  <h2 class="sec">What that looks like</h2>
+  <div class="tree"><b>Flora-Bama</b>
+├── Lounge              <i>own hours, own events</i>
+├── Yacht Club          <i>own hours, own menu</i>
+├── Oyster Bar          <i>own hours, own menu</i>
+├── <b>Marina</b>
+│   ├── Pontoon Rentals     <i>own availability, own prices</i>
+│   ├── Jet Ski Rentals     <i>own availability, own prices</i>
+│   ├── Dolphin Cruises     <i>own start times, own capacity</i>
+│   ├── Parasailing         <i>own booking link</i>
+│   └── Fishing Charters    <i>own vessels, own trips</i>
+├── Liquor Store        <i>own hours</i>
+└── Gift Store          <i>own hours</i></div>
+  <h2 class="sec">Why this is the whole problem</h2>
+  <p class="body">Today the dolphin cruise hours are wrong because Google only has one field for
+    hours. The marina phone rings for an oyster bar reservation. A review about the gift shop
+    drags down the charter rating. <b>Every one of those is the same bug: one record where there
+    should be a graph.</b></p>
+  <p class="body">Each operation gets its own everything. Change the main phone number once and
+    every unit that didn't override it follows. Override the marina's number and the five things
+    under it follow that instead.</p>
+  <div class="kill">This is also why a franchisor or a management company can run twenty
+    properties from one account &mdash; same structure, more branches.</div>
+  <div class="close">
+    <div class="price"><div class="amt">$299</div><div class="per">per month &middot; per parent</div></div>
+    <div class="cta"><div class="line">Name your operations out loud.</div>
+      <p>However many you say in that sentence, that's the setup. Most owners have never been
+        asked the question, and the answer is usually more than they expected.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s6" role="tabpanel" hidden>
+  <span class="who">Every business &middot; The one that changes everything</span>
+  <h1>Find out who booked you. Not just that somebody did.</h1>
+  <p class="promise">FareHarbor knows their name, their number and their email. You get a
+    notification. That's the arrangement, and it's the reason you can't fill a Tuesday.</p>
+  <div class="money">
+    <div class="fig">100%</div>
+    <p class="fig-note">Of bookings that come through your own page arrive with <b>a name and a
+      phone number you own.</b> The platform still takes the transaction. You still get the
+      customer.</p>
+  </div>
+  <h2 class="sec">How it works, and it's simpler than it sounds</h2>
+  <ol class="order" style="list-style:none;counter-reset:o;margin:22px 0 0;padding:0">
+    <li><span>They land on your page and see <b>real availability</b> &mdash; the thing no other page of yours has ever shown.</span></li>
+    <li><span>They pick a trip.</span></li>
+    <li><span>They give a <b>name and a phone number.</b> One line, before anything else happens.</span></li>
+    <li><span>Then they go to FareHarbor and book, exactly as they would have.</span></li>
+    <li><span>The confirmation email comes back to you. We read it.</span></li>
+    <li><span>The name from step three and the booking from step five <b>get matched.</b> That's your customer now.</span></li>
+  </ol>
+  <div class="kill">Nobody is asked to leave a platform that works. The booking site keeps the
+    booking. You keep the human being.</div>
+  <h2 class="sec">What you can do that you couldn't before</h2>
+  <div class="beats">
+    <div class="beat"><div class="bh">Ask for the review</div><p>From someone you can prove was actually on the boat.</p></div>
+    <div class="beat"><div class="bh">Fill the cancellation</div><p>Text the people who wanted that exact trip.</p></div>
+    <div class="beat"><div class="bh">Get them back next April</div><p>They come to the beach every year. You've just never been able to reach them.</p></div>
+  </div>
+  <div class="close">
+    <div class="price"><div class="amt">$299</div><div class="per">per month</div></div>
+    <div class="cta"><div class="line">One question at the first meeting.</div>
+      <p>"How many repeat customers did you have last year?" Almost no operator can answer it.
+        After this, you can.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s7" role="tabpanel" hidden>
+  <span class="who">Charters &middot; Rentals &middot; Restaurants</span>
+  <h1>Three seats just opened for tomorrow. Somebody wants them.</h1>
+  <p class="promise">That inventory was going to expire worthless in eighteen hours. It doesn't
+    have to.</p>
+  <div class="money">
+    <div class="fig">$267</div>
+    <p class="fig-note">Three seats at $89 on tomorrow's ten o'clock, sold from <b>one
+      cancellation and one text message.</b> Nothing was built for this &mdash; the pieces were
+      already there and they connected.</p>
+  </div>
+  <h2 class="sec">What happens, automatically</h2>
+  <div class="flow">
+    <div><span class="mono">10:04 AM</span> &nbsp;cancellation email arrives from the booking platform</div>
+    <div><span class="mono">10:04 AM</span> &nbsp;availability updates &nbsp;&rarr;&nbsp; <b>3 seats open</b></div>
+    <div><span class="mono">10:05 AM</span> &nbsp;finds people who searched that trip, asked about that time, joined the list, or booked something like it before</div>
+    <div><span class="mono">10:05 AM</span> &nbsp;texts them from your number</div>
+    <div><span class="mono">10:31 AM</span> &nbsp;<b>sold</b></div>
+  </div>
+  <div class="kill">You could not have done this last season at any price, because you had no
+    list, no live count, and no way to reach the people who wanted that exact time.</div>
+  <h2 class="sec">Works on anything with a capacity</h2>
+  <p class="body">Seats on a cruise. A pontoon on a Saturday. A six-top at 7:30. A chair at
+    2 p.m. A condo for a three-night gap nobody will ever search for.</p>
+  <div class="close">
+    <div class="price"><div class="amt">Included</div><div class="per">in the monthly</div></div>
+    <div class="cta"><div class="line">Count last season's empty seats.</div>
+      <p>Not the cancellations &mdash; the ones that never got refilled. Multiply by your rate.
+        That number is usually larger than the annual cost by a lot.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s8" role="tabpanel" hidden>
+  <span class="who">Every business &middot; The core of it</span>
+  <h1>Change your hours once. And find out if one of them didn't take.</h1>
+  <p class="promise">Google, your website, Facebook, the booking site, the POS. One place, one
+    time &mdash; and proof it landed in all five.</p>
+  <div class="money">
+    <div class="fig">5 places</div>
+    <p class="fig-note">What a holiday closing takes today, assuming you remember all five.
+      <b>Most owners forget one, and the one they forget is the one the customer checks.</b></p>
+  </div>
+  <h2 class="sec">The part nobody else does</h2>
+  <p class="body">After it changes something, it goes and <b>reads it back on a different
+    path</b> than the one it used to write. Wrote through the app; checks through a browser on
+    the public page.</p>
+  <p class="body">So you don't get told "done." You get told which surfaces are right and which
+    one isn't:</p>
+  <div class="math">
+    <div class="math-h">Closing time &rarr; 8:00 PM</div>
+    <div class="math-row"><span>Your website</span><span class="v">8:00 PM &check;</span></div>
+    <div class="math-row"><span>Google Business</span><span class="v">8:00 PM &check;</span></div>
+    <div class="math-row"><span>Booking platform</span><span class="v">8:00 PM &check;</span></div>
+    <div class="math-row tot"><span>Facebook</span><span class="v">9:00 PM &mdash; not applied</span></div>
+  </div>
+  <p class="body" style="margin-top:18px"><b>That fourth line is worth the subscription by
+    itself.</b> A clean failure tells you nothing changed. A partial one leaves two versions of
+    the truth out there and nobody knowing which a customer is reading.</p>
+  <h2 class="sec">And when an app redesigns itself</h2>
+  <p class="body">Every night, every procedure checks the screens it expects are still there.
+    It touches nothing. When one moves, it refuses to act and tells us. <b>We fix it once and
+    every customer has the fix by morning.</b></p>
+  <div class="kill">You aren't buying software. You're buying the fact that somebody absorbs
+    every app redesign, forever, so you never think about it again.</div>
+  <div class="close">
+    <div class="price"><div class="amt">$299</div><div class="per">per month</div></div>
+    <div class="cta"><div class="line">Text it and watch.</div>
+      <p>First demo: you text "change Friday to 9 to 5." Watch it happen, then check Google
+        yourself on your own phone.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s9" role="tabpanel" hidden>
+  <span class="who">Every business &middot; The free report that sells the job</span>
+  <h1>Your price is $349. Facebook still says $399.</h1>
+  <p class="promise">Nobody has ever checked. Not you, not a listing service, not the platforms
+    themselves. So it's been wrong for eleven months.</p>
+  <div class="money">
+    <div class="fig">3 of 4</div>
+    <p class="fig-note">The usual result. Three surfaces agree with what the owner believes is
+      true, and one doesn't &mdash; <b>and the wrong one is often the one getting the most
+      traffic.</b></p>
+  </div>
+  <div class="math">
+    <div class="math-h">Canonical &mdash; half-day charter, $349</div>
+    <div class="math-row"><span>Your website</span><span class="v">$349 &middot; checked today</span></div>
+    <div class="math-row"><span>Google Business</span><span class="v">$349 &middot; checked today</span></div>
+    <div class="math-row"><span>Your booking page</span><span class="v">$349 &middot; checked today</span></div>
+    <div class="math-row tot"><span>Facebook</span><span class="v">$399 &middot; wrong since March</span></div>
+    <div class="math-row"><span>Yelp</span><span class="v">couldn't read it yet</span></div>
+  </div>
+  <h2 class="sec">Four questions, asked continuously</h2>
+  <div class="beats">
+    <div class="beat"><div class="bh">What's true?</div><p>The one value you say is correct, in one place, not scattered across nine logins.</p></div>
+    <div class="beat"><div class="bh">How do we know?</div><p>Which source said so, on what date, and who changed it.</p></div>
+    <div class="beat"><div class="bh">Where is it wrong?</div><p>Every surface compared against it, by name.</p></div>
+    <div class="beat"><div class="bh">When did we last check?</div><p>Because "it was right in March" is not the same as right.</p></div>
+  </div>
+  <div class="kill">Nobody sells this today. Listing services push data out and never look back
+    to see whether it stuck. This is the only thing that goes and reads it.</div>
+  <div class="close">
+    <div class="price"><div class="amt">Free</div><div class="per">the first report</div></div>
+    <div class="cta"><div class="line">Run it before they buy anything.</div>
+      <p>Check their hours, phone, price and menu across every surface and hand them the sheet.
+        It's usually uncomfortable, and it sells the rest of the product by itself.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s10" role="tabpanel" hidden>
   <span class="who">Restaurants &middot; Charters &middot; Anyone with a review problem</span>
   <h1>Reviews from people who actually ordered the shrimp scampi.</h1>
-  <p class="promise">Not a star rating for the whole restaurant. A rating for the dish,
-    from the person who ate it, tied to a real check.</p>
-
+  <p class="promise">Not a star rating for the whole restaurant. A rating for the dish, from the
+    person who ate it, tied to a real check.</p>
   <div class="money">
     <div class="fig">Real</div>
     <p class="fig-note">We know they were there, when they sat, what they ordered and what they
-      paid, because the ticket says so. <b>In an internet filling up with generated reviews,
-      a receipt is the only thing left that can't be faked.</b></p>
+      paid, because the ticket says so. <b>In an internet filling up with generated reviews, a
+      receipt is the last thing that can't be faked.</b></p>
   </div>
-
   <h2 class="sec">What a guest sees</h2>
   <div class="flow">
     <div><b>Big Chicken Alfredo</b> &nbsp;&mdash;&nbsp; 4.8 &nbsp;&middot;&nbsp; 61 verified orders</div>
@@ -388,229 +611,243 @@
     <div><b>Calamari</b> &nbsp;&mdash;&nbsp; 4.4 &nbsp;&middot;&nbsp; 88 verified orders</div>
     <div><b>Bushwhacker</b> &nbsp;&mdash;&nbsp; 5.0 &nbsp;&middot;&nbsp; 210 verified orders</div>
   </div>
-
-  <h2 class="sec">Why this is worth more than your star rating</h2>
+  <h2 class="sec">Why it beats your star rating</h2>
   <p class="body">A 4.3 tells a tourist nothing. <b>"The bushwhacker is a 5.0 across two hundred
     and ten people who actually bought one"</b> tells them where to go tonight.</p>
   <p class="body">And it tells you something no review site ever has: the calamari is dragging.
     Not the restaurant &mdash; the calamari. You can fix a dish. You can't fix a 4.3.</p>
-
-  <div class="kill">Nobody can astroturf this. To leave a review you had to be in the building,
-    at a table, with a closed check. That's the moat, and it's permanent.</div>
-
-  <h2 class="sec">Where they end up</h2>
-  <p class="body">On your own page, on the QR menu, in the local directory, and in the answer
-    an AI gives when someone asks what's good nearby. <b>You own them. We publish them
-    everywhere and take nothing for it.</b></p>
-
+  <div class="kill">To leave a review you had to be in the building, at a table, with a closed
+    check. Nobody can astroturf that, and nobody else has it.</div>
   <div class="close">
     <div class="price"><div class="amt">Included</div><div class="per">in the monthly</div></div>
-    <div class="cta">
-      <div class="line">Pick your worst-selling good dish.</div>
-      <p>That's the one to watch first. When it starts getting verified fives next to its
-        name, it stops being a secret.</p>
-    </div>
+    <div class="cta"><div class="line">Pick your worst-selling good dish.</div>
+      <p>That's the one to watch. When it starts showing verified fives, it stops being a
+        secret.</p></div>
   </div>
 </section>
 
-<!-- ============ 6 ============ -->
-<section class="sheet" id="s6" role="tabpanel" hidden>
+<section class="sheet" id="s11" role="tabpanel" hidden>
+  <span class="who">Every business &middot; The hour you get back</span>
+  <h1>Answer every review without signing into anything.</h1>
+  <p class="promise">Google, Facebook, the booking sites, your own page. All of them land in one
+    place, and you reply by talking.</p>
+  <div class="money">
+    <div class="fig">0 logins</div>
+    <p class="fig-note">Most owners never reply to reviews. Not because they don't care &mdash;
+      because it means four passwords and an hour they don't have. <b>Replied-to reviews
+      measurably outperform ignored ones</b>, and this is the only reason it doesn't happen.</p>
+  </div>
+  <h2 class="sec">What it's actually like</h2>
+  <div class="flow">
+    <div><span class="mono">IT READS</span> &nbsp;"Three stars. Food was great, waited 40 minutes."</div>
+    <div><span class="mono">YOU SAY</span> &nbsp;"Tell her sorry about the wait, thank her for coming back."</div>
+    <div><span class="mono">IT DRAFTS</span> &nbsp;a reply in your words, not corporate ones</div>
+    <div><span class="mono">YOU SAY</span> &nbsp;"Send it."</div>
+    <div><span class="mono">IT POSTS</span> &nbsp;to wherever the review came from</div>
+  </div>
+  <h2 class="sec">And it learns how you talk</h2>
+  <p class="body">After thirty replies it knows you say "y'all," that you always invite them
+    back, and that you never blame the kitchen. <b>After a hundred, the drafts stop needing
+    edits.</b></p>
+  <p class="body">You keep approving every one. It never posts on its own, because a review
+    reply is the most public thing your business says all week.</p>
+  <div class="kill">Nobody's replies sound like a small business owner, because nobody's replies
+    are written by one. Yours will be, and it'll take four minutes a week.</div>
+  <div class="close">
+    <div class="price"><div class="amt">Included</div><div class="per">in the monthly</div></div>
+    <div class="cta"><div class="line">Pull up their worst recent review.</div>
+      <p>Ask what they'd want to say back. Then show them it posted &mdash; while you're sitting
+        there.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s12" role="tabpanel" hidden>
   <span class="who">Every business &middot; Phone and text</span>
   <h1>Your business line answers itself. From your own number.</h1>
   <p class="promise">Not a 1-800. Not a forwarding service with a strange area code. The number
     already on your truck, your sign and your cards.</p>
-
   <div class="money">
     <div class="fig">$0</div>
-    <p class="fig-note">Per-message fee. Your own SIM is in the phone on your counter, so texts
-      go out on your real line at your carrier's rate. <b>No middleman taking a cent a message
-      to send a text from your own number.</b></p>
+    <p class="fig-note">Per message. Your own SIM is in the phone on your counter, so texts go
+      out on your real line at your carrier's rate. <b>No middleman taking a cent a message to
+      send a text from your own number.</b></p>
   </div>
-
   <h2 class="sec">Inbound &mdash; it answers</h2>
   <div class="beats">
-    <div class="beat"><div class="bh">"Y'all open Sunday?"</div><p>Answered in seconds, with the hours it just verified this morning.</p></div>
-    <div class="beat"><div class="bh">"Any boats at 2?"</div><p>Answered from live availability &mdash; across every platform, not just one.</p></div>
-    <div class="beat"><div class="bh">"Do you have gluten free?"</div><p>Answered off the real menu, the one you changed at lunch.</p></div>
+    <div class="beat"><div class="bh">"Y'all open Sunday?"</div><p>Answered in seconds, with hours it verified this morning.</p></div>
+    <div class="beat"><div class="bh">"Any boats at 2?"</div><p>From live availability across every platform, not just one.</p></div>
+    <div class="beat"><div class="bh">"Got gluten free?"</div><p>Off the real menu &mdash; the one you changed at lunch.</p></div>
   </div>
-
-  <h2 class="sec">Outbound &mdash; you talk to your own list</h2>
-  <p class="body">Slow Tuesday, forty tables open. Text the people who've actually been in
-    before: <b>"Half off bushwhackers till 6."</b> From your number, so it lands like a text
-    from a person instead of a marketing blast.</p>
-  <p class="body">And it's your list. We don't rent it, resell it, or hold it. If you leave,
-    you leave with it.</p>
-
-  <div class="kill">Everybody sells you a texting product with a number you've never seen
-    before. Customers ignore those. They don't ignore the number that's been on the sign
-    for eleven years.</div>
-
+  <h2 class="sec">Outbound &mdash; your own list</h2>
+  <p class="body">Slow Tuesday, forty tables open. Text people who've actually been in:
+    <b>"Half off bushwhackers till 6."</b> From your number, so it lands like a text from a
+    person instead of a marketing blast.</p>
+  <p class="body">And it's your list. We don't rent it, resell it or hold it. If you leave, you
+    leave with it.</p>
+  <div class="kill">Everyone sells you a texting product with a number nobody's seen before.
+    Customers ignore those. They don't ignore the number that's been on the sign for eleven
+    years.</div>
   <h2 class="sec">It's also how you approve things</h2>
-  <p class="body">When the system wants to do something that matters &mdash; change a price,
-    send an invoice &mdash; it texts you first and waits. <b>You reply YES.</b> Nothing
-    irreversible happens without a person saying so.</p>
-
+  <p class="body">When the system wants to do something that matters &mdash; change a price, send
+    an invoice &mdash; it texts you first and waits. <b>You reply YES.</b> Nothing irreversible
+    happens without a person saying so.</p>
   <div class="close">
     <div class="price"><div class="amt">$299</div><div class="per">per month &middot; your SIM</div></div>
-    <div class="cta">
-      <div class="line">You buy the phone. Forty dollars.</div>
-      <p>Any Android from any store. Put your SIM in it, sign into your apps, plug it into
-        the box. That's the whole setup, and the phone is yours.</p>
-    </div>
+    <div class="cta"><div class="line">You buy the phone. Forty dollars.</div>
+      <p>Any Android from any store. Your SIM, your logins, plug it in. That's the setup, and
+        the phone is yours.</p></div>
   </div>
 </section>
 
-<!-- ============ 7 ============ -->
-<section class="sheet" id="s7" role="tabpanel" hidden>
+<section class="sheet" id="s13" role="tabpanel" hidden>
   <span class="who">Every business &middot; Getting found</span>
   <h1>Ask any AI who has crab legs nearby. It can't tell you.</h1>
-  <p class="promise">Every assistant your customers now use is guessing from scraped, stale,
-    second-hand listings. Yours will be the one that actually knows.</p>
-
+  <p class="promise">Every assistant your customers now use is guessing from scraped, stale
+    listings. Yours will be the one that actually knows.</p>
   <div class="money">
     <div class="fig">&ldquo;?&rdquo;</div>
-    <p class="fig-note">Try it tonight. Ask for crab legs within five miles, or who has a
-      six-top free at 7:30, or which charter has two seats tomorrow. <b>Nothing on earth can
-      answer those questions today</b> &mdash; because nobody has the data.</p>
+    <p class="fig-note">Try it tonight. Crab legs within five miles. A six-top free at 7:30.
+      A charter with two seats tomorrow. <b>Nothing on earth can answer those</b> &mdash; because
+      nobody has the data.</p>
   </div>
-
   <h2 class="sec">Why nobody can answer it</h2>
-  <p class="body">The answer would need live menus, live availability and item-level truth from
-    thousands of small businesses. <b>No listing service has that</b>, because the businesses
-    have never had a way to publish it.</p>
-  <p class="body">You'll be publishing all three, every day, as a side effect of running your
-    business. Not extra work &mdash; the same updates you're already making.</p>
-
-  <h2 class="sec">Where it goes</h2>
+  <p class="body">It would need live menus, live availability and item-level truth from thousands
+    of small businesses. <b>No listing service has that</b>, because the businesses have never
+    had a way to publish it.</p>
+  <p class="body">You'll publish all three every day as a side effect of running your business.
+    Not extra work &mdash; the same updates you're already making.</p>
   <div class="beats">
     <div class="beat"><div class="bh">Google &amp; the maps</div><p>Hours, photos, posts, menu. Pushed and verified, not typed in and hoped for.</p></div>
-    <div class="beat"><div class="bh">The local directory</div><p>Your chamber, your tourism board, the regional guide. Fed from the same truth.</p></div>
-    <div class="beat"><div class="bh">The assistants</div><p>Published in a form an AI can read directly, so it quotes you instead of guessing.</p></div>
+    <div class="beat"><div class="bh">The local directory</div><p>Your chamber, your tourism board, the regional guide. Same truth.</p></div>
+    <div class="beat"><div class="bh">The assistants</div><p>Published so an AI reads you directly instead of guessing.</p></div>
   </div>
-
-  <div class="kill">Listing services charge $200 to $1,000 a year per location just to push
-    your hours around &mdash; and they hold the distribution hostage to the subscription.
-    We publish yours everywhere and charge nothing for it. It's your data.</div>
-
-  <h2 class="sec">The part that compounds</h2>
-  <p class="body">A tourist asks for the best calamari on 30A. The answer comes back with
-    <b>real numbers from real receipts</b> at four restaurants, and one of them is yours.</p>
-  <p class="body">That answer gets better as more businesses join, which is why the first ones
-    in a town matter most. <b>Being early here is worth more than being big.</b></p>
-
+  <div class="kill">Listing services charge $200 to $1,000 a year per location just to push your
+    hours around, and they hold the distribution hostage to the subscription. We publish yours
+    everywhere and charge nothing for it. It's your data.</div>
   <div class="close">
     <div class="price"><div class="amt">$0</div><div class="per">for distribution</div></div>
-    <div class="cta">
-      <div class="line">Ask your phone about your own restaurant.</div>
-      <p>Right now, in front of us. Whatever it gets wrong is the pitch &mdash; and it's
-        usually the hours.</p>
-    </div>
+    <div class="cta"><div class="line">Ask your phone about their business.</div>
+      <p>Right there in the meeting. Whatever it gets wrong is the pitch &mdash; and it's
+        usually the hours.</p></div>
   </div>
 </section>
 
-<!-- ============ 8 ============ -->
-<section class="sheet" id="s8" role="tabpanel" hidden>
+<section class="sheet" id="s14" role="tabpanel" hidden>
+  <span class="who">Every business &middot; The pricing promise</span>
+  <h1>We take zero percent of your bookings.</h1>
+  <p class="promise">Not a discounted rate. Not a lower rate than theirs. Zero. Keep your booking
+    platform, keep your calendar, keep your customers.</p>
+  <div class="money">
+    <div class="fig">0%</div>
+    <p class="fig-note">Our cut of what you sell &mdash; forever. Flat monthly fee for the
+      software and nothing else. <b>A busy month costs the same as a slow one.</b></p>
+  </div>
+  <h2 class="sec">Why nobody else does this</h2>
+  <p class="body">Because a percentage is how they make their money, and it scales with your
+    success instead of with their cost. The better your season, the more you owe them.</p>
+  <p class="body">Ours doesn't scale with your revenue because <b>our cost doesn't either.</b>
+    Serving your hundredth booking costs us the same as your first.</p>
+  <div class="beats">
+    <div class="beat"><div class="bh">Keep FareHarbor</div><p>Or Toast, Square, Peek, whatever you already run. We're not replacing it and not asking you to switch.</p></div>
+    <div class="beat"><div class="bh">Flat, not metered</div><p>No per-booking fee, no per-message fee, no surprise bill in July because you had a good week.</p></div>
+    <div class="beat"><div class="bh">Cancel and keep working</div><p>Stop paying and it keeps running exactly as it is. It just stops getting new things.</p></div>
+  </div>
+  <div class="kill">Every other platform in your life makes more money when you do. We make the
+    same. That's why we can tell you to keep the tools you already have.</div>
+  <div class="close">
+    <div class="price"><div class="amt">$299</div><div class="per">per month &middot; flat</div></div>
+    <div class="cta"><div class="line">Ask them what their number is.</div>
+      <p>Every competitor takes a percentage, a per-seat fee, or both. Make them say it out loud
+        next to ours.</p></div>
+  </div>
+</section>
+
+<section class="sheet" id="s15" role="tabpanel" hidden>
   <span class="who">The hardware &middot; Ghost</span>
   <h1>A computer that works for you. Not for an AI company.</h1>
-  <p class="promise">A small box on the wall or under the counter. It runs your business,
-    it holds your data, and it belongs to you the way a truck belongs to you.</p>
-
+  <p class="promise">A small box on the wall or under the counter. It runs your business, it
+    holds your data, and it belongs to you the way a truck belongs to you.</p>
   <div class="money">
     <div class="fig">Yours</div>
     <p class="fig-note">Not a cloud account. Not a seat in someone's platform. A machine you
-      bought, in your building, that keeps working if we disappear.
-      <b>We can't read what's on it, because there's no way in from our side.</b></p>
+      bought, in your building, that keeps working if we disappear. <b>We can't read what's on
+      it, because there's no way in from our side.</b></p>
   </div>
-
-  <h2 class="sec">Four things that are true and almost nobody can say</h2>
+  <h2 class="sec">Four things almost nobody can say</h2>
   <div class="beats">
     <div class="beat"><div class="bh">We can't see your books</div><p>There's no remote access. Not "we promise not to look" &mdash; there's no door. It isn't built.</p></div>
-    <div class="beat"><div class="bh">It can't be broken by an update</div><p>If an update doesn't come up right, the box puts itself back the way it was. You never find out.</p></div>
-    <div class="beat"><div class="bh">Stop paying, keep working</div><p>It runs forever, frozen where it is, still patched for security. You just stop getting new things.</p></div>
+    <div class="beat"><div class="bh">An update can't break it</div><p>If one doesn't come up right, the box puts itself back the way it was. You never find out.</p></div>
+    <div class="beat"><div class="bh">Stop paying, keep working</div><p>It runs forever, still patched for security. You just stop getting new things.</p></div>
     <div class="beat"><div class="bh">Wipe it if you want</div><p>It's a Linux computer. Put anything you like on it. It's your hardware.</p></div>
   </div>
-
   <h2 class="sec">What you see</h2>
-  <p class="body">A screen that looks like a smart TV, because you already know how to read
-    one. Big tiles, a remote, no menus to hunt through. <b>No terminal, no file manager,
-    nothing that looks like a computer</b> unless you go looking for it.</p>
-  <p class="body">On it, first thing in the morning: <b>three things that need your OK.</b>
-    Reply to Maria about the Thursday quote. Invoice 1184, $2,400, ready to send. Reorder
-    twelve units, $890, usual supplier. You approve them with coffee in your hand.</p>
-
+  <p class="body">A screen that looks like a smart TV, because you already know how to read one.
+    <b>No terminal, no file manager, nothing that looks like a computer.</b> And if you'd rather
+    use it on your phone or a laptop, it's the same system with a different view.</p>
+  <p class="body">On it, first thing in the morning: <b>three things that need your OK.</b> Reply
+    to Maria about the Thursday quote. Invoice 1184, $2,400, ready to send. Reorder twelve units,
+    $890, usual supplier. Approve them with coffee in your hand.</p>
   <div class="kill">Every AI company is racing to get inside your business so your data becomes
-    theirs. This is the opposite. The brain sits on your counter, the data stays in the
-    building, and any AI you like plugs into it &mdash; ours, theirs, or the free one.</div>
-
+    theirs. This is the opposite. The brain sits on your counter and any AI you like plugs into
+    it &mdash; ours, theirs, or the free one.</div>
   <div class="close">
     <div class="price"><div class="amt">$2,495</div><div class="per">once &middot; then $299/mo</div></div>
-    <div class="cta">
-      <div class="line">Or don't buy the box at all.</div>
-      <p>It runs on a computer you already own for the same monthly. The box is the easy
-        way, not the only way.</p>
-    </div>
+    <div class="cta"><div class="line">Or don't buy the box at all.</div>
+      <p>It runs on a computer you already own for the same monthly. The box is the easy way, not
+        the only way.</p></div>
   </div>
 </section>
 
-<!-- ============ 9 ============ -->
-<section class="sheet" id="s9" role="tabpanel" hidden>
-  <span class="who">The platform &middot; What you're really buying</span>
-  <h1>Everything anyone adds to it makes yours worth more.</h1>
-  <p class="promise">You're not buying a finished product that stops where it is today.
-    You're buying the thing all of it plugs into.</p>
-
+<section class="sheet" id="s16" role="tabpanel" hidden>
+  <span class="who">The platform &middot; What you're actually buying</span>
+  <h1>Don't buy five hundred features you'll never use.</h1>
+  <p class="promise">You install the six that match your business. The restaurant next door
+    installs six different ones. Neither of you pays for the other's.</p>
   <div class="money">
-    <div class="fig">One</div>
-    <p class="fig-note">One login, many apps. Add a booking app, a loyalty program, an
-      inventory tool, a payroll connection &mdash; <b>they all run on the same box, on the same
-      account, on your own data</b>, without you signing up for anything new.</p>
+    <div class="fig">6 of 60</div>
+    <p class="fig-note">What a typical business actually runs. <b>Every other system in your life
+      charges you for all sixty</b> and buries the six you need somewhere in a menu you don't
+      have time to learn.</p>
   </div>
-
-  <h2 class="sec">The app store</h2>
-  <p class="body">Anything that runs on your box arrives from one catalog, the way apps arrive
-    on a phone. Search, install, done. <b>You'll never see a GitHub page or type a command.</b></p>
-  <p class="body">Everything in it is checked before it's listed: scanned, signed, and tested
-    against your exact machine. And every app is boxed in &mdash; it gets the permissions you
-    grant and nothing else, including ours.</p>
-
+  <h2 class="sec">Same platform, four businesses</h2>
   <div class="beats">
-    <div class="beat"><div class="bh">Triggers</div><p>"When a five-star review comes in, post it." "When the last jet ski books, text me." You set the rule once.</p></div>
-    <div class="beat"><div class="bh">Plug-ins</div><p>New platforms as you adopt them. A new POS doesn't mean a new system &mdash; it means one more app.</p></div>
-    <div class="beat"><div class="bh">Your own models</div><p>Swap the AI underneath any time. Local and private, or your own ChatGPT key. Never locked to one.</p></div>
+    <div class="beat"><div class="bh">Restaurant</div><p>QR Menu &middot; Happy Hour &middot; Reviews &middot; Loyalty &middot; Events &middot; SMS Club</p></div>
+    <div class="beat"><div class="bh">Charter</div><p>Availability &middot; Fishing Reports &middot; Vessels &middot; Weather &middot; Booking Leads &middot; Last-Minute</p></div>
+    <div class="beat"><div class="bh">Band</div><p>Song Requests &middot; Tip Jar &middot; Events &middot; Fan Club &middot; Merch &middot; SMS List</p></div>
+    <div class="beat"><div class="bh">Electrician</div><p>Quote Requests &middot; Scheduling &middot; Service Areas &middot; Emergency &middot; Job Photos &middot; Reviews</p></div>
+  </div>
+  <h2 class="sec">And it keeps getting more</h2>
+  <div class="beats">
+    <div class="beat"><div class="bh">Triggers</div><p>"When a five-star review comes in, post it." "When the last jet ski books, text me." Set the rule once.</p></div>
+    <div class="beat"><div class="bh">New platforms</div><p>Switch your POS and it's one more module, not a new system and not a new contract.</p></div>
+    <div class="beat"><div class="bh">Your own AI</div><p>Swap what's underneath any time. Local and private, or your own key. Never locked to one.</p></div>
     <div class="beat"><div class="bh">Outside developers</div><p>Anyone can build for it. They get paid; they never get your data.</p></div>
   </div>
-
-  <h2 class="sec">The part most owners don't think about until year two</h2>
-  <p class="body">Every system you've ever bought got worse over time &mdash; the vendor moved
-    on, the integrations broke, the price went up. <b>This one gets better every month
-    without you doing anything</b>, because that's literally the product.</p>
-
-  <div class="kill">You're not buying what it does today. You're buying the fact that it keeps
-    absorbing everything that changes underneath you &mdash; every app redesign, every new
-    platform, every price change &mdash; for as long as you're paying.</div>
-
+  <div class="kill">Every system you've ever bought got worse over time &mdash; the vendor moved
+    on, the integrations broke, the price went up. This one keeps absorbing what changes
+    underneath you, because that <em>is</em> the product.</div>
   <div class="close">
     <div class="price"><div class="amt">$299</div><div class="per">per month &middot; everything</div></div>
-    <div class="cta">
-      <div class="line">Start with one thing.</div>
-      <p>Pick the single job that annoys you most this week. We turn that one on. Everything
-        else waits until you ask for it.</p>
-    </div>
+    <div class="cta"><div class="line">Start with one thing.</div>
+      <p>Pick the single job that annoys you most this week. We turn that one on. Everything else
+        waits until you ask.</p></div>
   </div>
 </section>
 
 </main>
 
 <footer class="wrap">
-  <p><b>Working numbers.</b> $299/mo and $2,495 for the box are the figures used across all
-  nine sheets so the math stays consistent &mdash; change them in one place and every sheet
-  follows. The $400k charter example is arithmetic on a real commission rate, not a case study;
-  swap in a prospect's own statement before the meeting and the sheet does the rest.</p>
+  <p><b>Working numbers.</b> $299/mo, $29/mo for artists and $2,495 for the box are used across
+  every sheet so the math never contradicts itself &mdash; change them in one place and all
+  sixteen follow. The $400k charter, the $267 cancellation and the 3-of-4 consistency result are
+  arithmetic on stated assumptions, not case studies; swap in a prospect's own statement before
+  the meeting and the sheet does the rest.</p>
 </footer>
 
 <script>
 (function(){
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
   var panels = tabs.map(function(t){ return document.getElementById(t.dataset.s); });
   function show(i){
     tabs.forEach(function(t,j){
@@ -627,6 +864,12 @@
       e.preventDefault();
       var n = (i+d+tabs.length)%tabs.length;
       tabs[n].focus(); show(n);
+    });
+  });
+  cards.forEach(function(c){
+    c.addEventListener('click', function(){
+      var i = tabs.findIndex(function(t){ return t.dataset.s === c.dataset.s; });
+      if(i >= 0){ show(i); tabs[i].scrollIntoView({block:'nearest', inline:'center'}); }
     });
   });
 })();
