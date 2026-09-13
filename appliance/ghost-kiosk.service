@@ -1,7 +1,7 @@
 [Unit]
 Description=Ghost kiosk — one application, fullscreen, no way out
-After=systemd-user-sessions.service ghost-node.service
-Wants=ghost-node.service
+After=systemd-user-sessions.service ghost-node.service ghost-shell.service
+Wants=ghost-node.service ghost-shell.service
 
 [Service]
 Type=simple

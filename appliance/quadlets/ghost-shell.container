@@ -1,0 +1,25 @@
+[Unit]
+Description=Ghost shell — what the screen shows
+After=ghost-node.service
+Wants=ghost-node.service
+
+[Container]
+Image=quay.io/anextgent/shell:2026.09.1
+ContainerName=ghost-shell
+Network=ghost.network
+# Read-only. The shell renders the database; it has never needed to write to
+# it, and a surface that cannot write cannot be talked into writing.
+Volume=/var/lib/anextgent/db:/data:ro,Z
+PublishPort=127.0.0.1:8088:8088
+Environment=ANEXTGENT_DB=/data/node.sqlite
+Environment=ANEXTGENT_CONTRACTS=/usr/lib/anextgent/contracts
+Exec=python3 /app/server.py /data/node.sqlite --port 8088 --host 0.0.0.0
+HealthCmd=/usr/bin/curl -fsS http://localhost:8088/api/home
+HealthInterval=30s
+HealthRetries=3
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

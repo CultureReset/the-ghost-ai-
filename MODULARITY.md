@@ -13,6 +13,7 @@ node       -> nothing
 sdk        -> nothing
 appliance  -> nothing
 admin      -> nothing
+interface  -> nothing
 ```
 
 No module imports another. There is no shared library, no `common/`, no base
@@ -34,6 +35,7 @@ python3 -m ingest.run  --db n.sqlite ...  # parsed 1
 python3 -m executor.run --db n.sqlite ... # VERIFIED 4/4
 python3 node/api.py    --db n.sqlite      # {"ok": true, "capabilities": 6}
 python3 admin/server.py n.sqlite         # admin on http://127.0.0.1:8090
+python3 interface/server.py n.sqlite     # shell on http://127.0.0.1:8080
 ```
 
 All five, in separate repositories, against content published from a third

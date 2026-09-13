@@ -1,0 +1,238 @@
+/* The shell: top bar, hero, stat strip, rails, composer, status bar.
+ * Every screen in the product is these pieces in a different order. */
+
+/* ------------------------------------------------------------- top bar */
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;
+  gap:18px;padding:14px var(--pad);backdrop-filter:blur(18px);
+  background:linear-gradient(180deg,rgba(8,9,11,.92),rgba(8,9,11,.55));}
+.mark{font-size:17px;font-weight:600;letter-spacing:.22em;white-space:nowrap}
+.navpills{display:flex;gap:4px;margin-inline:auto;
+  position:absolute;left:50%;transform:translateX(-50%)}
+.navpills button{padding:7px 17px;border-radius:var(--r-pill);color:var(--ink-2);
+  font-size:var(--body);font-weight:500;transition:background .12s,color .12s}
+.navpills button:hover{color:var(--ink);background:rgba(255,255,255,.05)}
+.navpills button[aria-current="true"]{background:var(--panel-hi);color:var(--ink)}
+.topright{display:flex;align-items:center;gap:14px;margin-left:auto}
+.iconbtn{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;
+  color:var(--ink-2)}
+.iconbtn:hover{background:rgba(255,255,255,.06);color:var(--ink)}
+.who{display:flex;align-items:center;gap:9px;font-weight:500}
+.avatar{width:30px;height:30px;border-radius:var(--r-pill);display:grid;
+  place-items:center;font-size:13px;font-weight:600;
+  background:linear-gradient(145deg,#3A4450,#222A32);color:var(--ink)}
+
+/* --------------------------------------------------------------- hero */
+/* The art bleeds the full width and is faded out from the left and from the
+   bottom. Clipping the artwork itself left a hard vertical seam down the
+   middle of the page -- the gradient has to do the hiding, not the geometry. */
+.hero{position:relative;padding:30px var(--pad) 6px;min-height:206px;
+  display:flex;flex-direction:column;justify-content:center}
+.hero .art{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.hero .art svg{position:absolute;inset:0;width:100%;height:100%}
+.hero .art::after{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,var(--ground) 4%,rgba(8,9,11,.90) 30%,
+                    rgba(8,9,11,.22) 66%,rgba(8,9,11,.42) 100%),
+    linear-gradient(180deg,rgba(8,9,11,.55) 0%,rgba(8,9,11,0) 26%,
+                    rgba(8,9,11,0) 62%,var(--ground) 100%)}
+.eyebrow{font-size:var(--tiny);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:10px}
+h1{font-size:var(--display);font-weight:600;letter-spacing:-.025em;margin:0;
+  line-height:1.05}
+.sub{color:var(--ink-2);font-size:16px;margin-top:8px}
+.tagline{position:absolute;right:var(--pad);bottom:28px;text-align:right;
+  color:var(--ink-2);font-size:13px}
+.tagline hr{border:0;border-top:1px solid var(--line-2);margin:12px 0 0;width:84px;
+  margin-left:auto}
+.heroside{position:absolute;right:var(--pad);top:34px;text-align:right}
+.heroside b{font-size:22px;font-weight:600}
+.heroside span{display:block;color:var(--ink-2);font-size:var(--small);margin-top:2px}
+.heroside .ghostbtn{margin-top:14px}
+.ghostbtn{display:inline-flex;align-items:center;gap:8px;padding:8px 15px;
+  border:1px solid var(--line-2);border-radius:var(--r-pill);font-size:var(--small);
+  background:rgba(20,24,28,.7);color:var(--ink)}
+.ghostbtn:hover{background:var(--panel-hi)}
+
+/* ---------------------------------------------------------- stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));
+  gap:var(--gap);padding:22px var(--pad) 0}
+.stat{display:flex;align-items:center;gap:14px;padding:16px 18px;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);
+  box-shadow:var(--lift)}
+.stat:hover{background:var(--panel-2)}
+.stat .ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+  flex:0 0 auto}
+.stat .n{font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.stat .k{color:var(--ink-2);font-size:var(--small)}
+.stat .cap{font-size:var(--small);color:var(--ink-2);font-weight:500}
+.stat .chev{margin-left:auto;color:var(--muted)}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:var(--tiny);
+  font-weight:600;padding:2px 7px;border-radius:var(--r-pill);margin-left:7px}
+.delta.up{color:var(--ok);background:rgba(50,215,75,.13)}
+.delta.down{color:var(--bad);background:rgba(255,69,58,.13)}
+
+/* ------------------------------------------------------------ sections */
+section{padding:28px var(--pad) 0}
+.shead{display:flex;align-items:center;gap:8px;margin-bottom:13px}
+.shead h2{font-size:var(--h2);font-weight:600;letter-spacing:-.015em;margin:0}
+.shead .more{margin-left:auto;color:var(--ink-2);font-size:var(--small);
+  display:inline-flex;align-items:center;gap:5px}
+.shead .more:hover{color:var(--ink)}
+.shead .caret{color:var(--muted)}
+
+/* A rail scrolls sideways and lets the next card peek, so it reads as
+   "there is more" without a scrollbar shouting it. */
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(236px,1fr);
+  gap:var(--gap);overflow-x:auto;scroll-snap-type:x proximity;
+  padding-bottom:4px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail > *{scroll-snap-align:start}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));
+  gap:var(--gap)}
+.cols2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+  gap:var(--gap);align-items:start}
+
+/* --------------------------------------------------------------- cards */
+.card{background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r-card);box-shadow:var(--lift);overflow:hidden}
+.card.pad{padding:16px}
+.tile{display:flex;gap:12px;align-items:flex-start;padding:14px;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);
+  box-shadow:var(--lift);transition:background .12s,border-color .12s;
+  text-align:left;width:100%}
+.tile:hover{background:var(--panel-2);border-color:var(--line-2)}
+.tile.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.tile .body{min-width:0;flex:1}
+.tile .name{font-weight:600;font-size:var(--body);letter-spacing:-.01em;
+  overflow-wrap:anywhere}
+.tile .desc{color:var(--ink-2);font-size:var(--small);margin-top:2px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tile .kebab{color:var(--muted);flex:0 0 auto;letter-spacing:1px;font-size:15px;
+  line-height:1}
+.tile .foot{margin-top:9px;display:flex;align-items:center;gap:6px;
+  font-size:var(--small);color:var(--ink-2)}
+
+/* the rounded-square app icon */
+.ico{width:44px;height:44px;border-radius:var(--r-icon);display:grid;
+  place-items:center;flex:0 0 auto;color:#fff;font-weight:700;font-size:17px}
+.ico.sm{width:34px;height:34px;border-radius:9px;font-size:13px}
+.ico.xs{width:26px;height:26px;border-radius:7px;font-size:11px}
+
+/* status dot + word */
+.dot{width:7px;height:7px;border-radius:99px;flex:0 0 auto;display:inline-block}
+.dot.ok{background:var(--ok)}   .dot.warn{background:var(--warn)}
+.dot.bad{background:var(--bad)} .dot.idle{background:var(--muted)}
+.dot.info{background:var(--info)}
+.st-ok{color:var(--ok)} .st-warn{color:var(--warn)} .st-bad{color:var(--bad)}
+
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;
+  border-radius:var(--r-pill);font-size:var(--tiny);font-weight:500;
+  background:var(--panel-hi);color:var(--ink-2)}
+.chip.ok{background:rgba(50,215,75,.12);color:var(--ok)}
+.chip.warn{background:rgba(255,159,10,.13);color:var(--warn)}
+.chip.bad{background:rgba(255,69,58,.13);color:var(--bad)}
+
+/* --------------------------------------------------------------- lists */
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:12px;padding:13px 16px;
+  border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--panel-2)}
+.row .body{flex:1;min-width:0}
+.row .t{font-weight:500;font-size:var(--body);display:flex;align-items:center;
+  gap:9px;flex-wrap:wrap}
+.row .q{color:var(--ink-2);font-size:var(--small);margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .when{color:var(--muted);font-size:var(--small);white-space:nowrap}
+.btn{padding:6px 14px;border-radius:8px;background:var(--panel-hi);
+  border:1px solid var(--line-2);font-size:var(--small);font-weight:500}
+.btn:hover{background:var(--line-2)}
+.btn.go{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.go:hover{background:var(--accent-2)}
+.cardhead{display:flex;align-items:center;gap:8px;padding:14px 16px;
+  border-bottom:1px solid var(--line)}
+.cardhead h3{margin:0;font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.cardhead .more{margin-left:auto;font-size:var(--small);color:var(--ink-2)}
+
+/* agenda */
+.agenda{padding:6px 16px 14px}
+.ag{display:flex;gap:13px;padding:9px 0;align-items:flex-start}
+.ag .time{color:var(--ink-2);font-size:var(--small);width:64px;flex:0 0 auto;
+  padding-top:1px}
+.ag .t{font-weight:500}
+.ag .d{color:var(--ink-2);font-size:var(--small)}
+.ag .pip{margin-top:6px}
+
+/* ----------------------------------------------------------- sidebar */
+/* The rail is painted on the grid, not on <aside>, so it reaches the bottom of
+   a long page while the nav itself stays stuck to the top of the viewport. */
+.withside{display:grid;grid-template-columns:232px minmax(0,1fr);
+  background:linear-gradient(90deg,var(--rail) 0 232px,transparent 232px)}
+aside{border-right:1px solid var(--line);padding:14px 12px;
+  position:sticky;top:0;align-self:start;height:100vh;
+  display:flex;flex-direction:column}
+.wsback{display:flex;align-items:center;gap:8px;width:100%;padding:9px 11px;
+  border:1px solid var(--line);border-radius:10px;color:var(--ink-2);
+  font-size:var(--small)}
+.wsback:hover{background:var(--panel)}
+.wscur{display:flex;gap:11px;align-items:center;padding:11px;margin:10px 0 16px;
+  border-radius:10px;background:var(--panel-2);border:1px solid var(--line-2)}
+.wscur .name{font-weight:600;font-size:var(--body)}
+.wscur .sub{color:var(--ink-2);font-size:var(--tiny);margin:0}
+.snav{display:flex;flex-direction:column;gap:1px}
+.snav button{display:flex;align-items:center;gap:12px;padding:9px 11px;
+  border-radius:9px;color:var(--ink-2);font-size:var(--body);font-weight:500;
+  width:100%;text-align:left}
+.snav button:hover{background:var(--panel);color:var(--ink)}
+.snav button[aria-current="true"]{background:var(--panel-hi);color:var(--ink)}
+.asidecard{margin-top:auto;margin-bottom:4px;padding:14px;border-radius:12px;
+  background:var(--panel);border:1px solid var(--line);font-size:var(--small)}
+
+/* -------------------------------------------------------- composer */
+/* The composer is sticky, so the last card needs room to scroll out
+   from under it. */
+main{padding-bottom:26px}
+section:last-of-type{padding-bottom:18px}
+.composer{position:sticky;bottom:0;z-index:30;padding:18px var(--pad) 12px;
+  background:linear-gradient(180deg,rgba(8,9,11,0),var(--ground) 38%)}
+.cbox{display:flex;align-items:center;gap:11px;max-width:1120px;margin:0 auto;
+  padding:9px 12px 9px 14px;border-radius:var(--r-pill);
+  background:var(--panel-2);border:1px solid var(--line-2);box-shadow:var(--drop)}
+.cbox:focus-within{border-color:var(--accent)}
+.cbox .spark{color:var(--accent-2)}
+.cbox select{background:var(--panel-hi);border:1px solid var(--line-2);
+  border-radius:var(--r-pill);padding:6px 11px;font-size:var(--small);
+  font-weight:500;-webkit-appearance:none;appearance:none;
+  padding-right:26px;background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 4l3 3 3-3' stroke='%239AA7B3' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center}
+.cbox input{flex:1;background:none;border:0;outline:0;font-size:15px;min-width:0}
+.cbox input::placeholder{color:var(--ink-3)}
+.send{width:34px;height:34px;border-radius:var(--r-pill);display:grid;
+  place-items:center;background:var(--panel-hi);border:1px solid var(--line-2)}
+.send:hover{background:var(--accent);border-color:var(--accent)}
+
+/* ------------------------------------------------------- status bar */
+.statusbar{display:flex;align-items:center;gap:10px;
+  padding:0 var(--pad) 16px;color:var(--muted);font-size:var(--tiny)}
+.statusbar .mark{font-size:11px;letter-spacing:.2em;color:var(--ink-3)}
+.statusbar .right{margin-left:auto;display:flex;align-items:center;gap:7px}
+
+/* ---------------------------------------------------------- responsive */
+@media (max-width:1100px){
+  :root{--pad:22px}
+  .navpills{position:static;transform:none;margin-inline:auto;overflow-x:auto}
+  .cols2{grid-template-columns:1fr}
+  .heroside{position:static;text-align:left;margin-top:16px}
+  .tagline{display:none}
+}
+@media (max-width:760px){
+  :root{--pad:16px;--display:29px}
+  .withside{grid-template-columns:1fr}
+  aside{position:static;min-height:0;border-right:0;
+    border-bottom:1px solid var(--line)}
+  .hero .art svg{width:100%;opacity:.5}
+  .top{gap:10px}
+  .mark{font-size:14px}
+  .who span{display:none}
+}

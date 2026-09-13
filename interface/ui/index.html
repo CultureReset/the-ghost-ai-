@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ghost</title>
+<!-- No CDN, no font fetch, no analytics. This is the first thing the box draws
+     after boot; a screen that needs the internet is a black screen on exactly
+     the morning the internet is the problem. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%2308090B'/%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%232F6FED'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="shell.css">
+</head>
+<body>
+<header class="top" id="top"></header>
+<main id="view"></main>
+<div class="composer" id="composer"></div>
+<div class="statusbar" id="status"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

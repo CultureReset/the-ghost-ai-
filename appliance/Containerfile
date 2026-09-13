@@ -51,6 +51,13 @@ RUN chmod +x /usr/lib/greenboot/check/required.d/*.sh
 COPY schema/ /usr/lib/anextgent/schema/
 COPY contracts/ /usr/lib/anextgent/contracts/
 
+# The shell. `ghost-kiosk.service` runs /usr/lib/anextgent/shell as its one
+# client; that script waits for ghost-shell.service and then execs a browser
+# with every door nailed shut, pointed at localhost.
+COPY interface/ /usr/lib/anextgent/interface/
+COPY shell /usr/lib/anextgent/shell
+RUN chmod +x /usr/lib/anextgent/shell
+
 RUN systemctl enable ghost-kiosk.service podman.socket firewalld chronyd \
  && systemctl mask sshd.service
 # sshd is masked deliberately. There is no remote access path into a customer

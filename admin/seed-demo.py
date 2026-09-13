@@ -8,7 +8,7 @@ to show.
 Demo data only. It is idempotent -- run it twice and you get the same fleet, not
 two of them -- and it never touches a row it did not create.
 """
-import argparse, sqlite3, uuid
+import argparse, hashlib, sqlite3, uuid
 
 BOXES = [
     # id            entity   label                     serial       os        chan      health      last_seen
@@ -49,6 +49,126 @@ DRIFTS = [
 
 
 def kv(db, sql, args): db.execute(sql, args)
+
+# ------------------------------------------------------------------ the floor
+# The Business Hub reads real rows or it is a painting. A restaurant needs a
+# menu, tickets that closed today, reviews that have not been answered and
+# messages nobody has read.
+MENU = [
+    ("Starters", [("Royal Red Shrimp", 1600, 1), ("Smoked Tuna Dip", 1400, 1),
+                  ("Fried Green Tomatoes", 1200, 1)]),
+    ("Mains",    [("Grouper Sandwich", 2100, 1), ("Shrimp Scampi", 1899, 1),
+                  ("Blackened Redfish", 2800, 0), ("Bushwacker Wings", 1500, 1)]),
+    ("Raw Bar",  [("Gulf Oysters, dozen", 2400, 1), ("Peel & Eat, half", 1800, 1)]),
+]
+REVIEWS = [
+    (5, "Amazing food and great service. Will be back!", "google", "-2 hours", None),
+    (5, "Best grouper sandwich on the beach. Worth the wait.", "google", "-9 hours", None),
+    (4, "Great music, drinks took a while on a Saturday.", "google", "-1 days", None),
+    (2, "Waited 40 minutes for a table we had booked.", "google", "-1 days", None),
+    (5, "Sunset from the deck is unreal.", "facebook", "-3 days", "Thank you!"),
+]
+MESSAGES = [
+    ("in", "sms", "Do you have outdoor seating tonight?", "-8 hours"),
+    ("in", "sms", "Are you open Thanksgiving?", "-2 hours"),
+    ("out", "sms", "We are -- 11 to 6. See you then.", "-30 hours"),
+]
+EVENTS = [
+    ("Team meeting", "11:00", "Prep for weekend specials"),
+    ("New menu photos", "14:00", "Post to Google & Instagram"),
+    ("Dinner rush", "17:00", "Peak staffing in place"),
+    ("Scheduled post", "20:00", "Live music this Friday"),
+]
+APPS = [("io.anextgent.menu", "1.2.0"), ("io.anextgent.reviews", "1.0.4"),
+        ("io.anextgent.hours", "1.1.0"), ("io.anextgent.messages", "0.9.2")]
+
+
+def seed_floor(db, kv, known):
+    ent = "e_fb"
+    if ent not in known:
+        return
+    kv(db, """INSERT INTO location(entity_id,line1,city,region,postal,country)
+              VALUES (?,'17401 Perdido Key Dr','Perdido Key','AL','32507','US')
+              ON CONFLICT(entity_id) DO NOTHING""", (ent,))
+    kv(db, """INSERT INTO menu(id,entity_id,name) VALUES ('mn_main',?,'All Day')
+              ON CONFLICT(id) DO NOTHING""", (ent,))
+    for si, (section, items) in enumerate(MENU):
+        sid = "ms_%d" % si
+        kv(db, """INSERT INTO menu_section(id,menu_id,name,sort)
+                  VALUES (?,'mn_main',?,?) ON CONFLICT(id) DO NOTHING""",
+           (sid, section, si))
+        for ii, (name, cents, avail) in enumerate(items):
+            # eightysixed_at must be a timestamp, not the text of a SQL call --
+            # a bound parameter is never evaluated, and the screen showed
+            # "NaN days ago" as a result.
+            kv(db, """INSERT INTO menu_item(id,section_id,name,price_cents,
+                                            available,eightysixed_at,sort)
+                      VALUES (?,?,?,?,?,
+                              CASE WHEN ?=0 THEN datetime('now','-3 hours') END,?)
+                      ON CONFLICT(id) DO UPDATE SET available=excluded.available,
+                           price_cents=excluded.price_cents,
+                           eightysixed_at=excluded.eightysixed_at""",
+               ("mi_%d_%d" % (si, ii), sid, name, cents, avail, avail, ii))
+
+    for i in range(6):
+        kv(db, """INSERT INTO dining_table(id,entity_id,label,seats,qr_token)
+                  VALUES (?,?,?,?,?) ON CONFLICT(id) DO NOTHING""",
+           ("dt_%d" % i, ent, "T%d" % (i + 1), 2 + (i % 3) * 2, "qr_%d" % i))
+
+    # Tickets that closed today, and the same count yesterday for the delta.
+    totals_today = [4218, 2650, 1899, 3340, 2075, 5512, 1280, 2960]
+    totals_yday  = [3900, 2400, 2100, 2800, 1950, 4100, 1500]
+    for i, c in enumerate(totals_today):
+        kv(db, """INSERT INTO ticket(id,entity_id,table_id,opened_at,closed_at,
+                                     total_cents)
+                  VALUES (?,?,?,datetime('now','-%d hours'),
+                          datetime('now','-%d hours'),?)
+                  ON CONFLICT(id) DO NOTHING""" % (i + 2, i + 1),
+           ("tk_t%d" % i, ent, "dt_%d" % (i % 6), c))
+    for i, c in enumerate(totals_yday):
+        kv(db, """INSERT INTO ticket(id,entity_id,table_id,opened_at,closed_at,
+                                     total_cents)
+                  VALUES (?,?,?,datetime('now','-1 days','-%d hours'),
+                          datetime('now','-1 days','-%d hours'),?)
+                  ON CONFLICT(id) DO NOTHING""" % (i + 2, i + 1),
+           ("tk_y%d" % i, ent, "dt_%d" % (i % 6), c))
+
+    for i, (rating, body, source, when, reply) in enumerate(REVIEWS):
+        rid = "rv_h%d" % i
+        kv(db, """INSERT INTO review(id,entity_id,subject_kind,subject_id,rating,
+                                     body,source,created_at)
+                  VALUES (?,?,'entity',?,?,?,?,datetime('now',?))
+                  ON CONFLICT(id) DO NOTHING""",
+           (rid, ent, ent, rating, body, source, when))
+        if reply:
+            kv(db, """INSERT INTO review_reply(id,review_id,draft,posted_at)
+                      VALUES (?,?,?,datetime('now','-2 days'))
+                      ON CONFLICT(id) DO NOTHING""", ("rr_h%d" % i, rid, reply))
+
+    for i, (direction, channel, body, when) in enumerate(MESSAGES):
+        kv(db, """INSERT INTO message(id,entity_id,direction,channel,body,sent_at)
+                  VALUES (?,?,?,?,?,datetime('now',?))
+                  ON CONFLICT(id) DO NOTHING""",
+           ("ms_h%d" % i, ent, direction, channel, body, when))
+
+    for i, (title, hhmm, body) in enumerate(EVENTS):
+        kv(db, """INSERT INTO event(id,entity_id,title,starts_at,body)
+                  VALUES (?,?,?,date('now')||' '||?,?)
+                  ON CONFLICT(id) DO NOTHING""",
+           ("ev_h%d" % i, ent, title, hhmm, body))
+
+    for i, (vapp, ver) in enumerate(APPS):
+        kv(db, """INSERT INTO app_install(id,entity_id,vapp,version,source_sha)
+                  VALUES (?,?,?,?,?) ON CONFLICT(id) DO NOTHING""",
+           ("ai_h%d" % i, ent, vapp, ver,
+            hashlib.sha256((vapp + ver).encode()).hexdigest()))
+
+    for wd in range(7):
+        kv(db, """INSERT INTO hours(id,entity_id,weekday,opens,closes)
+                  VALUES (?,?,?,'11:00','02:00') ON CONFLICT(id) DO NOTHING""",
+           ("hr_%d" % wd, ent, wd))
+
+
 
 
 def main():
@@ -144,11 +264,16 @@ def main():
            ("ss_%s_%s_%s" % (ent, field, surface), ent, field, surface,
             observed, verdict, when))
 
+    seed_floor(db, kv, known)
+
     db.commit()
     n = lambda t: db.execute("SELECT COUNT(*) FROM " + t).fetchone()[0]
     print("devices %d  content %d  drift %d  maps %d  map_run %d  surfaces %d"
           % (n("device"), n("device_content"), n("drift"), n("app_map"),
              n("map_run"), n("surface_state")))
+    print("menu_item %d  ticket %d  review %d  message %d  event %d  apps %d"
+          % (n("menu_item"), n("ticket"), n("review"), n("message"),
+             n("event"), n("app_install")))
 
 
 if __name__ == "__main__":

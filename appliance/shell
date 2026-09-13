@@ -1,0 +1,33 @@
+#!/bin/bash
+# The one client cage runs. This is what a customer sees after the boot
+# splash, and the only thing they can reach.
+#
+# It is a browser with every door nailed shut, pointed at localhost. There is
+# no address bar to type into, no context menu, no new window, no devtools and
+# no way to the filesystem. The shell it renders is served by
+# ghost-shell.service out of /usr/lib/anextgent/interface.
+set -euo pipefail
+
+URL="${ANEXTGENT_SHELL_URL:-http://127.0.0.1:8088/}"
+
+# Do not paint a browser over a server that is not up yet -- a customer
+# should never see a connection-refused page on their own box.
+for _ in $(seq 1 60); do
+  if curl -fsS --max-time 1 "${URL}api/home" >/dev/null 2>&1; then break; fi
+  sleep 1
+done
+
+exec /usr/bin/chromium-browser \
+  --kiosk "$URL" \
+  --app="$URL" \
+  --no-first-run \
+  --noerrdialogs \
+  --disable-infobars \
+  --disable-session-crashed-bubble \
+  --disable-pinch \
+  --overscroll-history-navigation=0 \
+  --disable-features=TranslateUI,AutofillServerCommunication \
+  --check-for-update-interval=31536000 \
+  --autoplay-policy=no-user-gesture-required \
+  --ozone-platform=wayland \
+  --user-data-dir=/var/lib/anextgent/shell-profile
