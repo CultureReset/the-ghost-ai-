@@ -33,7 +33,6 @@ def load_capabilities():
 
 
 CAPS = load_capabilities()
-RISK_NEEDS_APPROVAL = {"high", "critical"}
 
 
 class Denied(Exception):
@@ -64,27 +63,104 @@ def gate(db, cap, entity_id, actor_id, install_id=None):
         if cap.get("mode", "write") == "write" and g[0] != "write":
             raise Denied(403, f"install {install_id} holds read only on {cap['name']}")
 
-    approval = cap.get("approval", "notify")
-    if approval == "none":
-        return "auto"
-    if approval in ("required", "strong") or cap.get("risk") in RISK_NEEDS_APPROVAL:
+    return decide(db, cap, entity_id)
+
+
+def decide(db, cap, entity_id):
+    """What the business's own constitution says about this capability.
+
+    Most specific wins: a rule naming the capability beats one naming the risk
+    tier, and the business's own constitution beats the platform default. The
+    capability's declared `approval` is a floor — a business may tighten it,
+    never loosen it below what the capability itself demands.
+    """
+    row = db.execute("""
+        SELECT decision FROM authority
+         WHERE (entity_id = ? OR entity_id IS NULL)
+           AND (capability = ? OR (capability IS NULL AND risk = ?))
+         ORDER BY (entity_id IS NULL), specificity
+         LIMIT 1""",
+        (entity_id, cap["name"], cap.get("risk"))).fetchone()
+    decision = row[0] if row else "hold"      # no rule means ask a person
+
+    if decision == "deny":
+        raise Denied(403, f"the constitution denies {cap['name']}")
+
+    if cap.get("approval") == "strong" and decision != "hold":
         return "hold"
-    return "notify"
+    return decision
 
 
 # ---------------------------------------------------------------- reads
-def do_read(db, name, entity_id, args):
-    if name == "availability.read":
-        on = args.get("on")
-        rows = db.execute("""SELECT a.starts_at, t.name, a.capacity, a.booked, a.open_seats
-                             FROM availability a
-                             LEFT JOIN charter_trip t ON t.id = a.trip_id
-                             WHERE a.entity_id = ? AND a.starts_at LIKE ?
-                             ORDER BY a.starts_at""",
-                          (entity_id, f"{on}%" if on else "%")).fetchall()
-        return [{"starts_at": r[0], "trip": r[1], "capacity": r[2],
-                 "booked": r[3], "open_seats": r[4]} for r in rows]
-    raise Denied(501, f"read not implemented: {name}")
+SOURCES = {          # whitelist. Nothing outside this is reachable by a read.
+    "availability": {"charter_trip"},
+    "consistency":  set(),
+    "item_rating":  set(),
+    "fillable":     {"person"},
+}
+IDENT = re.compile(r"^[a-z_][a-z0-9_]*$")
+
+
+def do_read(db, cap, entity_id, args):
+    """Serve the projection the capability declares.
+
+    No branch per capability. Sources, columns and joins are resolved against
+    the whitelist above; every value arrives as a bound parameter, so nothing
+    a caller sends can reach the SQL text.
+    """
+    spec = cap.get("read")
+    if not spec:
+        raise Denied(501, f"{cap['name']} declares no read projection")
+
+    src = spec["source"]
+    if src not in SOURCES:
+        raise Denied(500, f"source '{src}' is not a permitted read source")
+
+    join, cols, params = spec.get("join"), [], []
+    for c in spec["select"]:
+        if not IDENT.match(c):
+            raise Denied(500, f"bad column '{c}'")
+        if join and c == join["as"]:
+            cols.append(f'j.{join["column"]} AS {c}')
+        else:
+            cols.append(f"s.{c}")
+
+    sql = f'SELECT {", ".join(cols)} FROM {src} s'
+    if join:
+        if join["table"] not in SOURCES[src]:
+            raise Denied(500, f"join to '{join['table']}' is not permitted from {src}")
+        sql += f' LEFT JOIN {join["table"]} j ON j.id = s.{join["on"]}'
+
+    where = []
+    for col, rule in (spec.get("filter") or {}).items():
+        if not IDENT.match(col):
+            raise Denied(500, f"bad filter column '{col}'")
+        if isinstance(rule, dict) and "prefix" in rule:
+            v = _bind(rule["prefix"], entity_id, args)
+            if v is None:
+                continue
+            where.append(f"s.{col} LIKE ?"); params.append(f"{v}%")
+        else:
+            v = _bind(rule, entity_id, args)
+            if v is None:
+                continue
+            where.append(f"s.{col} = ?"); params.append(v)
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    if spec.get("order"):
+        if not IDENT.match(spec["order"]):
+            raise Denied(500, "bad order column")
+        sql += f' ORDER BY s.{spec["order"]}'
+
+    rows = db.execute(sql, params).fetchall()
+    return [dict(zip(spec["select"], r)) for r in rows]
+
+
+def _bind(token, entity_id, args):
+    if not isinstance(token, str) or not token.startswith("$"):
+        return token
+    name = token[1:]
+    return entity_id if name == "entity" else args.get(name)
 
 
 # ---------------------------------------------------------------- writes
@@ -206,7 +282,7 @@ class Handler(BaseHTTPRequestHandler):
                     raise Denied(405, f"{name} is a write capability; POST /do/{name}")
                 e = q.get("entity") or self._need("entity")
                 gate(db, cap, e, q.get("actor"), q.get("install"))
-                return self._send(200, do_read(db, name, e, q))
+                return self._send(200, do_read(db, cap, e, q))
 
             raise Denied(404, "no such route")
         except Denied as d:

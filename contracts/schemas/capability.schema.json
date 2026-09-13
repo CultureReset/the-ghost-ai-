@@ -4,65 +4,228 @@
   "title": "Capability",
   "description": "A capability names WHAT, never HOW. It is a postcondition plus the executors permitted to bring it about. The moment a capability names Playwright or a resource-id, the executor stops being swappable.",
   "type": "object",
-  "required": ["name", "version", "risk", "postcondition", "executors", "verify"],
+  "required": [
+    "name",
+    "version",
+    "risk",
+    "postcondition",
+    "executors",
+    "verify"
+  ],
   "additionalProperties": false,
   "properties": {
-    "name":    { "type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$" },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
-    "title":   { "type": "string" },
-    "mode":    { "enum": ["read", "write"], "default": "write" },
-    "risk":    { "enum": ["low", "medium", "high", "critical"] },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "read",
+        "write"
+      ],
+      "default": "write"
+    },
+    "risk": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
     "args": {
       "type": "object",
       "additionalProperties": {
         "type": "object",
-        "required": ["type"],
+        "required": [
+          "type"
+        ],
         "properties": {
-          "type":     { "enum": ["string","integer","number","boolean","date","time","money"] },
-          "required": { "type": "boolean", "default": false },
-          "enum":     { "type": "array" }
+          "type": {
+            "enum": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "date",
+              "time",
+              "money"
+            ]
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "enum": {
+            "type": "array"
+          }
         }
       }
     },
     "postcondition": {
       "type": "object",
-      "required": ["subject", "predicate", "surfaces"],
+      "required": [
+        "subject",
+        "predicate",
+        "surfaces"
+      ],
       "additionalProperties": false,
       "properties": {
-        "subject":   { "type": "string" },
-        "predicate": { "type": "string" },
-        "surfaces":  { "type": "array", "minItems": 1, "items": { "type": "string" } }
+        "subject": {
+          "type": "string"
+        },
+        "predicate": {
+          "type": "string"
+        },
+        "surfaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
       }
     },
     "executors": {
-      "type": "array", "minItems": 1,
-      "items": { "enum": ["android","browser","linux","api","workflow","human"] }
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "android",
+          "browser",
+          "linux",
+          "api",
+          "workflow",
+          "human"
+        ]
+      }
     },
     "verify": {
       "type": "object",
-      "required": ["by", "settle_seconds"],
+      "required": [
+        "by",
+        "settle_seconds"
+      ],
       "additionalProperties": false,
       "properties": {
         "by": {
-          "type": "array", "minItems": 1,
-          "description": "Verifying executors. MUST NOT overlap `executors` — a verifier that is also the writer is self-certification.",
-          "items": { "enum": ["android","browser","linux","api","workflow","human"] }
+          "type": "array",
+          "minItems": 1,
+          "description": "Verifying executors. MUST NOT overlap `executors` \u2014 a verifier that is also the writer is self-certification.",
+          "items": {
+            "enum": [
+              "android",
+              "browser",
+              "linux",
+              "api",
+              "workflow",
+              "human"
+            ]
+          }
         },
-        "settle_seconds": { "type": "integer", "minimum": 0,
-          "description": "Wait before reading back. Google Business does not reflect a change instantly; reading too early records a false CONTRADICTED." },
-        "retries": { "type": "integer", "minimum": 0, "default": 3 }
+        "settle_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Wait before reading back. Google Business does not reflect a change instantly; reading too early records a false CONTRADICTED."
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 3
+        }
       }
     },
     "on_partial": {
-      "enum": ["rollback", "drive_forward", "escalate"],
-      "description": "What to do when some surfaces took the change and others did not. Required for write capabilities — silent partial success is worse than clean failure.",
+      "enum": [
+        "rollback",
+        "drive_forward",
+        "escalate"
+      ],
+      "description": "What to do when some surfaces took the change and others did not. Required for write capabilities \u2014 silent partial success is worse than clean failure.",
       "default": "escalate"
     },
-    "approval": { "enum": ["none","notify","required","strong"], "default": "notify" },
-    "idempotent": { "type": "boolean", "default": true }
+    "approval": {
+      "enum": [
+        "none",
+        "notify",
+        "required",
+        "strong"
+      ],
+      "default": "notify"
+    },
+    "idempotent": {
+      "type": "boolean",
+      "default": true
+    },
+    "read": {
+      "type": "object",
+      "description": "How a read capability projects. Declared here so serving it is data, not a branch in the API. Sources, columns and joins are resolved against a whitelist; values only ever arrive as bound parameters.",
+      "required": [
+        "source",
+        "select"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "join": {
+          "type": "object"
+        },
+        "select": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "filter": {
+          "type": "object"
+        },
+        "order": {
+          "type": "string"
+        }
+      }
+    }
   },
-  "allOf": [{
-    "if": { "properties": { "mode": { "const": "write" } } },
-    "then": { "required": ["on_partial"] }
-  }]
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "write"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "on_partial"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "read"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "read"
+        ]
+      }
+    }
+  ]
 }

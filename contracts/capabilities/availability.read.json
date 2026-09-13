@@ -4,12 +4,53 @@
   "title": "Open seats for a slot",
   "mode": "read",
   "risk": "low",
-  "args": { "trip_id": { "type": "string" }, "on": { "type": "date", "required": true } },
-  "postcondition": {
-    "subject":   "slot{trip_id,on}",
-    "predicate": "open_seats is known",
-    "surfaces":  ["own"]
+  "args": {
+    "trip_id": {
+      "type": "string"
+    },
+    "on": {
+      "type": "date",
+      "required": true
+    }
   },
-  "executors": ["api"],
-  "verify": { "by": ["api"], "settle_seconds": 0, "retries": 0 }
+  "postcondition": {
+    "subject": "slot{trip_id,on}",
+    "predicate": "open_seats is known",
+    "surfaces": [
+      "own"
+    ]
+  },
+  "executors": [
+    "api"
+  ],
+  "verify": {
+    "by": [
+      "api"
+    ],
+    "settle_seconds": 0,
+    "retries": 0
+  },
+  "read": {
+    "source": "availability",
+    "join": {
+      "table": "charter_trip",
+      "on": "trip_id",
+      "as": "trip",
+      "column": "name"
+    },
+    "select": [
+      "starts_at",
+      "trip",
+      "capacity",
+      "booked",
+      "open_seats"
+    ],
+    "filter": {
+      "entity_id": "$entity",
+      "starts_at": {
+        "prefix": "$on"
+      }
+    },
+    "order": "starts_at"
+  }
 }

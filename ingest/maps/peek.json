@@ -1,0 +1,18 @@
+{
+  "vendor": "peek",
+  "map_version": 1,
+  "kind": "booking",
+  "match": ["peek(pro)?\\.com", "peek pro"],
+  "fingerprint": ["peek", "confirmation\\s*(code|#)|booking id"],
+  "cancelled_when": "\\bcancell?ed\\b",
+  "fields": {
+    "external_ref":   { "type": "string",   "patterns": ["Confirmation\\s*(?:code|#)\\s*:?\\s*([A-Z0-9-]+)", "Booking ID:\\s*([A-Z0-9-]+)"] },
+    "trip":           { "type": "string",   "patterns": ["Activity:\\s*(.+)"] },
+    "starts_at":      { "type": "datetime", "patterns": ["Activity date:\\s*(.+)", "When:\\s*(.+)"] },
+    "qty":            { "type": "int",      "patterns": ["(?:Guests?|Tickets?):\\s*(\\d+)"], "default": 1 },
+    "customer_name":  { "type": "string",   "patterns": ["Guest(?: name)?:\\s*(.+)"] },
+    "customer_phone": { "type": "phone",    "patterns": ["Phone:\\s*([0-9()+\\-.\\s]{7,})"] },
+    "customer_email": { "type": "email",    "patterns": ["Email:\\s*(\\S+@\\S+)"] },
+    "total_cents":    { "type": "money",    "patterns": ["Total(?: paid)?:\\s*\\$?([\\d,]+\\.\\d{2})"] }
+  }
+}

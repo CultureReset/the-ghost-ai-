@@ -2,7 +2,7 @@
 import email, re
 from email import policy
 from .model import Result, DRIFTED, PARSED, UNMATCHED
-from .parsers import load
+from .engine import load_maps, match_map, fingerprint, apply_map
 
 
 def _text(msg):
@@ -18,7 +18,7 @@ def _text(msg):
     return re.sub(r"<[^>]+>", " ", c) if msg.get_content_type() == "text/html" else c
 
 
-def parse_message(raw: str) -> Result:
+def parse_message(raw: str, maps_dir=None) -> Result:
     msg = email.message_from_string(raw, policy=policy.default)
     ctx = {
         "from":    str(msg.get("From", "")),
@@ -28,17 +28,14 @@ def parse_message(raw: str) -> Result:
         "date":    str(msg.get("Date", "")),
         "body":    _text(msg) or "",
     }
-    for mod in load():
-        if not mod.match(ctx):
+    for m in load_maps(maps_dir):
+        if not match_map(m, ctx):
             continue
-        # Fingerprint gate. Same rule as the executor: if the message does not
-        # look like what we were mapped against, refuse to parse it.
-        whole = "\n".join((ctx["from"], ctx["subject"], ctx["body"]))
-        missing = [m for m in mod.FINGERPRINT if not re.search(m, whole, re.I)]
+        missing = fingerprint(m, ctx)
         if missing:
-            return Result(status=DRIFTED, vendor=mod.VENDOR,
+            return Result(status=DRIFTED, vendor=m["vendor"],
                           missing=missing, source_ref=ctx["id"])
-        r = mod.parse(ctx)
-        r.status, r.vendor, r.source_ref = PARSED, mod.VENDOR, ctx["id"]
+        r = apply_map(m, ctx)
+        r.vendor, r.source_ref = m["vendor"], ctx["id"]
         return r
     return Result(status=UNMATCHED, source_ref=ctx["id"])

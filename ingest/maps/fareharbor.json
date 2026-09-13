@@ -1,0 +1,18 @@
+{
+  "vendor": "fareharbor",
+  "map_version": 2,
+  "kind": "booking",
+  "match": ["fareharbor"],
+  "fingerprint": ["fareharbor", "booking\\s*#|reference|trip\\s*\\.+"],
+  "cancelled_when": "\\bcancell?ed\\b",
+  "fields": {
+    "external_ref":   { "type": "string",   "patterns": ["Booking\\s*#\\s*([A-Z0-9-]+)", "Reference:\\s*([A-Z0-9-]+)", "Message-ID:\\s*<(fh-[0-9]+)"] },
+    "trip":           { "type": "string",   "patterns": ["Item:\\s*(.+)", "Tour:\\s*(.+)", "Trip\\s*\\.+\\s*(.+)"] },
+    "starts_at":      { "type": "datetime", "patterns": ["Date(?:/Time)?:\\s*(.+)", "When:\\s*(.+)", "When\\s*\\.+\\s*(.+)"] },
+    "qty":            { "type": "int",      "patterns": ["Guests?:\\s*(\\d+)", "Party size:\\s*(\\d+)", "Party\\s*\\.+\\s*(\\d+)"], "default": 1 },
+    "customer_name":  { "type": "string",   "patterns": ["Customer:\\s*(.+)", "Name:\\s*(.+)"] },
+    "customer_phone": { "type": "phone",    "patterns": ["Phone:\\s*([0-9()+\\-.\\s]{7,})"] },
+    "customer_email": { "type": "email",    "patterns": ["Email:\\s*(\\S+@\\S+)"] },
+    "total_cents":    { "type": "money",    "patterns": ["Total:\\s*\\$?([\\d,]+\\.\\d{2})"] }
+  }
+}

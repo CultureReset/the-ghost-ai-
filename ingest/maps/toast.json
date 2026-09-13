@@ -1,0 +1,18 @@
+{
+  "vendor": "toast",
+  "map_version": 1,
+  "kind": "sales_summary",
+  "match": ["toasttab\\.com", "toast pos"],
+  "fingerprint": ["toast", "net sales|gross sales", "orders?"],
+  "fields": {
+    "business_day": { "type": "string", "patterns": ["Business day:\\s*(\\d{4}-\\d{2}-\\d{2})"] },
+    "gross_cents":  { "type": "money",  "patterns": ["(?:Gross|Net) sales:\\s*\\$?([\\d,]+\\.\\d{2})"] },
+    "orders":       { "type": "int",    "patterns": ["Orders?:\\s*(\\d+)"], "default": 0 }
+  },
+  "repeating": {
+    "items": [
+      { "pattern": "^\\s*(\\d{1,4})\\s+([A-Za-z][A-Za-z0-9 '&/-]{2,40})\\s*$", "qty": 1, "label": 2 },
+      { "pattern": "^\\s*([A-Za-z][A-Za-z0-9 '&/-]{2,40})\\s+x\\s*(\\d{1,4})\\s*$", "qty": 2, "label": 1 }
+    ]
+  }
+}

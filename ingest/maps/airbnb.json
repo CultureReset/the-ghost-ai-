@@ -1,0 +1,17 @@
+{
+  "vendor": "airbnb",
+  "map_version": 1,
+  "kind": "booking",
+  "match": ["airbnb\\.com"],
+  "match_on": ["from"],
+  "fingerprint": ["airbnb", "confirmation code|reservation"],
+  "cancelled_when": "\\bcancell?ed\\b",
+  "fields": {
+    "external_ref":  { "type": "string",   "patterns": ["Confirmation code:?\\s*([A-Z0-9]+)"] },
+    "trip":          { "type": "string",   "patterns": ["Listing:\\s*(.+)"] },
+    "starts_at":     { "type": "datetime", "patterns": ["Check-?in:\\s*(.+)"] },
+    "qty":           { "type": "int",      "patterns": ["Guests?:\\s*(\\d+)"], "default": 1 },
+    "customer_name": { "type": "string",   "patterns": ["Guest:\\s*(.+)"] },
+    "total_cents":   { "type": "money",    "patterns": ["(?:Total payout|You earn):\\s*\\$?([\\d,]+\\.\\d{2})"] }
+  }
+}
