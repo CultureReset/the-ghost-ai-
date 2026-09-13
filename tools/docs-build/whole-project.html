@@ -1,0 +1,725 @@
+<title>The Whole Project</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;0,6..96,700;1,6..96,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F4F4F0; --page:#FFFFFF; --page-2:#ECECE6;
+    --ink:#0C1012; --ink-2:#3A4144; --muted:#6B7377;
+    --rule:#D6D6CE; --rule-2:#B4B5AB;
+    --blue:#1B3FA8; --blue-soft:#E2E6F4;
+    --deep:#0C1012; --deep-ink:#EDEDE7; --deep-2:#9AA1A5; --deep-rule:#2A3134;
+    --lift:0 1px 2px rgba(12,16,18,.05), 0 18px 40px -26px rgba(12,16,18,.5);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#101416; --page:#171C1F; --page-2:#1E2427;
+      --ink:#ECECE6; --ink-2:#B1B8BB; --muted:#7F878B;
+      --rule:#272E31; --rule-2:#3A4246;
+      --blue:#7D9AE8; --blue-soft:#161F36;
+      --deep:#07090A; --deep-ink:#ECECE6; --deep-2:#9AA1A5; --deep-rule:#232A2D;
+      --lift:0 1px 2px rgba(0,0,0,.55), 0 20px 44px -28px rgba(0,0,0,.95);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#101416; --page:#171C1F; --page-2:#1E2427;
+    --ink:#ECECE6; --ink-2:#B1B8BB; --muted:#7F878B;
+    --rule:#272E31; --rule-2:#3A4246;
+    --blue:#7D9AE8; --blue-soft:#161F36;
+    --deep:#07090A; --deep-ink:#ECECE6; --deep-2:#9AA1A5; --deep-rule:#232A2D;
+    --lift:0 1px 2px rgba(0,0,0,.55), 0 20px 44px -28px rgba(0,0,0,.95);
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);margin:0;
+    font-family:Literata,Georgia,"Times New Roman",serif;
+    font-size:17.5px;line-height:1.68;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding-inline:22px}
+  .wide{max-width:960px;margin:0 auto;padding-inline:22px}
+  p{margin:0}
+  strong,b{font-weight:600}
+  em,i{font-style:italic}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+
+  h1,h2,h3{font-family:"Bodoni Moda",Didot,"Bodoni MT",Georgia,serif;margin:0;
+    text-wrap:balance;font-weight:600;line-height:1.06}
+
+  /* ---------- cover ---------- */
+  .cover{background:var(--deep);color:var(--deep-ink);padding-block:72px 60px;
+    border-bottom:6px solid var(--blue)}
+  .cover .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--deep-2)}
+  .cover h1{font-size:clamp(3rem,10vw,6.4rem);font-weight:700;letter-spacing:-.018em;
+    margin:22px 0 0;line-height:.95}
+  .cover .sub{font-size:clamp(1.15rem,2.6vw,1.5rem);line-height:1.45;color:var(--deep-2);
+    max-width:44ch;margin-top:24px;font-style:italic}
+  .cover .meta{display:flex;flex-wrap:wrap;gap:30px;margin-top:44px;
+    border-top:1px solid var(--deep-rule);padding-top:22px}
+  .cover .meta div{min-width:110px}
+  .cover .meta .k{display:block;font-family:"IBM Plex Mono",monospace;font-size:.63rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--deep-2);margin-bottom:6px}
+  .cover .meta .v{font-family:"Bodoni Moda",Georgia,serif;font-size:1.08rem;font-weight:600}
+
+  /* ---------- contents ---------- */
+  .toc{background:var(--page);border-bottom:1px solid var(--rule);padding-block:38px 42px}
+  .toc h2{font-size:1.05rem;letter-spacing:.02em;margin-bottom:18px;
+    font-family:"IBM Plex Mono",monospace;font-weight:600;text-transform:uppercase;
+    letter-spacing:.16em;color:var(--muted)}
+  .toc ol{list-style:none;counter-reset:c;margin:0;padding:0;
+    columns:2;column-gap:40px}
+  .toc li{counter-increment:c;break-inside:avoid;padding:5px 0}
+  .toc a{display:flex;gap:12px;text-decoration:none;color:var(--ink);font-size:.98rem;
+    line-height:1.4}
+  .toc a:hover{color:var(--blue)}
+  .toc a::before{content:counter(c,decimal-leading-zero);
+    font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:600;color:var(--blue);
+    padding-top:4px;min-width:22px}
+  @media (max-width:620px){ .toc ol{columns:1} }
+
+  /* ---------- chapters ---------- */
+  main{padding-block:8px 0}
+  section.ch{padding-block:52px 8px;border-top:1px solid var(--rule)}
+  section.ch:first-of-type{border-top:0}
+  .chnum{font-family:"IBM Plex Mono",monospace;font-size:.68rem;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--blue);display:block;
+    margin-bottom:14px}
+  section.ch h2{font-size:clamp(1.85rem,4.6vw,2.7rem);font-weight:600;letter-spacing:-.01em;
+    max-width:20ch}
+  section.ch > p{margin-top:20px}
+  section.ch h3{font-family:Literata,Georgia,serif;font-size:1.12rem;font-weight:600;
+    margin-top:30px;letter-spacing:0;line-height:1.4}
+  section.ch h3 + p{margin-top:10px}
+
+  /* pull band */
+  .band{background:var(--deep);color:var(--deep-ink);margin-top:38px;padding-block:36px}
+  .band p{font-family:"Bodoni Moda",Georgia,serif;font-size:clamp(1.3rem,3.2vw,1.72rem);
+    line-height:1.32;max-width:30ch}
+  .band .attrib{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--deep-2);margin-top:16px}
+
+  /* figure list */
+  .facts{margin-top:26px;border-top:2px solid var(--ink)}
+  .facts .row{display:flex;justify-content:space-between;gap:18px;align-items:baseline;
+    padding:12px 0;border-bottom:1px solid var(--rule)}
+  .facts .row span:first-child{font-size:.99rem;color:var(--ink-2);max-width:44ch}
+  .facts .row .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:.95rem;
+    font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--blue)}
+
+  /* steps */
+  ol.steps{list-style:none;counter-reset:s;margin:26px 0 0;padding:0}
+  ol.steps li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:16px;
+    padding-block:13px;border-bottom:1px solid var(--rule);align-items:baseline}
+  ol.steps li::before{content:counter(s);font-family:"IBM Plex Mono",monospace;
+    font-size:.82rem;font-weight:600;color:var(--blue)}
+  ol.steps li p{font-size:1rem;line-height:1.55}
+  ol.steps li b{font-weight:600}
+
+  ul.plain{margin:20px 0 0;padding:0;list-style:none}
+  ul.plain li{padding:8px 0 8px 20px;position:relative;font-size:1.01rem;line-height:1.55;
+    color:var(--ink-2);border-bottom:1px solid var(--rule)}
+  ul.plain li:last-child{border-bottom:0}
+  ul.plain li::before{content:"";position:absolute;left:0;top:18px;width:9px;height:1.5px;
+    background:var(--blue)}
+  ul.plain li b{color:var(--ink);font-weight:600}
+
+  .note{background:var(--page);border-left:3px solid var(--blue);padding:20px 22px;
+    margin-top:28px;font-size:1rem;line-height:1.6;color:var(--ink-2);box-shadow:var(--lift)}
+  .note b{color:var(--ink)}
+  .note .lbl{display:block;font-family:"IBM Plex Mono",monospace;font-size:.64rem;
+    font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);
+    margin-bottom:9px}
+
+  pre{font-family:"IBM Plex Mono",monospace;font-size:.84rem;line-height:1.65;
+    background:var(--page-2);border:1px solid var(--rule);border-radius:2px;
+    padding:16px 18px;margin-top:24px;overflow-x:auto;white-space:pre}
+
+  footer{background:var(--deep);color:var(--deep-2);padding-block:46px 66px;margin-top:58px}
+  footer p{font-size:.95rem;line-height:1.65;max-width:62ch}
+  footer b{color:var(--deep-ink);font-weight:600}
+  footer .sig{font-family:"Bodoni Moda",Georgia,serif;font-size:1.5rem;color:var(--deep-ink);
+    margin-bottom:16px;font-weight:600}
+
+  @media (max-width:620px){
+    body{font-size:16.5px}
+    .cover{padding-block:52px 44px}
+    section.ch{padding-block:40px 6px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="cover"><div class="wrap">
+  <span class="eyebrow">The whole project, start to finish</span>
+  <h1>A NEXT<br>GENT</h1>
+  <p class="sub">A Linux computer made simple &mdash; and the business that grows out of
+    making it simple.</p>
+  <div class="meta">
+    <div><span class="k">The box</span><span class="v">Ghost</span></div>
+    <div><span class="k">Version one</span><span class="v">Ghost of Lisa</span></div>
+    <div><span class="k">Buyer</span><span class="v">Small business</span></div>
+    <div><span class="k">Model</span><span class="v">Red Hat</span></div>
+    <div><span class="k">Thesis</span><span class="v">Churn absorption</span></div>
+  </div>
+</div></header>
+
+<nav class="toc"><div class="wrap">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#c1">What it is</a></li>
+    <li><a href="#c2">Where it starts</a></li>
+    <li><a href="#c3">What Red Hat actually sells</a></li>
+    <li><a href="#c4">The wedge: absorbing churn</a></li>
+    <li><a href="#c5">The mechanism: a real phone</a></li>
+    <li><a href="#c6">Proof, not success</a></li>
+    <li><a href="#c7">The way in: email</a></li>
+    <li><a href="#c8">What the data becomes</a></li>
+    <li><a href="#c9">Four surfaces, one truth</a></li>
+    <li><a href="#c10">The apps on top</a></li>
+    <li><a href="#c11">The platform and the store</a></li>
+    <li><a href="#c12">How the money works</a></li>
+    <li><a href="#c13">The box itself</a></li>
+    <li><a href="#c14">The harness</a></li>
+    <li><a href="#c15">The name and the fight</a></li>
+    <li><a href="#c16">Who buys it, and how</a></li>
+    <li><a href="#c17">What's owned, what's given away</a></li>
+    <li><a href="#c18">What exists today</a></li>
+    <li><a href="#c19">The order to build it</a></li>
+    <li><a href="#c20">The one test that decides everything</a></li>
+    <li><a href="#c21">If it works</a></li>
+  </ol>
+</div></nav>
+
+<main>
+<section class="ch" id="c1"><div class="wrap">
+  <span class="chnum">One</span>
+  <h2>What it is</h2>
+  <p>A small computer that sits in a business &mdash; on a wall, under a counter &mdash; and
+  operates that business's software for them. The hours, the prices, the menu, the posts, the
+  bookings. The owner speaks or texts in plain English and it goes and does the thing, on every
+  platform at once, and then proves it did.</p>
+  <p>It runs Linux. The owner never finds that out. What they see is a screen laid out like a
+  smart TV, because that is a grammar every adult already reads without being taught.</p>
+  <p>They buy the box once and subscribe to the updates. The subscription is not for the
+  software &mdash; the software is open source and free. It is for the fact that when an app
+  they depend on redesigns itself, somebody else fixes it before they notice.</p>
+  <p>That is the product. Everything else in this document is either how that works, or what
+  becomes possible once it does.</p>
+</div></section>
+
+<section class="ch" id="c2"><div class="wrap">
+  <span class="chnum">Two</span>
+  <h2>Where it starts</h2>
+  <p>In 2013 there was an email chain about building a directory to compete with Google. The
+  pitch was simple and, at the time, unfashionable: nobody cares about 1.8 trillion search
+  results. A person with a leaking faucet wants a plumber who can come today. They do not want
+  to call four numbers and leave three voicemails.</p>
+  <p>The idea was correct and unbuildable. A directory is only as good as its data, and in 2013
+  getting live, truthful, item-level data out of thousands of small businesses was impossible.
+  There was no mechanism. The businesses had nothing to publish with, and nobody would do data
+  entry forever for free.</p>
+  <p>Fourteen years later the answer turns out not to be a better directory. It is to give the
+  businesses something they want badly enough to run every day &mdash; something that saves them
+  real money and real time &mdash; and to let the data fall out of it as a by-product.</p>
+  <div class="note"><span class="lbl">The reframe</span>
+  The box is not the product. The box is the <b>mechanism that finally makes the data
+  exist</b>. Everything that has ever been hard about local search becomes easy once thousands
+  of businesses are publishing live truth about themselves because it is in their own
+  interest.</div>
+</div></section>
+
+<section class="ch" id="c3"><div class="wrap">
+  <span class="chnum">Three</span>
+  <h2>What Red Hat actually sells</h2>
+  <p>Most people get this wrong, and the entire business model depends on getting it right.</p>
+  <p>Red Hat does not sell software. Every line of it is free and public, and legally they
+  cannot stop anyone from taking it. What a subscription buys is the ongoing work of keeping it
+  correct: tested builds, security patches, a version that will not break next Tuesday, and
+  someone on the hook when it does.</p>
+  <p>The customer is not buying code. They are buying <b>not having to do the integration work
+  themselves.</b></p>
+  <p>The enforcement is simple and it is not a lock. A paid account is what grants access to
+  the update channel. Stop paying and nothing breaks &mdash; the machine runs forever. You keep
+  everything you have. You stop receiving what comes next.</p>
+  <p>IBM paid $34 billion for that arrangement. It is the largest software acquisition in
+  history, and what they bought was a company that gives its product away.</p>
+  <div class="facts">
+    <div class="row"><span>What Red Hat sells</span><span class="v">the build, not the code</span></div>
+    <div class="row"><span>What enforces it</span><span class="v">entitlement, not DRM</span></div>
+    <div class="row"><span>What happens if you lapse</span><span class="v">it keeps working</span></div>
+    <div class="row"><span>Upstream projects in RHEL</span><span class="v">~2,500</span></div>
+    <div class="row"><span>Upstream projects here</span><span class="v">~80</span></div>
+  </div>
+</div></section>
+
+<section class="ch" id="c4"><div class="wrap">
+  <span class="chnum">Four</span>
+  <h2>The wedge: absorbing churn</h2>
+  <p>Red Hat absorbs kernel and package churn so an enterprise does not have to. That churn is
+  scheduled, announced and slow. Enterprises could track it themselves; they pay not to.</p>
+  <p>A small business has a different upstream, and it is worse. Toast redesigns a screen on a
+  Tuesday with no notice. Google moves a button. FareHarbor changes a confirmation email
+  template. Every do-it-yourself automation in the country breaks silently, and nobody finds
+  out until a customer shows up to a closed door.</p>
+  <p>That churn is faster, unannounced, and invisible until it has already cost something. It is
+  a far better thing to sell protection from.</p>
+  <h3>How the absorption actually runs</h3>
+  <p>Every night, on every machine, every recorded procedure checks that the screens it expects
+  are still where it left them. It touches nothing &mdash; it just looks. When one has moved,
+  the machine refuses to act and reports it.</p>
+  <p>That report lands on one desk. One person re-records the path once. The fix is bundled,
+  signed, and on four hundred machines by morning. <b>The marginal cost of fixing it for
+  customer four hundred is zero, because it was already fixed for customer one.</b></p>
+  <div class="band"><div class="wrap">
+    <p>You are not selling software. You are selling the fact that somebody absorbs every app
+    redesign, forever, so the owner never thinks about it again.</p>
+    <p class="attrib">This is the subscription</p>
+  </div></div>
+</div></section>
+
+<section class="ch" id="c5"><div class="wrap">
+  <span class="chnum">Five</span>
+  <h2>The mechanism: a real phone</h2>
+  <p>The obvious way to update a business's hours everywhere is to integrate with each
+  platform's API. That path is closed, and it is closed on purpose.</p>
+  <p>Toast's API is partner-gated. Google Business Profile needs quota approval. Most of the
+  software a small business actually runs &mdash; the salon scheduler, the charter booking tool,
+  the local POS &mdash; will never have an API anyone can get. Building integrations means
+  asking permission from the companies with the most to lose.</p>
+  <p>So the integration is not an integration. It is a forty-dollar Android phone, bought by the
+  owner, with the owner's SIM card and the owner's logins, sitting in a dock. It is
+  remote-controlled at human speed. It taps the same buttons a person would.</p>
+  <h3>Why this defeats every objection</h3>
+  <ul class="plain">
+    <li><b>Nothing to integrate.</b> Support for an app exists the moment the owner installs it. The long tail nobody would ever build a connector for works on day one.</li>
+    <li><b>Authentication solves itself.</b> They log in once, on a phone, the way they have a thousand times. A real SIM means SMS two-factor just works &mdash; the thing that breaks every other automation product.</li>
+    <li><b>It is a real device.</b> Emulators and containers get detected and blocked by exactly the banking and point-of-sale apps that matter. A physical handset with a real IMEI is indistinguishable from a person's phone, because it is one.</li>
+    <li><b>They own it.</b> Not shipped in the box, not leased. They buy it, they put their own SIM in it, and that is what makes it feel like theirs rather than yours.</li>
+  </ul>
+  <div class="note"><span class="lbl">The distinction that matters</span>
+  It is not automation, and it is not an agent taking over. <b>It is remote control.</b> The
+  owner's own account, on the owner's own device, with the owner's own credentials, on the
+  owner's behalf, at human speed, with a person approving anything that matters.</div>
+</div></section>
+
+<section class="ch" id="c6"><div class="wrap">
+  <span class="chnum">Six</span>
+  <h2>Proof, not success</h2>
+  <p>Automation that drives a user interface is brittle. Anyone who tells you otherwise has not
+  run one for a year. Two rules turn brittle into shippable, and together they are the most
+  defensible thing in the whole build.</p>
+  <h3>One: refuse to act on a screen you do not recognise</h3>
+  <p>Before the first tap, the machine checks that one or two specific elements are on screen
+  where the recording says they should be. If they are not, it <b>stops and reports</b>. It does
+  not guess, and it does not proceed hoping for the best.</p>
+  <p>That single rule converts an app redesign from a fleet-wide disaster into a notification.
+  Without it, a moved button means four hundred businesses quietly get the wrong field changed
+  and nobody finds out for a week.</p>
+  <h3>Two: verify on a different path than you wrote</h3>
+  <p>After the phone changes the hours in Toast, something else &mdash; a browser, on the public
+  page &mdash; goes and reads them back. Different route, different software, independently.</p>
+  <p>If the verifier is the same thing that did the writing, it is self-certification with
+  extra steps. Writing through the phone and confirming through the browser is what makes the
+  result evidence instead of a claim.</p>
+  <p>The owner does not get told "done." They get told <b>"Toast now shows Monday to Friday,
+  nine to five"</b> with a screenshot attached and a reference number. And the whole chain
+  &mdash; who asked, what authorised it, what ran, what came back &mdash; is written to a record
+  that is added to and never edited.</p>
+  <div class="band"><div class="wrap">
+    <p>Every competitor will happily tap a button and report success. None of them refuse to
+    act because the screen changed, and none read the result back on a different path.</p>
+    <p class="attrib">The one thing with no upstream</p>
+  </div></div>
+</div></section>
+
+<section class="ch" id="c7"><div class="wrap">
+  <span class="chnum">Seven</span>
+  <h2>The way in: email</h2>
+  <p>Driving the phone is how things get <em>changed</em>. Getting information <em>out</em> of a
+  business is a separate problem, and it has an answer nobody can revoke.</p>
+  <p>Every vendor a business uses already emails them. The booking confirmation. The daily sales
+  summary. The payout notice. The cancellation. The review notification. That inbox is a
+  complete picture of the business's operations, delivered automatically, every day, for free.</p>
+  <p>Those emails get forwarded to a parser. That is the whole integration, and it cannot be
+  turned off &mdash; not without the vendor breaking their own product.</p>
+  <h3>Getting it set up, ranked by friction</h3>
+  <ol class="steps">
+    <li><p><b>Add a second notification address</b> inside the vendor's own settings. Toast, Square and FareHarbor all allow it. Two clicks, no Gmail involved, nothing to install.</p></li>
+    <li><p><b>A forwarding rule</b> in the email they already use. Two minutes in a screen they already know.</p></li>
+    <li><p><b>A script</b> &mdash; last resort only. "Run this script" kills the sale at the exact moment the product is supposed to feel like nothing.</p></li>
+  </ol>
+  <h3>The rule that cannot be added later</h3>
+  <p>Every value is stored as an <b>observation</b>, with its source and its timestamp, and
+  nothing is ever overwritten. The canonical answer is computed from the observations, not
+  written over the top of them.</p>
+  <p>If values get written directly for six months and someone then decides they want to know
+  where each one came from, there are six months of data with no origin and no way to
+  reconstruct it. Provenance is the one thing that must be built before the first email
+  arrives.</p>
+</div></section>
+
+<section class="ch" id="c8"><div class="wrap">
+  <span class="chnum">Eight</span>
+  <h2>What the data becomes</h2>
+  <p>Once the emails are parsed, three things become possible that were not possible before, for
+  anyone, at any price.</p>
+  <h3>Real-time availability</h3>
+  <p>A rental operator declares six jet skis. FareHarbor emails that two booked from ten to
+  twelve. Booking.com emails that one booked from ten-thirty. A cancellation releases one. The
+  answer is four, live, on their own website.</p>
+  <p>The thing no platform can do: <b>FareHarbor does not know about the Booking.com
+  reservation.</b> No single channel sees all channels. The business does, and now so does
+  their own site &mdash; which is the only way their site can ever compete with an agency taking
+  twenty percent.</p>
+  <div class="facts">
+    <div class="row"><span>Charter doing $400,000 a year at 20% commission</span><span class="v">$80,000</span></div>
+    <div class="row"><span>Moving 30% of bookings direct</span><span class="v">$24,000 back</span></div>
+    <div class="row"><span>What the subscription costs for a year</span><span class="v">$3,588</span></div>
+    <div class="row"><span>Return on one line item</span><span class="v">6.7&#8239;:&#8239;1</span></div>
+  </div>
+  <h3>Item-level verified reviews</h3>
+  <p>The QR code on the table is scanned at a time, by a table, whose check closes on a ticket.
+  That means the system knows what was actually ordered &mdash; the shrimp scampi, at 7:42,
+  table nine &mdash; and a review can be attached to a dish rather than to a building.</p>
+  <p>A 4.3 tells a visitor nothing. "The bushwhacker is a 5.0 across two hundred and ten people
+  who actually bought one" tells them where to go tonight. And in an internet filling with
+  generated reviews, <b>a receipt is the last thing that cannot be faked.</b></p>
+  <h3>Canonical business truth</h3>
+  <p>Hours that were changed and verified. Menus that are current because they were updated this
+  morning. Prices that match the register. Published in a form any assistant can read
+  directly.</p>
+  <p>Ask any AI today who has crab legs nearby, or who has a six-top free at seven-thirty.
+  Nothing on earth can answer, because the data has never existed in a form anyone could
+  publish. That is the gap this fills, and filling it is worth more over ten years than the
+  subscription is.</p>
+</div></section>
+
+<section class="ch" id="c9"><div class="wrap">
+  <span class="chnum">Nine</span>
+  <h2>Four surfaces, one truth</h2>
+  <p>There is one record of what is true about a business, and four ways to reach it. They are
+  not four products &mdash; they are four doors into the same hallway, and every one of them
+  produces the same structured request underneath.</p>
+  <ul class="plain">
+    <li><b>Text.</b> Their own business number, on the SIM in the phone. Questions in, answers out, approvals by reply. This one works with no hardware at all, which is why it ships first.</li>
+    <li><b>Voice.</b> Wake word, listen, understand, speak. Most commands in a business are eight fixed sentences, so most never need a model at all.</li>
+    <li><b>The screen.</b> The wall kiosk. Not a dashboard &mdash; a short list of things that need an OK, approved with coffee in hand.</li>
+    <li><b>Another agent.</b> The machine-readable door. Somebody else's assistant asks a question and gets an answer without ever touching the data behind it.</li>
+  </ul>
+  <h3>And two halves that must never be confused</h3>
+  <p>The <b>private half</b> lives on the node: the books, the customer list, the credentials,
+  the observations. It never leaves the building.</p>
+  <p>The <b>public half</b> is a signed, read-only projection: hours, menu, availability,
+  verified ratings. It is published everywhere and given away for nothing.</p>
+  <p>The edge that serves the public half has <b>no code path back into the node.</b> Not a
+  permission setting &mdash; there is no route, because none was built. That is what makes "we
+  cannot see your data" a structural fact instead of a promise in a privacy policy.</p>
+</div></section>
+
+<section class="ch" id="c10"><div class="wrap">
+  <span class="chnum">Ten</span>
+  <h2>The apps on top</h2>
+  <p>Once there is a live record of a business, applications stop being integrations and start
+  being views. Each one is small, because the hard part already happened.</p>
+  <ul class="plain">
+    <li><b>QR menu.</b> Always current, because it is the same menu that just got pushed to Google. Also the thing that closes the loop between what a guest looked at and what they ate.</li>
+    <li><b>Real-time availability.</b> On the business's own site, across every channel at once.</li>
+    <li><b>Verified reviews.</b> Item-level, receipt-backed, published everywhere and owned by the business.</li>
+    <li><b>Direct booking.</b> Zero percent. Keep the existing platform; this is the shop window, not a replacement.</li>
+    <li><b>Loyalty and points.</b> A co-op program that works across businesses in a town &mdash; which matters in a place people visit once a year and would otherwise never earn anything.</li>
+    <li><b>Referrals and attribution.</b> Authentic reviews turn into authentic referrals, and the transaction can be traced to the person who sent it.</li>
+    <li><b>The song request board.</b> QR code on the stage, a request, a payment straight to the artist, the confirmation email tying it back. The artist becomes a distribution channel.</li>
+    <li><b>Text marketing.</b> From the real number, to a list the business owns outright.</li>
+  </ul>
+  <p>Every one of these makes the next one cheaper, because they share the same record, the same
+  identity, the same permissions and the same proof.</p>
+</div></section>
+
+<section class="ch" id="c11"><div class="wrap">
+  <span class="chnum">Eleven</span>
+  <h2>The platform and the store</h2>
+  <p>A business that runs three of those apps has effectively moved its operations onto the box.
+  At that point the box stops being a tool and becomes a place other people can build.</p>
+  <h3>One login, many apps</h3>
+  <p>Everything arrives from one catalogue, the way apps arrive on a phone. Search, install,
+  done &mdash; no repository, no command line, no version to choose. What gets listed has been
+  scanned, signed, and tested against that exact machine first.</p>
+  <h3>The permission model is the differentiator</h3>
+  <p>The published packaging standards for agent plugins are good and worth adopting whole
+  &mdash; they are backed by a steering committee that includes Amazon, Microsoft, OpenAI,
+  Cursor and Vercel. But the specification says in its own words that it <b>contains no
+  capability or permission system.</b> Installing is a single trust flag: yes or no.</p>
+  <p>That is fine on a developer's laptop. It is not fine on a machine holding a restaurant's
+  books. So the capability list, the risk tiers, the sandbox, and the record of what every app
+  actually did are the layer added on top &mdash; and that layer is the most defensible thing
+  in the store.</p>
+  <h3>Developers get paid and get nothing</h3>
+  <p>An outside developer builds against capability names, not data. Their app asks a question;
+  the answer crosses; the underlying records never do. <b>Agent to agent, with the business's
+  agent as the intermediary that never hands anything over.</b></p>
+  <p>That is the inversion. Every platform in the last twenty years paid developers in access to
+  user data. This one pays them in money and gives them none.</p>
+  <div class="note"><span class="lbl">Why this compounds</span>
+  Every app built on the platform makes the platform more valuable to the next business, and
+  every business added makes it more valuable to the next developer. Anyone who wants to sell an
+  app to these businesses <b>has to sell them the platform first.</b></div>
+</div></section>
+
+<section class="ch" id="c12"><div class="wrap">
+  <span class="chnum">Twelve</span>
+  <h2>How the money works</h2>
+  <p>Two lines, and the second is the one nobody sees coming.</p>
+  <h3>The subscription</h3>
+  <p>A flat monthly fee per business. It pays the bills, it funds the churn absorption, and it
+  scales with the number of customers rather than with their revenue. Hardware sells at a modest
+  margin and is the acquisition channel, not the profit.</p>
+  <h3>The rail</h3>
+  <p>The platform charges <b>zero percent</b>. Developers pay nothing. Businesses keep their
+  existing booking systems and pay no commission on anything.</p>
+  <p>The money is in the payments that flow through the ecosystem. A standard processing rate is
+  2.9% plus thirty cents. Volume gets that renegotiated. The difference between the negotiated
+  rate and the posted rate is the margin, and it is invisible to everyone &mdash; the business
+  pays what they always paid.</p>
+  <p>One percent of a very large number is a large number, and high-transaction verticals
+  &mdash; charters, hotels, rentals, restaurants &mdash; are exactly where the volume is.</p>
+  <div class="facts">
+    <div class="row"><span>Platform fee charged to businesses</span><span class="v">0%</span></div>
+    <div class="row"><span>Platform fee charged to developers</span><span class="v">0%</span></div>
+    <div class="row"><span>Spread on processed volume</span><span class="v">~1%</span></div>
+    <div class="row"><span>Budget for disputes and reserves</span><span class="v">0.1&ndash;0.3%</span></div>
+  </div>
+  <p>That last line is the one that turns a full point into roughly seven tenths of one. With
+  destination charges the platform carries dispute liability by default, plus negative balances
+  when a business closes holding deposits. It is survivable and it must be budgeted from the
+  first dollar, not discovered in year two.</p>
+  <div class="band"><div class="wrap">
+    <p>Charging nothing is not generosity. It is how you get the volume that makes the spread
+    worth having &mdash; and it is a price no competitor funded by a percentage can match.</p>
+    <p class="attrib">Zero to one</p>
+  </div></div>
+</div></section>
+
+<section class="ch" id="c13"><div class="wrap">
+  <span class="chnum">Thirteen</span>
+  <h2>The box itself</h2>
+  <p>The operating system is not a collection of packages that drift apart on every machine. It
+  is <b>one signed image with one version number</b>, byte-identical everywhere.</p>
+  <p>Updates do not patch. The machine replaces itself with the next image, reboots, checks
+  its own health, and if anything is wrong it puts itself back the way it was. The owner never
+  learns a problem occurred.</p>
+  <p>That single architectural choice is what makes everything else affordable. A support call
+  starts with a version number and is reproducible in ten minutes on identical hardware, instead
+  of being an archaeology project on a machine that has never existed before and never will
+  again.</p>
+  <h3>What the owner sees</h3>
+  <p>One application, full screen, from the moment it boots. No desktop behind it, no file
+  manager, no terminal, nothing that looks like a computer. A short list of things that need
+  approval, and a way to ask for anything else.</p>
+  <p>And because they own it, there is a deliberate, documented way to the full Linux
+  underneath. Held down, typed in &mdash; never stumbled into by a dropped tray.</p>
+  <h3>Four claims almost nobody else can make</h3>
+  <ul class="plain">
+    <li><b>There is no remote access.</b> Not a promise not to look. There is no door, because it was never built &mdash; which also means it cannot be compelled, stolen, or misused.</li>
+    <li><b>An update cannot break it.</b> Failed health check, automatic rollback, invisible.</li>
+    <li><b>Lapsed means frozen, not bricked.</b> It runs forever and stays patched for security. It simply stops getting new things.</li>
+    <li><b>Backups go where they choose.</b> Their own drive, their own storage, encrypted with a key that is never held on the other end.</li>
+  </ul>
+</div></section>
+
+<section class="ch" id="c14"><div class="wrap">
+  <span class="chnum">Fourteen</span>
+  <h2>The harness</h2>
+  <p>The thing being sold is not a model. Models change every six months and whichever is best
+  today will not be best next year. What is being sold is the harness &mdash; the thing every
+  model plugs into.</p>
+  <p>On the box: a small model always resident that decides what handles each request, one
+  strong model held in memory, and a library of specialisations that swap in and out. The
+  swap is the trick &mdash; loading a different model costs seconds, but swapping a small
+  adapter on top of a loaded one costs about two hundred milliseconds. That is the difference
+  between a library and a queue.</p>
+  <p>Alongside it: the memory that belongs to this business and no other, the permission layer,
+  the record of everything every agent did, and a bridge to any cloud model the owner wants to
+  use with their own key &mdash; never proxied, never skimmed, never logged on the way through.</p>
+  <div class="note"><span class="lbl">The strategic bet</span>
+  Every other platform is racing to own the endpoint so their model owns the customer. A machine
+  that lets you swap freely gets <b>more valuable as that race accelerates</b>, while every
+  locked-in machine gets less. That is a bet that compounds in your favour with time.</div>
+  <h3>And the agent is deliberately stupid</h3>
+  <p>It reads a column of structured data. It is strict. It is the same for every business. It
+  does not improvise, it does not reason its way into a new approach, and it does not get
+  creative with a price. That is not a limitation &mdash; it is the reason the thing can be
+  trusted with a business, and it is why the words "artificial intelligence" appear nowhere in
+  the patent claims.</p>
+</div></section>
+
+<section class="ch" id="c15"><div class="wrap">
+  <span class="chnum">Fifteen</span>
+  <h2>The name and the fight</h2>
+  <p>Steve Jobs left Apple, took Unix, and built NeXT &mdash; the operating system Apple still
+  runs on today. He covered up where he found it. This does the opposite: it stays visibly
+  Linux, and the credit stays with the people who built it.</p>
+  <p>That is not sentiment, it is the strongest available position. Wall Street runs on Linux.
+  So does every AI company currently telling small businesses to trust the cloud. Building on
+  the same foundation and saying so out loud is credibility that cannot be bought, and the
+  instinct to rebrand it as a proprietary OS would throw it away.</p>
+  <p>The company is <b>A NEXT GENT</b>. The box is <b>Ghost</b>. Version one is the <b>Ghost of
+  Lisa</b> &mdash; the Apple machine that failed because it was too early, that contained most
+  of what computers would become, and that got buried in a landfill.</p>
+  <h3>The advertisement</h3>
+  <p>Apple's 1984 commercial was aimed at IBM. This one is aimed at gatekeepers &mdash; at an
+  industry where every company is racing to get inside a business so the business's data becomes
+  theirs. At the end, the screen does not get smashed with a hammer.</p>
+  <p>It just shuts off.</p>
+  <div class="band"><div class="wrap">
+    <p>It's not my computer. It's theirs. That sentence is the entire brand, and it is the one
+    thing no cloud company can say back.</p>
+    <p class="attrib">The position</p>
+  </div></div>
+</div></section>
+
+<section class="ch" id="c16"><div class="wrap">
+  <span class="chnum">Sixteen</span>
+  <h2>Who buys it, and how</h2>
+  <p>Small businesses are the customer nobody in technology has ever seriously served, for a
+  reason that used to be true: acquisition cost. You cannot afford a salesperson for a
+  two-hundred-dollar-a-month customer, and that customer will not self-serve.</p>
+  <p>Which is exactly why a founder who has sold cars and sold door to door for twenty years is
+  the thing this company has that a better-funded competitor cannot buy at any price.</p>
+  <h3>Density beats spread</h3>
+  <p>A chamber of commerce has three hundred to eight hundred members, wants something of value
+  to offer them, and has no technology of its own. One chamber agreement is a city's worth of
+  warm introductions from a trusted party.</p>
+  <p>The same shape works for tourism boards, marina associations, restaurant associations and
+  downtown districts. Two hundred businesses in one town is worth far more than two hundred
+  scattered, because density is what makes the directory work and what makes a developer
+  believe there is a market.</p>
+  <h3>The vertical is the unit of work</h3>
+  <p>A rental manager in Destin, Gulf Shores and Panama City is the same schema, the same
+  procedures, the same emails. Once a vertical is built, customer two through two hundred cost
+  effectively nothing regardless of where they are.</p>
+  <h3>And it can be resold</h3>
+  <p>White label, the way other platforms let an agency operate under their own brand. Trained
+  salespeople from rental operations. Anyone who already sells to these businesses can sell this
+  to them, and the product is easier to demonstrate than anything else they carry.</p>
+</div></section>
+
+<section class="ch" id="c17"><div class="wrap">
+  <span class="chnum">Seventeen</span>
+  <h2>What's owned, what's given away</h2>
+  <p>Almost all of it is given away. That is not a concession &mdash; it is the same trade Red
+  Hat made, and it works for the same reason.</p>
+  <h3>Given away</h3>
+  <p>The source. The architecture. The capability names. The projections. Distribution of the
+  business's own data to every directory that will take it, for nothing. And a share of revenue
+  back to the open source projects the whole thing is assembled from, once there is revenue to
+  share.</p>
+  <h3>Held</h3>
+  <ul class="plain">
+    <li><b>The brand.</b> Anyone can rebuild the software. Nobody else can be A NEXT GENT. That is the same moat Red Hat has and it is more durable than any code.</li>
+    <li><b>The recordings.</b> The accumulated map of how every app works, kept current across hundreds of businesses. It grows every day, it cannot be bought, and it is worth more the longer it runs.</li>
+    <li><b>The pipe.</b> The signing keys, the channel, the entitlement. Anyone can rebuild the image; nobody else can publish to the machines.</li>
+    <li><b>The method.</b> Provisional patents on the system and method for build-integrated remote control &mdash; written deliberately without artificial intelligence in the claims, which puts them outside a very crowded field of prior art and describes a concrete mechanism instead of an aspiration.</li>
+  </ul>
+  <div class="note"><span class="lbl">On being copied</span>
+  Someone will rebuild the image for free. That is the CentOS story and it is survivable,
+  because the free rebuild does not come with the hardware, the recordings, the fix pipeline,
+  the warranty, or the phone number. The defence was never legal. It is that the thing being
+  sold is a service that has to be performed every week.</div>
+</div></section>
+
+<section class="ch" id="c18"><div class="wrap">
+  <span class="chnum">Eighteen</span>
+  <h2>What exists today</h2>
+  <p>An honest inventory, because a plan that overstates its starting position is worthless.</p>
+  <div class="facts">
+    <div class="row"><span>Provisional patents filed</span><span class="v">yes</span></div>
+    <div class="row"><span>Written architecture and component ledger</span><span class="v">complete</span></div>
+    <div class="row"><span>External open-source components identified</span><span class="v">281</span></div>
+    <div class="row"><span>Of those, ever actually running</span><span class="v">~80</span></div>
+    <div class="row"><span>Needed for the first working demonstration</span><span class="v">2</span></div>
+    <div class="row"><span>Existing repositories under the company</span><span class="v">114</span></div>
+    <div class="row"><span>Flow engine, signing and packaging code</span><span class="v">written, untested on hardware</span></div>
+    <div class="row"><span>Businesses running it</span><span class="v">none yet</span></div>
+    <div class="row"><span>Relationships in the target market</span><span class="v">real</span></div>
+  </div>
+  <p>The architecture is further along than the implementation, and that is the correct thing to
+  be honest about. The documents have reached the point where they are auditing each other. None
+  of them has a customer in it.</p>
+</div></section>
+
+<section class="ch" id="c19"><div class="wrap">
+  <span class="chnum">Nineteen</span>
+  <h2>The order to build it</h2>
+  <p>Ruthlessly sequenced. Each step produces something that works before the next one starts,
+  and the early steps need no hardware and no operating system.</p>
+  <ol class="steps">
+    <li><p><b>Prove a phone can still be driven.</b> Real apps, real accounts, an accessibility service. One afternoon. Everything below depends on it.</p></li>
+    <li><p><b>Change one business's hours from a command line, and read it back in a browser.</b> That is the whole product with nothing around it.</p></li>
+    <li><p><b>Put the gate in front.</b> Who is asking, may they, how risky, and does a person have to say yes first.</p></li>
+    <li><p><b>Put the record behind.</b> Append-only, with the screenshot and the verdict.</p></li>
+    <li><p><b>Add the text door.</b> Their SIM, their number, approvals by reply. Now it is sellable with no hardware at all.</p></li>
+    <li><p><b>Turn on the email pipe.</b> Observations, provenance, canonical values. This is the step that turns an automation tool into the data layer.</p></li>
+    <li><p><b>Build the fix pipeline.</b> Nightly checks, one re-recording, signed, pushed to everyone. <b>Now the subscription is real.</b></p></li>
+    <li><p><b>Ship the appliance.</b> One image, health checks, rollback. The company, rather than the product.</p></li>
+    <li><p><b>Entitlement and channels.</b> Who is paid up, what may this machine install, staged rollout.</p></li>
+    <li><p><b>Open the store.</b> The manifest, the permission model, the certification gate, the first outside developer.</p></li>
+  </ol>
+  <p>Steps one through five are the product. Six and seven are the business. Eight through ten
+  are the company. Most of the value is in step one, and it has still not been run.</p>
+</div></section>
+
+<section class="ch" id="c20"><div class="wrap">
+  <span class="chnum">Twenty</span>
+  <h2>The one test that decides everything</h2>
+  <p>There is a single unverified assumption underneath this entire document, and it can be
+  settled in an afternoon for the price of a phone.</p>
+  <p>Install the applications a Destin charter operator or a 30A restaurant actually uses
+  &mdash; the real ones, not similar ones. Turn on an accessibility service. Watch what still
+  runs.</p>
+  <p>Some categories of application detect an active accessibility service and refuse to
+  operate. Banking is the strictest. Payment and point-of-sale software is the open question,
+  and it is precisely the software that matters most here.</p>
+  <div class="note"><span class="lbl">Why this is first and not fifth</span>
+  If those applications block it, the mechanism has to change &mdash; and it is far better to
+  know that in week one, with a forty-dollar phone, than in month nine with hardware ordered and
+  customers signed. <b>Nothing else in this plan is worth starting before this is answered.</b></div>
+  <h3>The other risks, ranked honestly</h3>
+  <ul class="plain">
+    <li><b>Terms of service.</b> Counsel has been engaged. The posture &mdash; their device, their account, their credentials, human speed, human approval &mdash; is deliberate and it is documented.</li>
+    <li><b>Support cost per customer.</b> The thing that kills small-business hardware companies. Every simplification is margin.</li>
+    <li><b>Working capital on hardware.</b> The factory is paid ninety days before the customer pays. Ship software first for exactly this reason.</li>
+    <li><b>Scope.</b> The directory, the points, the referrals, the smart home, the other verticals &mdash; none of them are wrong, and every one of them costs a month that does not exist yet.</li>
+  </ul>
+</div></section>
+
+<section class="ch" id="c21"><div class="wrap">
+  <span class="chnum">Twenty-one</span>
+  <h2>If it works</h2>
+  <p>The modest version: a hundred businesses, six hundred thousand to a million a year, a real
+  company that pays well and is owned outright. Most founders would take that and most never
+  get it.</p>
+  <p>The version worth building for is different, and it is not about the box at all.</p>
+  <p>If a few thousand small businesses publish live, verified, item-level truth about themselves
+  because doing so saves them money, then the answer to <em>where should I eat tonight</em> and
+  <em>who has a boat free at two</em> stops being a guess assembled from stale listings. It
+  becomes a fact, sourced from the business, consented to by the business, and owned by the
+  business.</p>
+  <p>Whoever holds that becomes infrastructure the assistants depend on rather than a directory
+  competing for attention. And because the data lives on the businesses' own machines and is
+  published rather than hoarded, holding it does not require becoming the thing this whole
+  project was built against.</p>
+  <div class="band"><div class="wrap">
+    <p>That was the idea in 2013. The hard part was never the directory. It was always the
+    data &mdash; and this is finally a mechanism that produces it.</p>
+    <p class="attrib">Fourteen years</p>
+  </div></div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <p class="sig">One last thing.</p>
+  <p>Every number in this document is arithmetic off a stated assumption, not a case study. The
+  $400,000 charter is an example with a real commission rate applied to it; the working price is
+  $299 a month. <b>Change the assumption and the conclusion changes with it</b> &mdash; that is
+  the point of writing them down.</p>
+  <p style="margin-top:16px">And the honest summary of where this stands: <b>the thinking is
+  further along than the building.</b> Step one of nineteen costs an afternoon and a
+  forty-dollar phone, and until it is run, everything above it is a well-argued hypothesis.</p>
+</div></footer>
