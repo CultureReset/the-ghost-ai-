@@ -1,0 +1,18 @@
+[Unit]
+Description=zot - OCI registry on the box; edge mirror of Quay
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=ghost-zot
+Image=ghcr.io/project-zot/zot-linux-amd64:latest
+Network=ghost.network
+PublishPort=5000:5000
+Volume=ghost-zot:/var/lib/registry
+Volume=%h/.config/ghost/zot-config.json:/etc/zot/config.json:ro,Z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

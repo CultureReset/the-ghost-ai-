@@ -1,0 +1,5 @@
+[Unit]
+Description=Ghost platform network
+
+[Network]
+NetworkName=ghost

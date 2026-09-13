@@ -1,0 +1,21 @@
+[Unit]
+Description=IBM ContextForge - one gateway for MCP tools, agents and APIs
+Wants=network-online.target ghost-postgres.service
+After=network-online.target ghost-postgres.service
+
+[Container]
+ContainerName=ghost-contextforge
+Image=ghcr.io/ibm/mcp-context-forge:latest
+Network=ghost.network
+PublishPort=4444:4444
+Environment=HOST=0.0.0.0
+Environment=PORT=4444
+Environment=DATABASE_URL=postgresql://ghost@ghost-postgres:5432/ghost
+EnvironmentFile=%h/.config/ghost/contextforge.env
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

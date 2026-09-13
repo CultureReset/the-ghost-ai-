@@ -1,0 +1,23 @@
+[Unit]
+Description=PostgreSQL - the one data platform every foundation service shares
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=ghost-postgres
+Image=docker.io/library/postgres:16-alpine
+Network=ghost.network
+Volume=ghost-pgdata:/var/lib/postgresql/data
+Environment=POSTGRES_DB=ghost
+Environment=POSTGRES_USER=ghost
+EnvironmentFile=%h/.config/ghost/postgres.env
+HealthCmd=pg_isready -U ghost
+HealthInterval=10s
+HealthRetries=6
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

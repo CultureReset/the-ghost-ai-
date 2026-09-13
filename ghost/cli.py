@@ -7,7 +7,7 @@ import sys
 
 from .device import Device, DeviceError
 from .flow import Flow, FlowError, load_dir
-from .pack import build, install, sign, verify
+from .pack import build, install, publish, pull, sign, verify, verify_ref
 from .recorder import record, screen_menu
 from .runner import Runner
 
@@ -176,6 +176,33 @@ def cmd_pack(args):
             print(f"!! {p}")
         return 1
 
+    if args.action == "publish":
+        if not args.ref:
+            raise SystemExit("publish needs --ref, e.g. "
+                             "--ref quay.io/anextgent/flows:2026.09.13")
+        ok, detail = publish(args.pack, args.ref, sign_after=not args.no_sign,
+                             key=args.key)
+        print(("published " if ok else "failed: ") + detail)
+        return 0 if ok else 1
+
+    if args.action == "pull":
+        if not args.ref:
+            raise SystemExit("pull needs --ref")
+        ok, detail = verify_ref(args.ref, key=args.key)
+        print(("signature: " if ok else "REFUSING — ") + detail)
+        if not ok and not args.insecure:
+            return 1
+        path, msg = pull(args.ref, os.path.dirname(os.path.abspath(args.pack)) or ".")
+        if not path:
+            print(f"failed: {msg}")
+            return 1
+        print(f"pulled {path}")
+        body, written = install(path, args.dir)
+        print(f"installed {body['pack']} ({body['channel']}) into {args.dir}")
+        for name, version, digest in written:
+            print(f"  · {name:<38} v{version}  {digest}")
+        return 0
+
     if args.action == "install":
         body, written = install(args.pack, args.dir)
         print(f"installed {body['pack']} ({body['channel']}) into {args.dir}")
@@ -226,7 +253,8 @@ def main(argv=None):
     s.set_defaults(fn=cmd_lint)
 
     s = sub.add_parser("pack", help="bundle flows to push to the fleet")
-    s.add_argument("action", choices=["build", "verify", "install"])
+    s.add_argument("action",
+                   choices=["build", "verify", "publish", "pull", "install"])
     s.add_argument("--dir", default="flows")
     s.add_argument("--out", default="dist/flows.pack.json")
     s.add_argument("--pack", default="dist/flows.pack.json")
@@ -234,6 +262,10 @@ def main(argv=None):
     s.add_argument("--notes", default="")
     s.add_argument("--sign", action="store_true", help="sign with cosign if present")
     s.add_argument("--key", help="cosign key")
+    s.add_argument("--ref", help="OCI reference, e.g. quay.io/org/flows:2026.09.13")
+    s.add_argument("--no-sign", action="store_true", help="publish unsigned")
+    s.add_argument("--insecure", action="store_true",
+                   help="install even if the signature does not verify")
     s.set_defaults(fn=cmd_pack)
 
     args = p.parse_args(argv)

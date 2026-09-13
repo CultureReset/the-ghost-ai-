@@ -1,0 +1,23 @@
+[Unit]
+Description=Keycloak - identity, SSO, MFA, roles for people and devices
+Wants=network-online.target ghost-postgres.service
+After=network-online.target ghost-postgres.service
+
+[Container]
+ContainerName=ghost-keycloak
+Image=quay.io/keycloak/keycloak:26.0
+Network=ghost.network
+PublishPort=8080:8080
+Exec=start --optimized --http-enabled=true --hostname-strict=false
+Environment=KC_DB=postgres
+Environment=KC_DB_URL=jdbc:postgresql://ghost-postgres:5432/ghost
+Environment=KC_DB_USERNAME=ghost
+Environment=KC_HEALTH_ENABLED=true
+EnvironmentFile=%h/.config/ghost/keycloak.env
+
+[Service]
+Restart=always
+TimeoutStartSec=600
+
+[Install]
+WantedBy=default.target
