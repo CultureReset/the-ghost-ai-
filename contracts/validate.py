@@ -12,6 +12,17 @@ JSON Schema and that the architecture actually turns on:
                                               than clean failure
   3. a VAPP names capabilities, never tables
   4. FINISHED requires a verification verdict
+
+Three more are borrowed from omarchy-plugin-validate, which refuses anything
+the running shell would silently reject:
+
+  5. a declared target is a promise to supply an entry point — a VAPP that
+     installs, enables and does nothing is worse than one that fails, and here
+     there is still someone to tell
+  6. io.anextgent.* is reserved, so a third-party app cannot impersonate a
+     first-party one
+  7. no symlinks inside a VAPP folder — a symlink points a copied app back at
+     arbitrary files once it lands in the trusted directory
 """
 import json, sys, re, os, glob
 
@@ -95,8 +106,34 @@ def capability_rules(c):
     return e
 
 TABLEY = re.compile(r"^(select|insert|update|delete)\b|_table$|^db\.", re.I)
-def vapp_rules(v, known):
+RESERVED = "io.anextgent."
+
+def vapp_rules(v, known, folder=None, first_party=False):
     e = []
+    # A declared target is a promise to supply something to load.
+    for target, key in (("node", "entry"), ("owner", "entry"), ("public", "sections")):
+        t = v.get("targets", {}).get(target)
+        if t is None:
+            continue
+        if key not in t or not t[key]:
+            e.append(f"targets.{target} declared without '{key}' — it would "
+                     "install, enable and do nothing")
+        elif key == "entry" and folder:
+            ep = t[key]
+            if ep.startswith("/") or ".." in ep:
+                e.append(f"targets.{target}.entry must be a safe relative path: {ep!r}")
+            elif not os.path.isfile(os.path.join(folder, ep)):
+                e.append(f"targets.{target}.entry not found in the package: {ep!r}")
+    # Reserved namespace.
+    if not first_party and v.get("id", "").startswith(RESERVED):
+        e.append(f"id '{v['id']}' uses the reserved {RESERVED}* namespace")
+    # Symlinks.
+    if folder:
+        for root, dirs, files in os.walk(folder):
+            dirs[:] = [d for d in dirs if d != ".git"]
+            for n in dirs + files:
+                if os.path.islink(os.path.join(root, n)):
+                    e.append(f"symlink in package: {os.path.relpath(os.path.join(root,n), folder)}")
     for k in ("reads", "writes"):
         for name in v.get(k, []):
             if TABLEY.search(name) or "/" in name:
@@ -122,6 +159,9 @@ def action_rules(a):
 
 # ---------------------------------------------------------------- main
 def main(argv):
+    argv = [a for a in argv if not a.startswith("--")] or argv and [] or []
+    flags = [a for a in sys.argv[1:] if a.startswith("--")]
+    argv = [a for a in sys.argv[1:] if not a.startswith("--")]
     schemas = {n: load(f"{HERE}/schemas/{n}.schema.json")
                for n in ("capability", "actionspec", "vapp.manifest")}
     caps, failures, checked = {}, 0, 0
@@ -137,7 +177,9 @@ def main(argv):
         kind = ("vapp.manifest" if "targets" in d else
                 "actionspec"    if "lifecycle" in d else "capability")
         errs = check(d, schemas[kind])
-        errs += (vapp_rules(d, caps) if kind == "vapp.manifest" else
+        errs += (vapp_rules(d, caps, os.path.dirname(os.path.abspath(f)),
+                            first_party="--first-party" in flags)
+                 if kind == "vapp.manifest" else
                  action_rules(d)     if kind == "actionspec" else
                  capability_rules(d))
         report(f, errs); failures += bool(errs)

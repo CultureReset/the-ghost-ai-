@@ -30,3 +30,17 @@ The database. Credentials. Another app's data. A route from the public target
 back into the node. Those are absences in the architecture, not settings.
 
 `example-app/` is a working manifest that passes.
+
+## Where these rules came from
+
+The gate below the schema check is borrowed from `omarchy-plugin-validate`,
+which refuses anything the running shell would silently reject:
+
+- **A declared target is a promise.** Declare `targets.node` and the entry point
+  must exist in the package. Without this an app installs, enables and does
+  nothing, explained only by a line on a console — refused here, while there is
+  still someone to tell.
+- **`io.anextgent.*` is reserved.** A third-party app cannot ship under the
+  first-party namespace. Pass `--first-party` to validate one of ours.
+- **No symlinks anywhere in the package.** A symlink points a copied app back at
+  arbitrary files once it lands in the trusted directory.
