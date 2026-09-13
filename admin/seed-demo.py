@@ -1,14 +1,40 @@
 #!/usr/bin/env python3
-"""Put a plausible Tuesday into a migrated database so the console has something
-to show.
+"""MADE-UP DATA. Not yours, not anybody's.
 
-    python3 schema/migrate.py demo.sqlite
-    python3 admin/seed-demo.py demo.sqlite
+    python3 admin/seed-demo.py demo.sqlite --i-know-this-is-fake
 
-Demo data only. It is idempotent -- run it twice and you get the same fleet, not
-two of them -- and it never touches a row it did not create.
+Every row this writes is invented: the business, the address, the tickets, the
+reviews, the text messages. It exists so a screen has something on it during
+development. It is not a data source and nothing in the product depends on it.
+
+It refuses to run without the flag, and it refuses to touch a database that
+already has real rows in it, because the whole reason this file is dangerous is
+that its output is indistinguishable from a real business's once it is in the
+table.
+
+If you are looking at this because a dashboard showed you numbers you did not
+recognise: the numbers came from here, and the real question is which writer is
+missing. As of now the writers are:
+
+    drift            executor/run.py       on a refused screen
+    device           fleet/report.py       --enroll, then a timer
+    device_content   fleet/report.py       digests read off the filesystem
+    heartbeat        fleet/report.py       every 5 minutes
+    canonical        resolve/run.py        observation -> the answer
+    surface_state    resolve/run.py        and what each surface still says
+    constitution     node/api.py           POST /constitution
+    observation      ingest/apply.py       vendor email
+    booking, lead    ingest/apply.py       vendor email
+    action, ledger   node/api.py, executor/run.py
+
+    ticket           NOTHING YET -- needs a POS connector
+    review           NOTHING YET -- needs a Google Business connector
+    message          NOTHING YET -- needs an SMS/social connector
+    event            NOTHING YET -- needs a calendar connector
+
+The four at the bottom are the honest gaps. Everything above them is real.
 """
-import argparse, hashlib, sqlite3, uuid
+import argparse, hashlib, sqlite3, sys, uuid
 
 BOXES = [
     # id            entity   label                     serial       os        chan      health      last_seen
@@ -172,11 +198,35 @@ def seed_floor(db, kv, known):
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Write invented rows into a database. Development only.")
     ap.add_argument("db", help="path to a migrated node database")
+    ap.add_argument("--i-know-this-is-fake", action="store_true", dest="ack",
+                    help="required. every row this writes is made up.")
+    ap.add_argument("--force", action="store_true",
+                    help="seed even though the database already has real rows")
     a = ap.parse_args()
+    if not a.ack:
+        print(__doc__)
+        print("refusing: pass --i-know-this-is-fake", file=sys.stderr)
+        return 1
     db = sqlite3.connect(a.db)
     db.execute("PRAGMA foreign_keys=ON")
+
+    # A database that already has rows nobody invented is not a demo database.
+    # Mixing the two is how a made-up ticket ends up in somebody's sales total.
+    real = {t: db.execute(
+                f"SELECT COUNT(*) FROM {t} WHERE id NOT LIKE 'tk\\_%' ESCAPE '\\'"
+                ).fetchone()[0] if t == "ticket" else
+            db.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+            for t in ("observation", "booking", "heartbeat")}
+    if any(real.values()) and not a.force:
+        print("refusing: this database has rows a real writer produced "
+              f"({', '.join(f'{k}={v}' for k, v in real.items() if v)}).",
+              file=sys.stderr)
+        print("         seeding would mix invented rows into real ones. "
+              "--force if you are certain.", file=sys.stderr)
+        return 1
 
     known = {r[0] for r in db.execute("SELECT id FROM entity")}
     for did, ent, label, serial, osv, chan, health, seen in BOXES:
@@ -277,4 +327,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

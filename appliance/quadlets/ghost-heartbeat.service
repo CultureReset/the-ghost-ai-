@@ -1,0 +1,13 @@
+[Unit]
+Description=Ghost heartbeat
+After=ghost-node.service
+
+[Service]
+Type=oneshot
+Environment=ANEXTGENT_CONTRACTS=/usr/lib/anextgent/contracts
+Environment=ANEXTGENT_APPMAPS=/var/lib/anextgent/appmaps
+Environment=ANEXTGENT_MAPS=/var/lib/anextgent/maps
+# Reads the machine, writes one row. It cannot be told to claim a version it is
+# not running -- the digests come off the filesystem.
+ExecStart=/usr/bin/python3 -m fleet.report --db /var/lib/anextgent/db/node.sqlite
+WorkingDirectory=/usr/lib/anextgent

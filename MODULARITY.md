@@ -14,6 +14,8 @@ sdk        -> nothing
 appliance  -> nothing
 admin      -> nothing
 interface  -> nothing
+fleet      -> nothing
+resolve    -> nothing
 ```
 
 No module imports another. There is no shared library, no `common/`, no base
@@ -36,6 +38,8 @@ python3 -m executor.run --db n.sqlite ... # VERIFIED 4/4
 python3 node/api.py    --db n.sqlite      # {"ok": true, "capabilities": 6}
 python3 admin/server.py n.sqlite         # admin on http://127.0.0.1:8090
 python3 interface/server.py n.sqlite     # shell on http://127.0.0.1:8080
+python3 -m fleet.report --db n.sqlite --enroll   # this box, in the fleet
+python3 -m resolve.run  --db n.sqlite    # observation -> canonical
 ```
 
 All five, in separate repositories, against content published from a third
@@ -94,12 +98,14 @@ Red Hat's structure is five things. Two and a half exist.
 | **Factory** | build, scan, sign, publish — **absent** |
 | **Distribution** | registry, channels, mirror, staged rollout — **absent** |
 | **Entitlement** | which box may pull what, today — **absent**. `grant_scope` is per-app, not per-box |
-| **Fleet** | what version is on which machine — **present** (`device`, `device_content`, `heartbeat`, `drift`), read by `admin` |
+| **Fleet** | what version is on which machine — **present**, and now written by `fleet/report.py` off the machine itself rather than by hand |
 
-The gap is one sentence: **content is pullable and the fleet is now legible, but
-nothing publishes content and nothing pulls it.** A box's version is recorded
-because something wrote it there, not because the box reported in over a
-channel that exists. A box can be told where its maps live; there is no channel
+The gap is one sentence: **content is pullable, the fleet reports in, but
+nothing publishes content and nothing pulls it.** A box now writes its own row
+— serial off `/etc/machine-id`, versions off `bootc status`, content digests
+off the filesystem, health off greenboot — so `device_content` says what is
+actually running. What is missing is a channel to fetch a newer bundle from,
+a signature to check it against, and an entitlement to satisfy first. A box can be told where its maps live; there is no channel
 to fetch them from, no signature to check, no entitlement to satisfy, and no
 record of which box ended up on which version.
 

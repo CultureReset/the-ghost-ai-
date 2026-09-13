@@ -1,0 +1,11 @@
+[Unit]
+Description=Ghost resolver
+After=ghost-node.service
+
+[Service]
+Type=oneshot
+# observation -> canonical, and every public surface marked VERIFIED or
+# CONTRADICTED against it. Rebuildable: delete canonical entirely and the next
+# run produces the same answers.
+ExecStart=/usr/bin/python3 -m resolve.run --db /var/lib/anextgent/db/node.sqlite
+WorkingDirectory=/usr/lib/anextgent

@@ -82,6 +82,26 @@ def gate(db, cap, entity_id, actor_id, install_id=None):
     return decide(db, cap, entity_id)
 
 
+def effect(db, entity_id):
+    """What the rules currently decide, capability by capability.
+
+    decide() raises on a denial because that is the right thing on the request
+    path -- a denied capability must not return a value a caller can mistake
+    for permission. Summarising a constitution is the other situation: "deny"
+    is the answer, not an exception. So the summary catches it rather than
+    decide() going soft, because a route that wants the exception still gets it.
+    """
+    out = []
+    for n, c in sorted(CAPS.items()):
+        try:
+            d = decide(db, c, entity_id)
+        except Denied:
+            d = "deny"
+        out.append({"capability": n, "risk": c.get("risk"),
+                    "approval": c.get("approval", "notify"), "decision": d})
+    return out
+
+
 def decide(db, cap, entity_id):
     """What the business's own constitution says about this capability.
 
@@ -216,6 +236,52 @@ def do_write(db, cap, entity_id, args, actor_id, decision):
             "awaiting_approval": decision == "hold"}
 
 
+def amend(db, entity_id, rules, actor_id, note=None):
+    """Write a new constitution for a business.
+
+    Amendments are versioned, never edited. The old version stays active=0 and
+    stays in the table, because the whole point of `constitution_version` on an
+    action is that you can go back and read the rules an action was judged
+    under -- which is impossible if amending overwrites them.
+
+    A business can only loosen or tighten within what the platform allows: a
+    capability whose contract says approval is 'strong' cannot be amended down
+    to auto. That check lives in decide(), so it holds regardless of what is
+    written here.
+    """
+    if not db.execute("SELECT 1 FROM entity WHERE id=?", (entity_id,)).fetchone():
+        raise Denied(404, f"no such entity: {entity_id}")
+    if not rules:
+        raise Denied(400, "an amendment with no rules would deny everything")
+
+    for r in rules:
+        if r.get("decision") not in ("auto", "notify", "hold", "deny"):
+            raise Denied(400, f"bad decision: {r.get('decision')!r}")
+        if not r.get("capability") and not r.get("risk"):
+            raise Denied(400, "a rule must name a capability or a risk tier")
+        if r.get("capability") and r["capability"] not in CAPS:
+            raise Denied(400, f"no such capability: {r['capability']}")
+        if r.get("risk") and r["risk"] not in ("low", "medium", "high"):
+            raise Denied(400, f"bad risk tier: {r['risk']!r}")
+
+    nxt = (db.execute("SELECT MAX(version) FROM constitution WHERE entity_id=?",
+                      (entity_id,)).fetchone()[0] or 0) + 1
+    cid = "ct_" + uuid.uuid4().hex[:12]
+    db.execute("UPDATE constitution SET active=0 WHERE entity_id=?", (entity_id,))
+    db.execute("""INSERT INTO constitution(id,entity_id,version,active,note)
+                  VALUES (?,?,?,1,?)""", (cid, entity_id, nxt, note))
+    for r in rules:
+        db.execute("""INSERT INTO constitution_rule(id,constitution_id,capability,
+                                                    risk,decision)
+                      VALUES (?,?,?,?,?)""",
+                   ("cr_" + uuid.uuid4().hex[:12], cid, r.get("capability"),
+                    r.get("risk"), r["decision"]))
+    db.commit()
+    return {"constitution": cid, "entity": entity_id, "version": nxt,
+            "rules": len(rules), "by": actor_id,
+            "effect": effect(db, entity_id)}
+
+
 def _ledger(db, action_id, seq, stage, executor, detail):
     db.execute("""INSERT INTO ledger(id, action_id, seq, stage, executor, detail)
                   VALUES (?,?,?,?,?,?)""",
@@ -251,6 +317,29 @@ class Handler(BaseHTTPRequestHandler):
                     "name": c["name"], "mode": c.get("mode", "write"),
                     "risk": c["risk"], "approval": c.get("approval", "notify"),
                     "surfaces": c["postcondition"]["surfaces"]} for c in CAPS.values()])
+
+            if u.path == "/constitution":
+                # What this business's rules currently decide, capability by
+                # capability. A constitution nobody can read is decorative --
+                # the answer has to be inspectable before it is trusted.
+                e = q.get("entity") or self._need("entity")
+                cur = db.execute("""SELECT id, version, created_at, note
+                                      FROM constitution
+                                     WHERE entity_id=? AND active=1""", (e,)).fetchone()
+                rules = db.execute("""SELECT capability, risk, decision
+                                        FROM constitution_rule
+                                       WHERE constitution_id=?
+                                       ORDER BY capability IS NULL, capability, risk""",
+                                   (cur[0],)).fetchall() if cur else []
+                return self._send(200, {
+                    "entity": e,
+                    "version": cur[1] if cur else None,
+                    "since": cur[2] if cur else None,
+                    "note": cur[3] if cur else None,
+                    "inherited": cur is None,
+                    "rules": [dict(zip(("capability", "risk", "decision"), r))
+                              for r in rules],
+                    "effect": effect(db, e)})
 
             if u.path == "/consistency":
                 e = q.get("entity") or self._need("entity")
@@ -315,6 +404,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "body is not JSON"})
         db = self.server.db
         try:
+            if u.path == "/constitution":
+                e = body.get("entity") or self._need("entity")
+                return self._send(200, amend(db, e, body.get("rules") or [],
+                                             body.get("actor"),
+                                             body.get("note")))
             if not u.path.startswith("/do/"):
                 raise Denied(404, "no such route")
             name = u.path[len("/do/"):]

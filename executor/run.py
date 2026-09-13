@@ -125,11 +125,15 @@ def run(db, action_id, driver_name="android", verifier_name=None, maps_dir=None,
     if absent:
         shot = drv.screenshot(os.path.join(EV_DIR, f"{action_id}-drift.json"))
         eid = _evidence(db, action_id, "screenshot", shot)
+        seen_version = drv.app_version(m["app"])
         _ledger(db, action_id, "DRIFTED", driver_name,
                 {"absent": absent,
-                 "app_version_seen": drv.app_version(m["app"]),
+                 "app_version_seen": seen_version,
                  "map_expected": m["app_version"]}, eid)
         _map_run(db, m, action_id, appmap.DRIFTED)
+        _drift(db, "appmap", m["app"], m["capability"], m["app_version"],
+               seen_version or "unknown",
+               "Fingerprint missing: " + _describe(absent))
         return _finish(db, action_id, "FAILED", 0, len(surfaces),
                        "screen did not match the map — refused to act")
 
@@ -221,6 +225,50 @@ def _verify(db, action_id, m, cap, args, surfaces, drv, vname):
                 {"surface": s, "expected": expect, "observed": observed, "verdict": verdict})
         out.append({"surface": s, "observed": observed, "verdict": verdict})
     return out
+
+
+def _describe(selectors):
+    """A selector in one readable phrase, for a person reading a queue.
+
+    A fingerprint entry is a dict -- {"id": "...", "text": "..."} -- and
+    joining dicts into a sentence raises. Whoever reads the drift queue wants
+    to know which element vanished, not a Python repr."""
+    out = []
+    for sel in selectors[:3]:
+        if isinstance(sel, dict):
+            out.append(sel.get("id") or sel.get("text") or sel.get("desc")
+                       or json.dumps(sel, sort_keys=True))
+        else:
+            out.append(str(sel))
+    return ", ".join(out) + ("\u2026" if len(selectors) > 3 else "")
+
+
+def _drift(db, kind, subject, capability, expected, seen, detail):
+    """Record that something out there changed, so a person can see it.
+
+    The executor already refused to act and already wrote DRIFTED to the
+    ledger. The ledger is per-occurrence and append-only, which is right for an
+    audit trail and useless as a work queue: a vendor redesign that stops 400
+    boxes is 400 ledger rows and one thing to fix.
+
+    So this is one row per (what changed), counted. It is the only thing that
+    creates work in the admin console, and until it existed that console's
+    front page was fed by nothing but a demo seed.
+    """
+    now = db.execute("SELECT datetime('now')").fetchone()[0]
+    cur = db.execute("""UPDATE drift
+                           SET occurrences = occurrences + 1,
+                               last_seen_at = ?,
+                               state = CASE WHEN state='fixed' THEN 'open' ELSE state END,
+                               detail = COALESCE(?, detail)
+                         WHERE kind=? AND subject=? AND capability IS ? AND seen IS ?""",
+                     (now, detail, kind, subject, capability, seen))
+    if cur.rowcount == 0:
+        db.execute("""INSERT INTO drift(id,kind,subject,capability,expected,seen,
+                                        detail,first_seen_at,last_seen_at)
+                      VALUES (?,?,?,?,?,?,?,?,?)""",
+                   (_id("dr"), kind, subject, capability, expected, seen,
+                    detail, now, now))
 
 
 def _map_run(db, m, action_id, outcome):

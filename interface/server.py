@@ -134,6 +134,8 @@ def q_hub(db, ent):
 VENDORS = {
     "com.toasttab.pos":          ("Toast", "POS & online orders", "doc", "--t-red"),
     "com.fareharbor.dashboard":  ("FareHarbor", "Bookings & manifests", "cal", "--t-blue"),
+    "com.google.android.apps.business":
+                                 ("Google Business", "Reviews, posts & profile", "tag", "--t-blue"),
     "fareharbor":                ("FareHarbor", "Bookings & manifests", "cal", "--t-blue"),
     "peek":                      ("Peek", "Bookings", "cal", "--t-violet"),
     "toast":                     ("Toast", "POS & online orders", "doc", "--t-red"),

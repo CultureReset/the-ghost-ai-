@@ -55,10 +55,15 @@ COPY contracts/ /usr/lib/anextgent/contracts/
 # client; that script waits for ghost-shell.service and then execs a browser
 # with every door nailed shut, pointed at localhost.
 COPY interface/ /usr/lib/anextgent/interface/
+# The writers. Without these the fleet table, the drift queue and every
+# canonical value are things only a demo seed ever filled in.
+COPY fleet/   /usr/lib/anextgent/fleet/
+COPY resolve/ /usr/lib/anextgent/resolve/
 COPY shell /usr/lib/anextgent/shell
 RUN chmod +x /usr/lib/anextgent/shell
 
-RUN systemctl enable ghost-kiosk.service podman.socket firewalld chronyd \
+RUN systemctl enable ghost-kiosk.service ghost-heartbeat.timer \
+                    ghost-resolve.timer podman.socket firewalld chronyd \
  && systemctl mask sshd.service
 # sshd is masked deliberately. There is no remote access path into a customer
 # box; "we cannot see your data" is a property of the build, not a promise.
