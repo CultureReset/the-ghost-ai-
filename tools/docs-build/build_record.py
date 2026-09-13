@@ -13,6 +13,8 @@ PARTS = [
   "Every open-source component by layer with a use / study / careful / skip verdict."),
  ("Part VI — The App Store Layer", "app-store.html",
   "Package format (Agent Plugins / Agent Skills), index-not-store distribution, the trust ladder, the installer, three targets per app, the nine deployable units, Grok Bot, Apple, and the spreadsheet channel."),
+ ("Part VII — Every Repo", "every-repo.html",
+  "The complete assembly list: 226 projects across 26 layers, each with what it is, the job it does in this build, its licence, and a use / study / careful / skip verdict."),
 ]
 
 out = []

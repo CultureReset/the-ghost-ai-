@@ -27,6 +27,8 @@ PARTS = [
   "Every open-source component by layer with a use / study / careful / skip verdict."),
  ("Part VI",  "The App Store Layer", "app-store.html",
   "Package format, index-not-store distribution, the trust ladder, the installer, nine deployable units, Grok Bot, Apple."),
+ ("Part VII", "Every Repo",          "every-repo.html",
+  "The complete assembly list: 226 projects across 26 layers, each with its job, its licence and a verdict."),
 ]
 
 def slug(s):

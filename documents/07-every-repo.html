@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>Every Repo</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --surface-2:#E9EBE6;
+    --ink:#181B19; --ink-2:#474C48; --muted:#757B74;
+    --rule:#D7DAD3; --rule-strong:#B9BDB4;
+    --accent:#A4601A; --accent-soft:#F1E4D2;
+    --use:#2E6B4C; --use-bg:#E2EDE7;
+    --study:#2B5B77; --study-bg:#E0EAF0;
+    --care:#93582A; --care-bg:#F5E7D8;
+    --skip:#8C3B34; --skip-bg:#F2E0DE;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+      --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+      --rule:#2E3438; --rule-strong:#414850;
+      --accent:#D79A4E; --accent-soft:#33291B;
+      --use:#66AC85; --use-bg:#1D2E26;
+      --study:#6BA3C4; --study-bg:#1B2830;
+      --care:#C68A52; --care-bg:#2F2519;
+      --skip:#C8756C; --skip-bg:#30211F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+    --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+    --rule:#2E3438; --rule-strong:#414850;
+    --accent:#D79A4E; --accent-soft:#33291B;
+    --use:#66AC85; --use-bg:#1D2E26;
+    --study:#6BA3C4; --study-bg:#1B2830;
+    --care:#C68A52; --care-bg:#2F2519;
+    --skip:#C8756C; --skip-bg:#30211F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+  .col{max-width:700px}
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2rem,5.2vw,3.1rem);font-weight:700;letter-spacing:-.022em;line-height:1.05}
+  h2{font-size:clamp(1.35rem,3vw,1.75rem);font-weight:650;letter-spacing:-.015em;line-height:1.16}
+  h3{font-size:1.08rem;font-weight:650;letter-spacing:-.006em}
+  p{margin:0}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  strong{font-weight:600}
+  .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .lede{font-size:1.14rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.93rem;color:var(--muted);line-height:1.55}
+
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:20px;padding-block:52px 36px}
+  .mast h1{max-width:15ch}
+  .mast .lede{max-width:58ch}
+
+  .key{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .keyitem{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--ink-2)}
+
+  .pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.61rem;
+    font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;
+    border-radius:2px;white-space:nowrap;line-height:1.3}
+  .p-use{background:var(--use-bg);color:var(--use)}
+  .p-study{background:var(--study-bg);color:var(--study)}
+  .p-care{background:var(--care-bg);color:var(--care)}
+  .p-skip{background:var(--skip-bg);color:var(--skip)}
+
+  section{padding-block:44px;border-bottom:1px solid var(--rule)}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:9px;margin-bottom:22px;max-width:660px}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.45}
+  thead th{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:500;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+    border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.repo{white-space:nowrap}
+  td.repo a,td.repo span.nolink{font-family:"JetBrains Mono",monospace;font-size:.83rem;font-weight:500}
+  td.repo span.nolink{color:var(--ink)}
+  td.lic{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--muted);white-space:nowrap}
+  td.v{white-space:nowrap}
+  td.d{color:var(--ink-2);min-width:260px}
+  td.d b{color:var(--ink);font-weight:600}
+
+  .spine{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:6px}
+  .spine-card{background:var(--surface);border:1px solid var(--rule);border-left:2px solid var(--accent);
+    border-radius:0 3px 3px 0;padding:15px 16px;display:flex;flex-direction:column;gap:6px}
+  .spine-card .r{font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:700;color:var(--accent)}
+  .spine-card p{font-size:.87rem;line-height:1.45;color:var(--ink-2)}
+
+  .flag{background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:18px 20px;display:flex;flex-direction:column;gap:9px;margin-top:20px}
+  .flag h3{color:var(--ink)}
+  .flag p{font-size:.96rem;line-height:1.55;color:var(--ink-2)}
+
+  ol.order{margin:0;padding:0;list-style:none;counter-reset:o;border-top:1px solid var(--rule)}
+  ol.order li{counter-increment:o;display:grid;grid-template-columns:36px 1fr;gap:14px;
+    padding-block:14px;border-bottom:1px solid var(--rule);align-items:baseline}
+  ol.order li::before{content:counter(o,decimal-leading-zero);
+    font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:700;color:var(--accent)}
+  ol.order li span{font-size:.96rem;line-height:1.5;color:var(--ink-2)}
+  ol.order li span b{color:var(--ink);font-weight:600}
+
+  footer{padding-block:32px 54px;color:var(--muted);font-size:.87rem;line-height:1.6}
+
+  @media (max-width:620px){
+    body{font-size:16px}
+    .mast-inner{padding-block:38px 30px}
+    section{padding-block:34px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  .p-core{background:var(--accent-soft);color:var(--accent)}
+  table.cat{table-layout:fixed;min-width:860px}
+  table.cat td.repo{white-space:normal;overflow-wrap:anywhere}
+  table.cat td.repo span.nolink{font-size:.79rem;line-height:1.35;display:inline-block}
+  table.cat td.d{min-width:0}
+  td.chk{width:16px;padding-right:0;color:var(--use);font-size:.8rem}
+  .counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:18px}
+  .cbox{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:13px 15px}
+  .cbox .n{font-family:"JetBrains Mono",monospace;font-size:1.5rem;font-weight:700;color:var(--accent);line-height:1}
+  .cbox .l{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.35}
+  .secnum{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;
+    letter-spacing:.14em;color:var(--accent)}
+  .toc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px 22px;margin-top:14px}
+  .toc-grid a{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--rule);
+    font-size:.9rem;color:var(--ink);border-bottom:1px solid var(--rule)}
+  .toc-grid a:hover{color:var(--accent)}
+  .toc-grid a .k{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--accent);
+    font-weight:700;padding-top:3px;min-width:22px}
+  .toc-grid a .c{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--muted);
+    margin-left:auto;padding-top:3px}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header class="mast"><div class="wrap mast-inner">
+<span class="eyebrow">The Complete Deck</span>
+<h1>Every Repo</h1>
+<p class="lede col">Two hundred and twenty-six projects across twenty-six layers &mdash; the full assembly list, not the short one. Each entry says what it is, what job it does in <i>your</i> build, what it is licensed under, and whether to use it, read it, handle it carefully, or leave it alone.</p>
+<div class="key">
+<span class="keyitem"><span class="pill p-core">CORE</span>Load-bearing</span>
+<span class="keyitem"><span class="pill p-use">USE</span>Build on this</span>
+<span class="keyitem"><span class="pill p-study">STUDY</span>Read it, don't depend on it</span>
+<span class="keyitem"><span class="pill p-care">CAREFUL</span>Real catch attached</span>
+<span class="keyitem"><span class="pill p-skip">SKIP</span>Wrong tool, or a trap</span>
+</div>
+<div class="counts">
+<div class="cbox"><div class="n">226</div><div class="l">unique projects</div></div>
+<div class="cbox"><div class="n">42</div><div class="l">core</div></div>
+<div class="cbox"><div class="n">70</div><div class="l">use</div></div>
+<div class="cbox"><div class="n">87</div><div class="l">study</div></div>
+<div class="cbox"><div class="n">33</div><div class="l">careful</div></div>
+<div class="cbox"><div class="n">12</div><div class="l">skip</div></div>
+</div>
+</div></header>
+<div class="wrap">
+<section id="contents"><div class="sec-head"><span class="secnum">Contents</span><h2>Twenty-six layers</h2><p class="note">Ordered roughly from the metal upward: the box, the distribution machine, the execution layer that is the actual product, then the platform above it.</p></div><div class="toc-grid">
+<a href="#s00"><span class="k">00</span><span>Your own repositories</span><span class="c">14</span></a>
+<a href="#s01"><span class="k">01</span><span>The OS image and the update spine</span><span class="c">13</span></a>
+<a href="#s02"><span class="k">02</span><span>The comparable, read closely</span><span class="c">4</span></a>
+<a href="#s03"><span class="k">03</span><span>Boot chain and hardware root of trust</span><span class="c">7</span></a>
+<a href="#s04"><span class="k">04</span><span>Apps on the box, and the naming trap</span><span class="c">5</span></a>
+<a href="#s05"><span class="k">05</span><span>The kiosk surface</span><span class="c">4</span></a>
+<a href="#s06"><span class="k">06</span><span>Containers, sandboxes and the isolation ladder</span><span class="c">16</span></a>
+<a href="#s07"><span class="k">07</span><span>Registry, fleet and entitlement — the Red Hat machine</span><span class="c">11</span></a>
+<a href="#s08"><span class="k">08</span><span>The pipeline and the policy gate</span><span class="c">5</span></a>
+<a href="#s09"><span class="k">09</span><span>Supply chain: signing, transparency, SBOM, scanning</span><span class="c">11</span></a>
+<a href="#s10"><span class="k">10</span><span>The execution layer — remote control of a real phone</span><span class="c">24</span></a>
+<a href="#s11"><span class="k">11</span><span>The other two execution paths</span><span class="c">7</span></a>
+<a href="#s12"><span class="k">12</span><span>Their screen, on their phone</span><span class="c">3</span></a>
+<a href="#s13"><span class="k">13</span><span>Agent protocols and the orchestration layer</span><span class="c">13</span></a>
+<a href="#s14"><span class="k">14</span><span>Workflow, events and durable execution</span><span class="c">12</span></a>
+<a href="#s15"><span class="k">15</span><span>Models and inference — the terabyte of specialists</span><span class="c">20</span></a>
+<a href="#s16"><span class="k">16</span><span>Voice</span><span class="c">13</span></a>
+<a href="#s17"><span class="k">17</span><span>The data plane</span><span class="c">9</span></a>
+<a href="#s18"><span class="k">18</span><span>Getting the data in — email as the universal API</span><span class="c">5</span></a>
+<a href="#s19"><span class="k">19</span><span>Identity, authorization, policy, secrets</span><span class="c">6</span></a>
+<a href="#s20"><span class="k">20</span><span>Reaching the box without owning it</span><span class="c">3</span></a>
+<a href="#s21"><span class="k">21</span><span>Money</span><span class="c">4</span></a>
+<a href="#s22"><span class="k">22</span><span>The app store layer</span><span class="c">11</span></a>
+<a href="#s23"><span class="k">23</span><span>Surfaces — what the customer and the world actually see</span><span class="c">4</span></a>
+<a href="#s24"><span class="k">24</span><span>Read, do not adopt — the IBM and Red Hat shelf</span><span class="c">4</span></a>
+<a href="#s25"><span class="k">25</span><span>The live traps</span><span class="c">16</span></a>
+</div>
+<div class="flag"><h3>How to read the licence column</h3><p>Licences are recorded as they stood when this project catalogued them, and they change &mdash; three entries here changed after they were first written down. A <span class="mono">&check;</span> beside a repository name means that entry was re-verified on the web today; everything else is from the working record and should be re-checked before it becomes load-bearing in a build you ship. GitHub itself is unreachable from the environment this was compiled in, so nothing here was confirmed by opening the repository directly.</p></div>
+</section>
+<section id="s00"><div class="sec-head">
+<span class="secnum">00</span>
+<h2>Your own repositories</h2>
+<p class="lede">The fourteen that already exist under CultureReset. These are the things you are not cloning from anyone, and the reason the rest of this list is an assembly job rather than a build-from-zero. Names as they appear in the session; rename freely.</p>
+<p class="note">Verdicts here are about role in the assembly, not code quality — I have not read these repositories, only the session's description of them.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/the-ghost-ai-</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The box.</b> Where this record, the platform assembly map, the Quadlet unit files and the flow/runner/pack code live. The repository the appliance is cut from.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/cybercheck-core</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The private truth.</b> Business record, observations, canonical values, provenance. The one place data is authoritative and the one place it is never published from.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/cybercheck-node</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The node runtime.</b> Runs identically on the box or in the cloud free tier. Same code, different address — this is what makes the free tier a real product and not a demo.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/cybercheck-cloud</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The hosted half.</b> The node when the customer has no hardware yet. Your entire first twenty-five customers live here before a single box ships.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/cybercheck-orchestrator</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The brain.</b> Model routing, capability dispatch, the four-state result. What you actually sell when you say you are selling the harness.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/cybercheck-marketplace</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The app store.</b> The index, the trust ladder, the manifests. Part VI is its spec.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/cybercheck-web</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The public projection.</b> Read-only, write-incapable by construction. The signed static half that the world sees.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/App-build-</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>App scaffolding.</b> The generator for a new VAPP — manifest, three targets, the surfaces. This is what a third-party developer starts from.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/API-layer-unified</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The seam.</b> One contract in front of everything so the apps do not learn nine different shapes. The place the capability list is enforced rather than documented.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/gcr-api-clean</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>API, cleaned.</b> Keep as the reference implementation of the contract above; fold what survives into API-layer-unified rather than running two.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/gcr-unified</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Earlier unification attempt.</b> Read it for the decisions you already made and forgot, then let it go. Two unified layers is zero unified layers.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/Admin-dashboard-main</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Your console.</b> Fleet state, drift alerts, the re-map queue. The screen you sit in front of on the Tuesday an app vendor ships a redesign.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/Dashboards-users-</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The owner's console.</b> Deliberately not the same product as yours. Theirs answers "is my stuff right"; yours answers "which four hundred boxes just broke".</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CultureReset/Landing-pages-</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The front door.</b> Also the per-business public page generator. One codebase, two jobs — worth keeping that way.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s01"><div class="sec-head">
+<span class="secnum">01</span>
+<h2>The OS image and the update spine</h2>
+<p class="lede">The Red Hat trick, mechanically: the operating system is a signed OCI image, updates are image pulls, and a failed boot rolls itself back without a phone call. Everything in this layer exists so that shipping an update is a push and not a visit.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">bootc-dev/bootc</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The whole thesis in one binary.</b> Boots a container image as the operating system and updates it transactionally. Note the org moved — it is <span class='mono'>bootc-dev/bootc</span> now, not <span class='mono'>containers/bootc</span>; the old path still redirects, which is exactly how you end up with a stale reference in a build script.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ostreedev/ostree</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The layer underneath bootc.</b> Content-addressed filesystem trees with atomic swap and rollback. You will rarely call it directly, but every strange bootc behaviour is explained here.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">osbuild/osbuild</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Image assembly.</b> Turns a manifest into a bootable artifact — ISO, qcow2, raw disk.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">osbuild/bootc-image-builder</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Container image → installable disk.</b> The step between "I built an image" and "I have something to put on a USB stick." This is your factory.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">fedora-iot/greenboot</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Health check on boot, automatic rollback on failure.</b> The single component that makes remote updates to unattended hardware in four hundred restaurants a survivable business rather than a support catastrophe. Write real health checks, not <span class='mono'>exit 0</span>.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">rauc/rauc</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The A/B update alternative.</b> Embedded-grade, bundle-signed, very mature. Correct choice if you ever ship something too small for a container runtime. Not both — pick one.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">mendersoftware/mender</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>OTA update platform with a managed server.</b> Good technology, but the server is the business model; you are building the server. Study the client-side delta logic, skip the rest.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">canonical/ubuntu-core</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The snap-based immutable appliance.</b> The closest commercial analogue to what you are doing. Study the store-and-brand-account model in particular — it is a working example of the control you say you want the least of.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">home-assistant/operating-system</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Read this one end to end before you commit.</b> A consumer appliance OS shipped to hundreds of thousands of non-technical households, with the update system, the recovery path and the "never show a terminal" discipline already solved in public.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">home-assistant/core</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The integration model.</b> Two thousand integrations maintained by strangers without the project collapsing. That governance pattern is your app store's future problem, already solved.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ublue-os/bluefin</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Universal Blue's daily driver.</b> Proof that image-based desktop Linux is usable by normal people today. Their build pipeline is a working template.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ublue-os/main</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The base images.</b> How to layer your own thing on top of a distro without forking it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ublue-os/image-template</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Start here on day one.</b> A working custom-bootc-image repo with CI already wired. Saves a week of GitHub Actions archaeology.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The one decision in this layer</h3><p>bootc or RAUC, and you cannot hedge. bootc gives you one artifact format from laptop to appliance and a registry you already run for everything else. RAUC gives you a smaller, older, more certain thing that works on hardware a container runtime would not fit on. Pick bootc for a mini-PC appliance; the rest of this catalog assumes you did.</p></div>
+</section>
+<section id="s02"><div class="sec-head">
+<span class="secnum">02</span>
+<h2>The comparable, read closely</h2>
+<p class="lede">Omarchy is the project you were pointed at first, and it remains the closest thing to your opinionated-Linux-for-humans idea that has actually shipped and found an audience.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">basecamp/omarchy</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The original.</b> DHH's opinionated Arch + Hyprland setup. The lesson is not the window manager; it is that taste, defaults and a name did more than any feature.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">omacom-io/omarchy</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The current home.</b> Check which org is canonical before you cite it anywhere public — this moved once already.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">omacom-io/omarchy-pkgs</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Their package overlay.</b> How a curated distro layer is maintained by a very small team.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">omacom-io/omarchy-mirror</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Their mirror.</b> Small, but it is the shape of distribution infrastructure you will need — and cheaper to copy than to design.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Why it is study and not use</h3><p>Omarchy is mutable Arch with excellent taste. You need immutable, signed and self-rolling-back, because your user is a restaurant owner and your update runs while the dinner rush is on. Take the taste and the positioning. Leave the architecture.</p></div>
+</section>
+<section id="s03"><div class="sec-head">
+<span class="secnum">03</span>
+<h2>Boot chain and hardware root of trust</h2>
+<p class="lede">You said you want the least control possible. The way to hold almost none while still being able to prove the box is yours is to put the trust in hardware and in signatures, not in an account you can log into.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">torvalds/linux</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The kernel.</b> Relevant decision: stay on in-tree drivers. The moment you need an out-of-tree module for the GPU, image-based updates stop being simple. AMD's in-tree <span class='mono'>amdgpu</span> is most of why Strix Halo is the right silicon.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">systemd/systemd</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Init, services, sockets, sysext, credentials.</b> Learn <span class='mono'>systemd-sysext</span> and the credentials system specifically — they solve per-device configuration on a read-only OS without a mutable <span class='mono'>/etc</span>.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">tpm2-software/tpm2-tss</span></td><td class="lic">BSD-2-Clause</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>TPM access.</b> Seal the disk key to the measured boot state. The customer's data is unreadable if the drive walks out of the building, and you never hold a key.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">Foxboron/sbctl</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Secure Boot key management that a human can operate.</b> Makes signed boot a build step rather than a research project.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">OP-TEE/optee_os</span></td><td class="lic">BSD-2-Clause</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>ARM TrustZone TEE.</b> Only relevant if you go ARM. On x86 the TPM covers your needs.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">fwupd/fwupd</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Firmware updates on Linux, properly.</b> The layer below your OS updates. Ignoring it means shipping known-vulnerable firmware to four hundred businesses.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">fwupd/lvfs-website</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The firmware distribution service.</b> A working model of exactly the thing you are building — signed artifacts, vendor accounts, staged rollout, public metadata. Read the design documents even if you never upload a cab file.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s04"><div class="sec-head">
+<span class="secnum">04</span>
+<h2>Apps on the box, and the naming trap</h2>
+<p class="lede">How software that is not the operating system gets onto and off of an immutable machine, and how the box describes what it has to a human being.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">flatpak/flatpak</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Sandboxed desktop apps on an immutable OS.</b> The answer to "the customer wants Chrome on it" that does not involve mutating the base image.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">flatpak/xdg-desktop-portal</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The permission broker.</b> How a sandboxed app asks for a file or the camera and the user answers. Your first-party apps go through the same door as third-party ones — that rule is worth more than any marketing claim about privacy.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">PackageKit/PackageKit</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Distro-neutral package operations.</b> The thing a graphical installer talks to so your UI never has to know what a package manager is.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ximion/appstream</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>The freedesktop metadata standard</b> for describing software to a store UI — icons, screenshots, summaries, categories. Use the format. <b>Do not use the word.</b> Between this and RHEL's AppStream repository you already have two; a third called yours will cost you a week of confused conversations.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">89luca89/distrobox</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Any distro's tooling inside a container on an immutable host.</b> How your own developers keep working on a machine that will not let them install a compiler.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s05"><div class="sec-head">
+<span class="secnum">05</span>
+<h2>The kiosk surface</h2>
+<p class="lede">The wall-mounted screen is where "a Linux computer made simple" either holds up or dies in front of everyone who works there. Nothing in this layer may ever show a terminal, an error dialog or a login prompt.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">cage-kiosk/cage</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>A Wayland compositor that runs exactly one application fullscreen.</b> No desktop, no shortcut to a desktop, no way out. That constraint is the product.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">swaywm/sway</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The tiling compositor cage is built from.</b> Read it when cage cannot do the one thing you need, not before.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">Quickshell/quickshell</span></td><td class="lic">LGPL-3.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>QML shell toolkit.</b> Relevant if the kiosk grows past a single fullscreen view into panels and overlays. Omarchy-adjacent territory.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">NoriginMedia/Norigin-Spatial-Navigation</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Arrow-key navigation for TV interfaces.</b> You said smart-TV layout, and this is the unglamorous library that makes a remote control feel right. Nobody notices it working; everyone notices it missing.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The rule for this layer</h3><p>If a customer can reach a shell by accident, you have shipped a Linux box. If they cannot reach one at all, you have broken your own promise that they own it. The resolution is a deliberate, documented, slightly hidden way in — held down, typed in, never discovered by a dropped tray.</p></div>
+</section>
+<section id="s06"><div class="sec-head">
+<span class="secnum">06</span>
+<h2>Containers, sandboxes and the isolation ladder</h2>
+<p class="lede">Third-party apps run on a machine sitting in a business's back office, holding that business's operational data. Isolation is not a feature here; it is the whole liability position.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">containers/podman</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Daemonless, rootless containers with systemd integration.</b> Quadlet — writing <span class='mono'>.container</span> files that systemd manages as units — is why this beats Docker on an appliance. No daemon to die, no socket to secure.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">containers/buildah</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Build images without a daemon.</b> Scriptable, minimal, pairs with podman.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">containers/skopeo</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Move and inspect images between registries without pulling them.</b> Your mirroring and promotion tool.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">containers/image</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The library underneath skopeo and podman.</b> Read when you write your own promotion logic.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">containers/storage</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The layer store.</b> Same reason.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">containers/bubblewrap</span></td><td class="lic">LGPL-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Unprivileged sandboxing primitive.</b> What Flatpak uses underneath. The cheapest real isolation you can put around a helper process.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/gvisor</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>A user-space kernel.</b> Syscall interception, so a container escape hits gVisor instead of your kernel. The right default for third-party code that touches customer data.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/nsjail</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Process jail.</b> Lighter than gVisor, less complete. Good for short-lived tooling.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">firecracker-microvm/firecracker</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>MicroVMs with ~125ms boot.</b> The strongest isolation short of separate hardware, and real operational weight. Justified only for untrusted code from a developer you have never met — which, if the app store works, is eventually most of it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/crosvm</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The ChromeOS VMM.</b> Read for how a consumer appliance runs untrusted guests without the user ever hearing the word virtualization.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">microsandbox/microsandbox</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>MicroVM sandboxing aimed specifically at agent-generated code.</b> Newer and smaller — watch it rather than depend on it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">bytecodealliance/wasmtime</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>WebAssembly runtime with capability-based security.</b> A plugin gets exactly the capabilities you hand it and cannot ask for more. This is the enforcement layer the Agent Plugins spec explicitly does not have.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">extism/extism</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The practical wrapper around Wasm plugins.</b> Host SDKs in a dozen languages, plugins in any language that compiles to Wasm. If you want third-party code without third-party risk, this plus wasmtime is the answer — and it is the difference between your store and Grok's.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">e2b-dev/infra</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Open infrastructure for AI code sandboxes.</b> Someone else's production answer to the same question. Read their isolation boundaries.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">apple/container</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Apple's container tooling.</b> Only interesting as a read on where the platform you are positioned against is heading.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">apple/containerization</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The framework under it.</b> Same.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Where the ladder actually lands</h3><p>First-party app: container + gVisor. Verified third-party app: the same, no exceptions and no shortcuts — identical treatment is the claim. Unverified community app: Wasm via Extism, with a capability list, or a microVM if it genuinely needs a filesystem. Never: a plugin that runs as a subprocess with the node's environment.</p></div>
+</section>
+<section id="s07"><div class="sec-head">
+<span class="secnum">07</span>
+<h2>Registry, fleet and entitlement — the Red Hat machine</h2>
+<p class="lede">This is the part you are actually copying. Not the operating system: the apparatus that turns 'we publish updates' into a subscription business, with content on one side and entitlement on the other.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">project-zot/zot</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>A minimal OCI-native registry.</b> Runs on the box, runs in the cloud, stores your OS images, your app bundles and your flow packs as OCI artifacts. Small enough to understand completely.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">quay/quay</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Red Hat's registry.</b> Overkill for you now. Read the organisation, robot-account and vulnerability-feed model — that is the shape a developer-facing registry needs eventually.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">pulp/pulp</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Content repository management: mirror, version, promote, publish.</b> The dev → staging → production channel pattern you need, already built by people who ship to enterprises.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">theforeman/foreman</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Lifecycle management for fleets of machines.</b> Heavy. Read the host-group and content-view concepts and implement a hundredth of it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">Katello/katello</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Foreman + Pulp + Candlepin together.</b> This combination <i>is</i> Red Hat Satellite, and Satellite is how Red Hat actually delivers what customers pay for. The single most useful thing in this section to read.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">candlepin/candlepin</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Subscription and entitlement management.</b> Who is paid up, what are they entitled to pull, when does it expire. You are building a subscription business for updates; this is that business's ledger, and it already exists.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">flightctl/flightctl</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Red Hat's edge device management for image-based hosts.</b> Declarative device state, staged rollout, rollback. Built for exactly your deployment shape — one image, many unattended machines, no on-site staff. The closest thing to a drop-in for your fleet plane.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">cockpit-project/cockpit</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Web admin for a Linux host.</b> Useful for you during development; a promise you do not want to make to a customer. If they can reach Cockpit, they can break the appliance, and the call comes to you.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">fleetdm/fleet</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Device management and reporting at scale via osquery.</b> Read the reporting model — you need fleet visibility without fleet access, and this is the closest working example.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">oras-project/oras</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Push and pull arbitrary artifacts to an OCI registry.</b> The reason your flow packs, app bundles and model manifests all live in the same signed, mirrored, content-addressed place as your OS. One distribution mechanism for everything.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/go-containerregistry</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The library for registry work in Go.</b> <span class='mono'>crane</span> is in here and is the tool you will actually type.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The four pieces that matter</h3><p>zot holds the bits. ORAS puts non-image things in it. Candlepin says who may pull. flightctl decides which devices get it and in what order. That is the subscription business, and every one of those four is open source and already written.</p></div>
+</section>
+<section id="s08"><div class="sec-head">
+<span class="secnum">08</span>
+<h2>The pipeline and the policy gate</h2>
+<p class="lede">How a change becomes a signed artifact that four hundred machines are allowed to pull, with a gate that says no on its own without you in the room.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">tektoncd/pipeline</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Kubernetes-native CI.</b> Correct if you are already on Kubernetes. You are not, and you should not start for this. Read the task/pipeline decomposition and do the same shape in whatever you already run.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">konflux-ci/konflux-ci</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Red Hat's full supply-chain build service.</b> Enormous. Read what it enforces — provenance, SBOM, policy — and steal the checklist, not the system.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">conforma/cli</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The policy gate, formerly Enterprise Contract.</b> Verifies signature, provenance and policy before an artifact is allowed to be promoted. This is the machine that lets you say "nothing unsigned reaches a customer" as a fact rather than a policy.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">enterprise-contract/ec-cli</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The former name.</b> Noted so an old link in a bookmark does not read as a different tool.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">argoproj/argo-cd</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>GitOps continuous delivery.</b> Excellent, and Kubernetes-shaped. Take the declared-state-in-git discipline; skip the cluster.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s09"><div class="sec-head">
+<span class="secnum">09</span>
+<h2>Supply chain: signing, transparency, SBOM, scanning</h2>
+<p class="lede">The evidence layer. Every claim you make about what is on the box has to be checkable by someone who does not trust you — including, eventually, a customer's insurer.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">sigstore/cosign</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Sign and verify container images and arbitrary artifacts.</b> Keyless signing via OIDC means you are not managing a private key on a laptop, which is where signing schemes usually die. Non-negotiable for anything that reaches a customer machine.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">sigstore/rekor</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The transparency log.</b> An append-only public record of what you signed and when. Put constitution versions and app-map promotions in here, not just OS images — those are the claims that actually need third-party verification. It is also your defence on the day someone alleges you changed a business's data.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">sigstore/sigstore</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The client libraries.</b> For when signing has to happen inside your own code.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">theupdateframework/python-tuf</span></td><td class="lic">Apache-2.0 / MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>TUF: the formal answer to compromised update servers.</b> Role separation, key rotation, rollback and freeze attack resistance. Sigstore covers most of it in practice; read TUF for the threat model you will be asked about by the first serious customer.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">anchore/syft</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Generate an SBOM from an image or directory.</b> One command. Do it on every build from the first build, because retrofitting SBOMs across a year of releases is a month of work.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">anchore/grype</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Scan that SBOM for known vulnerabilities.</b> Pairs with syft. The pair is your "we patch it" claim made mechanical.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">aquasecurity/trivy</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Broader scanner</b> — images, filesystems, IaC, secrets. Overlaps grype; run one in CI and the other as an independent check, since agreeing scanners tell you little.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">trufflesecurity/trufflehog</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Finds committed secrets, and verifies whether they are live.</b> Run it over every third-party app bundle before it enters the store. Note the AGPL: fine as a CI tool you execute, a problem if you link it into a service you distribute.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">aboutcode-org/scancode-toolkit</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>License and origin detection across a codebase.</b> You are assembling a hundred and eighty projects into hardware you sell. This is how you find the GPL component someone vendored into a dependency three levels down, before a customer's lawyer does.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">CycloneDX/cyclonedx-cli</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>SBOM format conversion and merging.</b> You will need one merged SBOM per released image, not forty.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">spdx/tools-python</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The other SBOM standard.</b> Emit whichever the asking party wants; the tooling to convert exists, so do not hold a religious position.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The claim this layer buys you</h3><p>"I cannot see your data" is architecture. "You can verify what I sent you" is signing plus transparency. The second is the one that survives a hostile question, because the person asking can check it without your cooperation.</p></div>
+</section>
+<section id="s10"><div class="sec-head">
+<span class="secnum">10</span>
+<h2>The execution layer — remote control of a real phone</h2>
+<p class="lede">The core of the product and the only row in the whole catalog with no upstream that does the whole job. Everything here is a part of the mechanism: see the screen, read the tree, act, and prove the act landed.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">Genymobile/scrcpy</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Mirror and control an Android device over USB or TCP with no app installed on it.</b> Low latency, rock solid, enormous install base. This is what makes "they can see their own phone on their iPhone" a weekend of work instead of a product.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">NetrisTV/ws-scrcpy</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>scrcpy in a browser over WebSocket.</b> The owner-facing viewer, without shipping a native app to anyone.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">openatx/uiautomator2</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Python control of Android's UIAutomator: dump the view hierarchy, find elements, tap, type, wait.</b> This is the executor. It is also precisely what <span class='mono'>ghost/device.py</span> was reimplementing — replace that file with this library and delete about three hundred lines you now have to maintain.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">openatx/adbutils</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>ADB from Python without shelling out.</b> The layer under uiautomator2; use it directly for device discovery, install, screenshot and file transfer.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">mobile-dev-inc/maestro</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Declarative YAML flows for mobile UI, with element matching and implicit waits that actually work.</b> The hardest, least interesting problem in this whole build is "wait until the screen is really ready", and Maestro has solved it in public. Verified today: still Apache-2.0, ~15.3k stars, releasing every few weeks.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">mobile-dev-inc/maestro-studio</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Point at an element, get a selector, record a flow.</b> This is your factory tool — the thing you use on the Tuesday an app vendor ships a redesign and you have to re-map before the fleet notices. It is also what <span class='mono'>ghost/recorder.py</span> was rebuilding.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">appium/appium</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The old guard of mobile automation.</b> Heavier than you need, but the driver architecture is the reference for supporting a second platform later.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">appium/appium-inspector</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>A GUI for inspecting a live app's element tree.</b> Free debugging for the day a selector matches nothing and the screenshot looks identical.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">appium/appium-uiautomator2-driver</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Their Android driver.</b> Read it when uiautomator2 does something you cannot explain.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google-research/android_world</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A benchmark of 116 tasks across 20 real Android apps.</b> Use it as your regression suite. Also use its published success rates as the honest ceiling on what unattended UI automation achieves — which is the number your fingerprint gate exists to work around.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">OpenBMB/AgentCPM-GUI</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>An on-device GUI agent model.</b> Interesting later, when a flow needs to survive a layout change without a human re-mapping it. Not the v1 mechanism; your v1 advantage is that you do <i>not</i> need a model to tap a button.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">bytedance/UI-TARS</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A GUI agent model with real benchmark numbers.</b> Same category, further along. Read the failure analysis rather than the headline scores.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">microsoft/OmniParser</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Turns a screenshot into structured, labelled elements.</b> The fallback when there is no accessibility tree — for example inside a WebView or a game-engine UI.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">simular-ai/Agent-S</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>An agent framework for computer use.</b> Read the memory and retry design.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">mobile-next/mobile-mcp</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Mobile control exposed as an MCP server.</b> Not an alternative executor — a projection. This is how an assistant asks your device layer to do something without being handed ADB.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">droidrun/mobilerun</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>LLM-agnostic mobile agent: inspect UI state, read screenshots, tap, swipe, type, plan.</b> Verified today as a live project. The closest public thing to your executor — read it for their tool surface, and note how much of their complexity comes from letting a model decide.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">callstackincubator/agent-device</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Mobile automation and verification for coding agents — CLI, MCP server and typed Node API across iOS, Android, TV, web, macOS and Linux.</b> Note the correct org: it is <span class='mono'>callstackincubator</span>, not <span class='mono'>callstack</span>. The word <i>verification</i> in their own description is the interesting part; read how they do it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">sktyou/OpenGUI</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>An Android GUI agent framework for phone-use AI.</b> Verified to exist; small and young. Read, do not depend.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">yashab-cyber/opendroid</span></td><td class="lic">—</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Appeared in the session's search results.</b> I could not re-verify its scope today — GitHub is unreachable from this environment. Treat as a lead, not a part, until you have opened it yourself.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">waydroid/waydroid</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Android in a container on Linux.</b> Tempting: no physical phone. But it defeats the entire premise — the customer's own SIM, the customer's own logged-in accounts, a real device they can pick up. Useful for your test rig, wrong for the product.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">block/trailblaze</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Android UI automation aimed at agents.</b> Small, recent, directly on your path.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/device-infra</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Google's own device lab infrastructure.</b> Read when you have fifty phones on a rack and the problem becomes logistics rather than automation.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">textbee/textbee</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Turns an Android phone into an SMS gateway over its own SIM.</b> This is the text-message marketing channel, sent from the business's real number, with no Twilio in the path and no per-message rake. Note the GPL-3.0 before it goes in a shipped image.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/artemis</span></td><td class="lic">—</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Appeared in the session as a mobile-automation reference.</b> I cannot verify it today and cannot confirm the repository is what it was described as. Do not put it in a plan until you have looked.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The row with no upstream</h3><p>Fingerprint-gated, independently verified remote control is the one job in this catalog that nothing here does. Every project above will happily tap a button and report success. None of them refuse to act because the screen is not the screen they were mapped against, and none read the result back on a different path to prove it landed. That gate and that read-back are the product. Everything else is a part you did not have to build.</p></div>
+</section>
+<section id="s11"><div class="sec-head">
+<span class="secnum">11</span>
+<h2>The other two execution paths</h2>
+<p class="lede">The verifier must not be the executor. If you write through Android and read back through Android, you have built self-certification with extra steps. These are the independent paths.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">microsoft/playwright</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Browser automation that is reliable enough to bet on.</b> Two jobs: the vendors that have a usable web interface, and — more importantly — the independent read-back path that proves an Android write actually landed.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">microsoft/playwright-mcp</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Playwright as an MCP server.</b> Same projection logic as mobile-mcp: the assistant asks, it does not drive.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">browser-use/browser-use</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Let a model drive a browser.</b> Genuinely useful for mapping a new site quickly. Keep it in the factory, out of the runtime — a model improvising on a customer's live booking system is the exact failure mode your whole design avoids.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">trycua/cua</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Computer-use agents in sandboxed VMs.</b> Read the sandbox boundary.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">OpenHands/OpenHands</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Formerly OpenDevin.</b> Read the execution-and-verification loop; ignore the coding focus.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">openinterpreter/open-interpreter</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Natural language to executed code, locally.</b> Instructive, and the AGPL makes it a distribution problem for a box you sell.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ydotool/ydotool</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Input automation on Wayland.</b> Sometimes the only way to drive a stubborn desktop app. Check the licence against your shipping plan.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Say it in the manifest</h3><p>Each capability should name its write path and its verify path, and the two must differ. "Wrote via Android, verified via browser" is a sentence a customer understands and a claim a sceptic can test. It is also the difference between a run record and a receipt.</p></div>
+</section>
+<section id="s12"><div class="sec-head">
+<span class="secnum">12</span>
+<h2>Their screen, on their phone</h2>
+<p class="lede">The feature that makes an owner feel they own the thing: pick up an iPhone, see the Android device sitting in the back office, take over.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">LizardByte/Sunshine</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Self-hosted low-latency desktop streaming host.</b> GPL-3.0 matters if it ships on hardware you sell — read it properly before it is load-bearing.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">moonlight-stream/moonlight-qt</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The client side.</b> Same licence note.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">Genymobile/scrcpy</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Listed again deliberately.</b> For the phone specifically, scrcpy plus ws-scrcpy is a simpler and better answer than a desktop streaming stack. Use the streaming pair only if you ever need to show the box's own screen.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s13"><div class="sec-head">
+<span class="secnum">13</span>
+<h2>Agent protocols and the orchestration layer</h2>
+<p class="lede">You are selling the harness. This is the wiring the harness is made of — and the standards question is now settled enough to build on.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">modelcontextprotocol/modelcontextprotocol</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>MCP, the specification.</b> The way a customer's own data becomes available to an assistant without leaving their machine. Your 'attach it and it stays on their computer' promise is this protocol, implemented honestly.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">modelcontextprotocol/servers</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Reference servers.</b> Read three, then write yours; the patterns are more useful than the code.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">modelcontextprotocol/python-sdk</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Python SDK.</b> The node speaks this.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">modelcontextprotocol/typescript-sdk</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>TypeScript SDK.</b> The surfaces speak this.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">a2aproject/A2A</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Agent-to-agent communication.</b> This is the wire for your zero-data developer story: the developer's agent talks to the business's agent, the answer crosses, the data does not. Verified today: the protocol landscape has converged under Linux Foundation governance, with IBM's ACP folded into this effort rather than competing with it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">agentclientprotocol/agent-client-protocol</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The editor-to-agent protocol.</b> Adjacent; read for the handshake design.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">IBM/mcp-context-forge</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>ContextForge: an MCP gateway and registry.</b> Federates many MCP servers behind one endpoint with auth, rate limits and an admin view. You will have dozens of MCP servers per node; without a gateway that becomes unmanageable around server number six.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">i-am-bee/beeai-framework</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>IBM's multi-agent framework, now under the Linux Foundation.</b> Verified today: real governance, real backing. Still moving fast — read the agent/workflow decomposition, and keep your orchestrator's core independent of it so a breaking release is an afternoon, not a quarter.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">i-am-bee/beeai-platform</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The platform around the framework.</b> Discovery and run management for agents from different frameworks. Closest public analogue to your orchestrator's job.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">i-am-bee/beeai-code-interpreter</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Sandboxed code execution for agents.</b> Compare against Extism before choosing.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">NousResearch/hermes-agent</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>An agent harness built around tool use.</b> Read the tool-calling loop.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">langchain-ai/langgraph</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Graph-structured agent workflows with checkpointing.</b> The state machine is the good idea. Take it; resist the rest of the ecosystem, which is a dependency surface you do not need on an appliance.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">block/goose</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A local, extensible agent.</b> Read the extension model — it is close to what your VAPP contract has to do.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Where the dumb agent lives</h3><p>MCP is how it reaches data. A2A is how it talks to someone else's agent without handing over the data. ContextForge is how you survive having thirty MCP servers per node. Everything else in this section is reading.</p></div>
+</section>
+<section id="s14"><div class="sec-head">
+<span class="secnum">14</span>
+<h2>Workflow, events and durable execution</h2>
+<p class="lede">A flow that taps four screens across two apps and dies halfway has to be explainable, resumable and — where it cannot resume — compensable. That is a durability problem, not an automation one.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">temporalio/temporal</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Durable execution: workflows survive crashes, restarts and deploys, with full history.</b> The compensating-action problem — a price change applied to two of four destinations is worse than one that failed cleanly — is exactly what this is built for. The run history is also your audit trail for free.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">restatedev/restate</span></td><td class="lic">BUSL-1.1</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Durable execution, lighter to operate.</b> Note the BUSL licence: source-available, not open source, with a delayed conversion. That is a business-model decision you would be adopting, not just a library.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">nats-io/nats-server</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Messaging with JetStream persistence, in a single small binary.</b> The right size for a box in a restaurant. Kafka is the wrong size by two orders of magnitude.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">apache/kafka</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Not for an appliance.</b> Listed because it came up, and because knowing why you said no is worth a line.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">apache/flink</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Same.</b> Stream processing at a scale you will never have on one node.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ansible/ansible</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Agentless configuration and orchestration.</b> Your provisioning tool for the factory bench, not something that runs on a customer's box.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ansible/awx</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The upstream of Automation Controller.</b> Read the job-template and credential model.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ansible/event-driven-ansible</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Rules that fire actions from events.</b> The shape of your drift-detected → re-map-queued pipeline.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">activepieces/activepieces</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Open-source automation with an MCP story.</b> Read the piece/connector model — it is close to your VAPP shape and genuinely MIT.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ComposioHQ/composio</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A large managed catalogue of tool integrations for agents.</b> Read how they handle auth per-tool; that problem will eat a month of your life.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">node-red/node-red</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Flow-based programming with a visual editor.</b> Twelve years of evidence about what non-programmers can and cannot assemble. Relevant the day an owner wants to change a flow.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">n8n-io/n8n</span></td><td class="lic">Sustainable Use</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Not open source.</b> The Sustainable Use Licence restricts commercial hosting. It gets called open source constantly, including by people selling advice. Using it inside a product you sell is a licensing conversation you do not want to have late.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s15"><div class="sec-head">
+<span class="secnum">15</span>
+<h2>Models and inference — the terabyte of specialists</h2>
+<p class="lede">A terabyte of specialised models on the box, one endpoint in front of them, and something that swaps them fast enough that a customer never feels it.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ggml-org/llama.cpp</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The engine room.</b> Quantised inference on ordinary hardware, with an OpenAI-compatible server built in. MIT, no strings, runs on the AMD unified-memory part you picked.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">mostlygeek/llama-swap</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Hot-swaps models behind one endpoint, each in its own process.</b> This is the specific piece that makes 'a terabyte of specialists' work instead of being a directory of files. Process isolation matters: one bad model cannot take the endpoint down.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ggml-org/whisper.cpp</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Speech recognition, same engine family.</b> Use when you want one runtime rather than two.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">vllm-project/vllm</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>High-throughput serving.</b> Built for many concurrent users on server GPUs. You have one business per box. Right answer for your cloud tier, wrong answer for the appliance.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ollama/ollama</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>The easiest local-model experience there is</b> — and a wrapper around llama.cpp. Perfect for your laptop this week. On a product you sell, go one layer down so you control quantisation, memory and swap behaviour yourself.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">BerriAI/litellm</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>One API shape in front of every provider, local or hosted.</b> Your neutrality claim, in code: the customer can point at your local models, or their own OpenAI key, and nothing upstream changes.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">open-webui/open-webui</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A polished local-model UI.</b> Read the model-management screens; that is a UI problem you would otherwise solve badly.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">huggingface/huggingface_hub</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Fetch and cache models programmatically.</b> Your model catalogue's download path — and worth mirroring into your own registry so a customer's box does not depend on someone else's uptime.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">instructlab/instructlab</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Community model tuning with synthetic data generation.</b> The path from 'the restaurant vertical needs its own adapter' to actually having one, without a research team.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ibm-granite/granite-guardian</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>A small model that checks other models' inputs and outputs for harm.</b> Cheap insurance on a device that writes to a business's public presence.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ibm-granite/granite-speech-models</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Speech models, Apache-2.0.</b> An alternative to Whisper with a clean licence.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ibm-granite/granite-vision-models</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Vision models.</b> Relevant for reading a screenshot when the accessibility tree fails.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ibm-granite/granite-tsfm</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Time-series foundation models.</b> Demand forecasting, much later.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">meta-llama/llama-stack</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A standardised API surface for inference, safety and agents.</b> Build to the Responses API shape whether or not you adopt the stack — it is becoming the common denominator.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">kserve/kserve</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Kubernetes model serving.</b> Wrong deployment shape for a box.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">llm-d/llm-d</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Distributed serving on Kubernetes.</b> Same.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ROCm/ROCm</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>AMD's compute stack.</b> The reason the hardware choice and the software choice are the same decision. Verify your exact part is supported by the exact ROCm version before you buy a pallet.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">NVIDIA/Personal-AI-Router</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Routing between local and remote models.</b> Read the routing policy; you need the same decision made on cost, privacy and latency.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">agentscope-ai/QwenPaw</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>An agent runtime worth a read, not a dependency.</b></td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">xai-org/grok-1</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The weights release.</b> Relevant only as evidence of what 'open' means to the company you are positioning against.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The swap trick worth knowing</h3><p>Loading a different model costs five to eight seconds. Swapping a LoRA adapter on a loaded base costs roughly two hundred milliseconds. If your verticals can be adapters over one base rather than twenty separate models, the box feels instant and the terabyte becomes a library rather than a queue.</p></div>
+</section>
+<section id="s16"><div class="sec-head">
+<span class="secnum">16</span>
+<h2>Voice</h2>
+<p class="lede">Wake word, endpointing, transcription, speech. Four small models and one protocol that lets them be swapped independently. This is also the demo people remember.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">rhasspy/wyoming</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The protocol that lets each voice piece be a separate service.</b> Swap the TTS without touching the wake word. Home Assistant runs on this in production across a very large install base.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">dscripka/openWakeWord</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Wake word detection, trainable on your own phrase.</b> "Hey Ghost" is a training run, not a licensing negotiation.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">snakers4/silero-vad</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Voice activity detection.</b> Tiny, fast, and the difference between a system that knows when you stopped talking and one that interrupts people.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">SYSTRAN/faster-whisper</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Whisper via CTranslate2 — several times faster, much less memory.</b> The practical transcription choice.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">rhasspy/piper</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Archived 6 October 2025.</b> Verified today. It is still the top result everywhere and still in a great many build guides. Do not start here.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">OHF-Voice/piper1-gpl</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Where Piper's development actually moved.</b> Verified today — and note the licence change from MIT to GPL-3.0. If you were planning on Piper because it was MIT, that reason no longer exists, and this is exactly the kind of thing that is expensive to discover after you have shipped hardware.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">hexgrad/kokoro</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>82M parameters, genuinely good voice, Apache-2.0.</b> The right default now: small enough for the box, clean enough for a product you sell.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">speaches-ai/speaches</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>An OpenAI-compatible server for speech-to-text and text-to-speech.</b> One familiar API in front of the whole voice stack.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">pipecat-ai/pipecat</span></td><td class="lic">BSD-2-Clause</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Real-time voice conversation orchestration</b> — interruption, turn-taking, barge-in. The things that separate a voice demo from a phone agent that does not infuriate callers.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">livekit/livekit</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>WebRTC infrastructure, self-hostable.</b> The transport when the voice agent has to answer an actual phone call.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">livekit/agents</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Their agent framework on top.</b> Read the turn-taking implementation.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">fonoster/fonoster</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Open-source programmable telephony.</b> The self-hosted answer to the question you already asked out loud — why am I paying Twilio.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">home-assistant/hassil</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Template-based intent matching.</b> Most voice commands in a business are eight fixed sentences. Matching them with templates is faster, cheaper and more predictable than asking a model, and it never hallucinates a reservation.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s17"><div class="sec-head">
+<span class="secnum">17</span>
+<h2>The data plane</h2>
+<p class="lede">Private truth on the node, signed projections on the read-only edge, and a backup the customer controls and you cannot read.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">postgres/postgres</span></td><td class="lic">PostgreSQL</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The node's database.</b> One node per business, no tenant_id column anywhere — the isolation is the deployment, which is a far stronger claim than a WHERE clause.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">pgvector/pgvector</span></td><td class="lic">PostgreSQL</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Vectors inside Postgres.</b> One database to back up, one to restore, one to reason about.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">asg017/sqlite-vec</span></td><td class="lic">Apache-2.0 / MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Vector search in SQLite.</b> For the small edge case where Postgres is too much machinery.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">benbjohnson/litestream</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Continuous streaming replication of SQLite to object storage.</b> Disaster recovery for the small database, with no server.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">restic/restic</span></td><td class="lic">BSD-2-Clause</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Encrypted, deduplicated backup to a destination the customer chooses.</b> Their NAS, their bucket, their key. They are protected from a dead drive; you still hold nothing. This one component is most of the 'no data, no liability' position made real.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">meilisearch/meilisearch</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Fast, typo-tolerant search with almost no operational burden.</b> The right size for 'who has crab legs nearby' across one town.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">qdrant/qdrant</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A dedicated vector database.</b> Only if pgvector stops being enough, which it will not for a long time.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">opensearch-project/OpenSearch</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Too heavy for a box.</b> Noted so the question stays answered.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">supabase/supabase</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Postgres plus auth, storage and realtime, self-hostable.</b> A fast start and a large surface. If you adopt it, adopt it deliberately as the node's platform rather than letting it arrive one feature at a time.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The thing you cannot add later</h3><p>Provenance. If you write canonical values for six months and then decide you want to know where each one came from, you have six months of data with no origin and no way to reconstruct it. The observation table goes in before the first ingestion runs, not after the first dispute.</p></div>
+</section>
+<section id="s18"><div class="sec-head">
+<span class="secnum">18</span>
+<h2>Getting the data in — email as the universal API</h2>
+<p class="lede">Every vendor already emails the business: the booking confirmation, the daily sales summary, the payout notice. That inbox is an integration nobody can revoke.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">apache/tika</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Extracts text and metadata from a thousand file formats.</b> The unglamorous front door for every PDF a vendor sends.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">docling-project/docling</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Turns PDFs into structured documents — tables as tables, not as mangled text.</b> A daily sales summary is a table in a PDF; this is the component that makes it a row in your database.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/langextract</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Structured extraction from unstructured text, with the source span recorded.</b> That last part is the point: every canonical value can point at the exact sentence it came from.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/magika</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Reliable file-type detection.</b> The first check on anything arriving from outside.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/schema-dts</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Typed schema.org for TypeScript.</b> How the public projection becomes machine-readable, which is how a business shows up correctly in an assistant's answer instead of an index's.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Rank the setup paths by friction</h3><p>First: add your address as a second notification email inside the vendor's own settings — Toast, Square and FareHarbor all allow it, and Gmail is never involved. Second: a Gmail filter and a verified forwarding address, two minutes in a UI they already know. Last resort: an Apps Script. "Run this script" kills conversion at the exact moment the product needs to feel like nothing.</p></div>
+</section>
+<section id="s19"><div class="sec-head">
+<span class="secnum">19</span>
+<h2>Identity, authorization, policy, secrets</h2>
+<p class="lede">One login, many apps — and a permission model the Agent Plugins specification openly says it does not have. This layer is where your store stops being a copy of someone else's.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">zitadel/zitadel</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Identity and access management, self-hostable, multi-tenant, Apache-2.0.</b> Lighter than Keycloak to run and operate. This is 'one login, many apps' with nothing phoning home.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">keycloak/keycloak</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>The heavyweight, Red Hat's SSO.</b> More capable, more to run. Choose it only if you need something Zitadel lacks, and write down what that was.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">authzed/spicedb</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Google Zanzibar-style fine-grained authorization.</b> Relationship-based permissions — this user, this business, this capability, this app. The enforcement point for capability lists, and the reason an app cannot quietly read something it was not granted.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">openfga/openfga</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The CNCF alternative.</b> Same model, different trade-offs. Pick one and never run both.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">open-policy-agent/opa</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Policy as code, evaluated anywhere.</b> The gate that decides whether a capability call is allowed given the constitution, the consent state and the time of day.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">openbao/openbao</span></td><td class="lic">MPL-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>The open fork of Vault.</b> Secrets, dynamic credentials, rotation. The customer's vendor logins live here, on their node, encrypted to hardware — not in a config file and not in your cloud.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The gap you are filling, stated plainly</h3><p>The Agent Plugins specification says, in its own words, that it contains no explicit capability or permission system. Grok's install command is <span class='mono'>--trust</span>, and trust is binary. Fine on a developer's laptop; not fine on a machine holding a business's operational data. SpiceDB plus OPA plus Extism is the answer, and it is the most defensible thing you are building.</p></div>
+</section>
+<section id="s20"><div class="sec-head">
+<span class="secnum">20</span>
+<h2>Reaching the box without owning it</h2>
+<p class="lede">You need to support a machine in someone's back office without a standing door into their network — and without a VPN account you could be compelled to use.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">juanfont/headscale</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>A self-hosted control plane for Tailscale clients.</b> You run the coordination, the customer runs the node, and the traffic is still end-to-end encrypted between devices.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">tailscale/tailscale</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The client, and the hosted service.</b> Read the ACL model even if you self-host the control plane.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">netbirdio/netbird</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The all-in-one alternative.</b> Simpler to stand up, one more thing you operate.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Support access is a design decision, not a default</h3><p>The strongest version: no standing access at all. The customer grants a session, it expires, and the grant is recorded in the transparency log. That is harder to build and much easier to say out loud in a sales conversation — and it is the same argument you are already making about data.</p></div>
+</section>
+<section id="s21"><div class="sec-head">
+<span class="secnum">21</span>
+<h2>Money</h2>
+<p class="lede">Zero percent of the platform, one percent of the payment volume, and a spread you renegotiate as the volume grows. That arrangement needs metering you can defend.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">getlago/lago</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Open-source usage-based billing and metering.</b> The AGPL is survivable here because you run it as a service rather than distributing it — but make that call deliberately.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">killbill/killbill</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Mature subscription billing.</b> Heavier, Apache-2.0, fifteen years of edge cases already found by other people.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">dubinc/dub</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Link attribution.</b> The referral and co-op loyalty mechanics need attribution that survives a click; this is a working implementation to read.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">candlepin/candlepin</span></td><td class="lic">GPL-2.0</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Listed again on purpose.</b> Lago meters usage. Candlepin decides entitlement — whether this box may pull this update today. Two different jobs, and conflating them is how subscription businesses end up unable to answer 'is this customer paid up' from a single source.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The number to watch</h3><p>With destination charges the platform carries dispute liability by default, plus negative balances when a business closes holding deposits. Budget 0.1–0.3% of volume for disputes and reserves. That is what turns a one-point spread into roughly seven tenths of one.</p></div>
+</section>
+<section id="s22"><div class="sec-head">
+<span class="secnum">22</span>
+<h2>The app store layer</h2>
+<p class="lede">The package format is settled, the distribution model is proven, and the trust ladder already exists in three different forms. None of this needs inventing — which is Part VI's whole argument.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">agentplugins/agent-plugins-spec</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Agent Plugins 1.0.0 — the package format.</b> Verified today, and better backed than the session thought: the technical steering committee is Amazon, Cursor, Microsoft, OpenAI and Vercel, under the Agentic AI Foundation. <span class='mono'>plugin.json</span>, a strict field list, Skills and MCP servers, path containment, PLUGIN_ROOT/PLUGIN_DATA isolation. Your VAPP manifest rides in <span class='mono'>extensions.io.anextgent</span>.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">agentskills/agentskills</span></td><td class="lic">—</td><td class="v"><span class="pill p-core">CORE</span></td><td class="d"><b>Agent Skills — the unit inside the package.</b> SKILL.md with frontmatter and progressive disclosure: about a hundred tokens of name and description loaded for every skill at startup, the body only on activation, resources only on demand. That first tier is your router, and the description field is the trigger rule.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">neondatabase/agent-skills</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A real, well-built skill set.</b> Read the descriptions specifically — they are written as phrase lists that route, which is the technique.</td></tr>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">vercel/skills</span></td><td class="lic">—</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>The installer pattern, verified today.</b> Vercel's <span class='mono'>skills</span> CLI installs across forty-plus agents using a provider registry, a <span class='mono'>.skillsrc</span> config and a <span class='mono'>.skill-lock.json</span> that compares directory tree SHAs to detect updates. That lock-file-and-tree-SHA design is what you want on the node, and it comes from a company on the specification's steering committee.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">junior/skilla</span></td><td class="lic">—</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>The installer the session identified, with its local registry.json.</b> I could not re-verify it today — GitHub is unreachable from here and it does not surface in search. Check it yourself; if it has gone quiet, the Vercel CLI above is the better-supported pattern anyway.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">xai-org/plugin-marketplace</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Index, not store.</b> The catalogue entry points at someone else's repository at a pinned full-length commit SHA. xAI never hosts the code. That model costs almost nothing to run and puts liability where the code is — read it closely, it is the cheapest distribution design available to you.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">xai-org/grok-build</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The build tooling around it.</b> Read the manifest validation.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">superagent-ai/grok-cli</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A third-party client.</b> Evidence of what the ecosystem does once a format is published.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">vercel/vercel-plugin</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>A real plugin in the wild.</b> Read one before you specify yours.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">getsentry/sentry-for-ai</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Another.</b> Two examples is enough to see the conventions.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">redhat-openshift-ecosystem/redhat-marketplace-operators</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>How certified content is submitted, reviewed and published.</b> The submission pipeline for a trust ladder, already written down by people who run one.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>The trust ladder, borrowed from people who run one</h3><p>Red Hat operates four distinct stores, and Automation Hub has three tiers: community content, certified content, and a private hub the customer controls. Map yours to community → verified → the business's own private index. The pinned full SHA is what makes any of it enforceable, because a tag can be moved and a forty-character commit hash cannot.</p></div>
+</section>
+<section id="s23"><div class="sec-head">
+<span class="secnum">23</span>
+<h2>Surfaces — what the customer and the world actually see</h2>
+<p class="lede">Four surfaces, one record behind them. The owner's console, the kiosk, the public page, and the agent endpoint.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">puckeditor/puck</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>A visual editor for React, embeddable in your own app.</b> The owner rearranges their public page without a developer and without you building a page builder from scratch.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">shadcn/ui</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-use">USE</span></td><td class="d"><b>Components you copy into your codebase rather than depend on.</b> No upstream that can break you, no version to chase. The right model for a product with a ten-year support horizon.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">flutter/flutter</span></td><td class="lic">BSD-3-Clause</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>One codebase for the owner's phone app.</b> Real value if the owner app matters; a second language and toolchain for a team of one. Consider a web app first and be honest about whether anyone actually asked for an app.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">microsoft/PowerToys</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Listed because it came up.</b> Read PowerToys Run as an interaction study for the box's command surface, then move on.</td></tr>
+</tbody></table></div>
+</section>
+<section id="s24"><div class="sec-head">
+<span class="secnum">24</span>
+<h2>Read, do not adopt — the IBM and Red Hat shelf</h2>
+<p class="lede">You said Red Hat is the model and Watson was open source. Both true. These are worth reading for how a platform business is structured, and worth not adopting, because each one assumes an operating environment you do not have.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">IBM/watsonx-developer-hub</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>How a large vendor presents an agent platform to developers.</b> Read the onboarding path — it is the thing you are competing with for a developer's first hour.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">IBM/watsonx-data</span></td><td class="lic">—</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The data layer.</b> Read the governance vocabulary; you will need the words.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">opendatahub-io/opendatahub-operator</span></td><td class="lic">Apache-2.0</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>The upstream of Red Hat's AI platform.</b> Kubernetes-shaped. Read the component decomposition, which is a good map of what an AI platform is made of.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">cockpit-project/cockpit</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-study">STUDY</span></td><td class="d"><b>Listed twice deliberately.</b> As a study item it is the best example of a web UI that manages a Linux host without pretending Linux is not there.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>What the IBM and Red Hat reading is actually for</h3><p>Not the code. The structure: content in one system, entitlement in another, certification as its own track, metering separate from billing, and a policy gate that can say no without a human. That structure is the business you described, and it is documented in public by a company that makes billions running it.</p></div>
+</section>
+<section id="s25"><div class="sec-head">
+<span class="secnum">25</span>
+<h2>The live traps</h2>
+<p class="lede">Things that will cost you a week or a lawyer if you find them late. Every one of these is currently a top search result for something you will search for.</p>
+</div>
+<div class="tablewrap"><table class="cat"><colgroup><col style="width:26px"><col style="width:178px"><col style="width:96px"><col style="width:86px"><col></colgroup><thead><tr><th></th><th>Project</th><th>Licence</th><th>Verdict</th><th>What it is, and the job it does here</th></tr></thead><tbody>
+<tr><td class="chk">&check;</td><td class="repo"><span class="nolink">rhasspy/piper</span></td><td class="lic">MIT, archived</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Archived October 2025</b>, and development moved to a <b>GPL-3.0</b> fork. Verified today. Every tutorial still points here.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">n8n-io/n8n</span></td><td class="lic">Sustainable Use</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Not open source</b>, despite being described that way nearly everywhere. Commercial hosting is restricted.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ximion/appstream</span></td><td class="lic">LGPL-2.1</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>The name collision.</b> This project, RHEL's AppStream repository, and anything of yours called AppStream makes three. Rename yours now, while renaming is a find-and-replace.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">ollama/ollama</span></td><td class="lic">MIT</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Not a trap, a boundary.</b> Ship llama.cpp; develop on ollama. Shipping a wrapper means debugging someone else's defaults on a customer's box.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">restatedev/restate</span></td><td class="lic">BUSL-1.1</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Source-available, not open source.</b> BUSL converts to an open licence on a delay; know the date before you depend on it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">trufflesecurity/trufflehog</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>AGPL.</b> Fine as a tool your CI runs. A distribution question if it is linked into something you ship.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">openinterpreter/open-interpreter</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>AGPL.</b> Same reasoning.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">getlago/lago</span></td><td class="lic">AGPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>AGPL.</b> Run it as a service and it is fine; bundle it and it is not.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">LizardByte/Sunshine</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>GPL-3.0 on hardware you sell</b> brings the anti-tivoisation provisions into play. Read them properly before this becomes load-bearing.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">textbee/textbee</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>GPL-3.0.</b> Same question, and this one sits in the SMS marketing feature you already want.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">89luca89/distrobox</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>GPL-3.0.</b> A developer tool rather than shipped product, which resolves it — but note it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">waydroid/waydroid</span></td><td class="lic">GPL-3.0</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>GPL-3.0, and wrong for the product anyway.</b> The customer's real SIM is the point.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/artemis</span></td><td class="lic">—</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Unverifiable from here.</b> It was in the session's list; I could not confirm it today. Anything you cannot open is not a part.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">google/CAGE</span></td><td class="lic">—</td><td class="v"><span class="pill p-skip">SKIP</span></td><td class="d"><b>Same.</b> Confirm before it appears in a plan.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">yashab-cyber/opendroid</span></td><td class="lic">—</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Same.</b> A lead until you have read it.</td></tr>
+<tr><td class="chk"></td><td class="repo"><span class="nolink">junior/skilla</span></td><td class="lic">—</td><td class="v"><span class="pill p-care">CAREFUL</span></td><td class="d"><b>Same.</b> The Vercel skills CLI is the better-supported pattern regardless.</td></tr>
+</tbody></table></div>
+<div class="flag"><h3>Why this section exists</h3><p>Licences change, projects get archived, and orgs move. Three of the entries above changed after they were first written down in this project — Piper archived and relicensed, bootc moved orgs, agent-device is under callstackincubator rather than callstack. Re-check anything load-bearing before a build, not after a customer calls.</p></div>
+</section>
+<section id="order"><div class="sec-head"><span class="secnum">The order</span><h2>Nine steps, and the order matters more than the list</h2><p class="lede">Anyone can clone two hundred and twenty-six repositories in a weekend. The useful question is which three are working by Friday.</p></div>
+<ol class="order">
+<li><span><b>scrcpy</b> &mdash; get a real Android phone mirrored on a Linux box with working input. One afternoon, and the first time the idea stops being a description.</span></li>
+<li><span><b>uiautomator2</b> &mdash; dump the view tree of the Google Business Profile app and tap a button from Python. Then delete <span class='mono'>ghost/device.py</span>.</span></li>
+<li><span><b>Maestro and Maestro Studio</b> &mdash; record one flow by pointing at elements. Compare what their waiting logic does to what yours was going to do.</span></li>
+<li><span><b>The test that decides everything</b> &mdash; install the real apps a Destin charter or a restaurant actually uses. Turn on an accessibility service. See what still runs. This is the one assumption underneath the entire business, and it has still not been run.</span></li>
+<li><span><b>llama.cpp and llama-swap</b> &mdash; one endpoint, two models, hot swap on demand. An hour, and the orchestrator has an engine room.</span></li>
+<li><span><b>wyoming + openWakeWord + silero-vad + faster-whisper + kokoro</b> &mdash; wire five small things together and say a sentence to your box. This is the demo people repeat to other people.</span></li>
+<li><span><b>Playwright</b> &mdash; write the same fact through Android and read it back through the browser. The moment those two agree on a different path, you have the product.</span></li>
+<li><span><b>home-assistant/operating-system</b> &mdash; read the update and recovery design end to end before committing to your own.</span></li>
+<li><span><b>bootc + greenboot</b> &mdash; build one image, boot it, break it on purpose, watch it roll itself back. Now you have a company rather than a script.</span></li>
+</ol>
+<div class="flag"><h3>Steps one to four are the product</h3><p>Five and six are the demo. Seven is the defensible part. Eight and nine are the company. Step four is the only one that can end the project, which is an argument for running it this week rather than after another document.</p></div>
+</section>
+<footer class="wrap"><p>Compiled from the full working record. Two hundred and twenty-six projects, twenty-six layers, two hundred and forty-four entries &mdash; some listed twice where a project is both a part and a trap. Exactly one job in this catalogue has no upstream: fingerprint-gated remote control with independent read-back. Everything else is a part you did not have to build.</p></footer>
+</div>
+</body>
+</html>

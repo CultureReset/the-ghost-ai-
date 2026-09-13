@@ -38,3 +38,13 @@ The PDFs embed their own copies and need nothing.
 containers. `build_docs.py` installs a `sys.meta_path` blocker that forces the
 ImportError so `pypdf` takes its pure-Python path. Remove it if the bindings
 work where you're building.
+
+## The repo catalog
+
+`catalog_data.py` holds every entry in Part VII as structured data — 244 rows
+across 26 sections, each `(repo, licence, verdict, description)`. A leading `*`
+on a repo name marks a fact re-verified on the web. `render_catalog.py` turns it
+into `every-repo.html` using the same design system as the other parts.
+
+Edit the data, re-run `render_catalog.py`, then `build_docs.py`. Do not edit
+`every-repo.html` directly — it is generated.

@@ -12,6 +12,7 @@
 4. **Part IV — The Build Plan** — Phases P0–P5 with done-when gates, the weekly ops loop, economics, risk register, first thirty days.
 5. **Part V — The Parts Catalog** — Every open-source component by layer with a use / study / careful / skip verdict.
 6. **Part VI — The App Store Layer** — Package format (Agent Plugins / Agent Skills), index-not-store distribution, the trust ladder, the installer, three targets per app, the nine deployable units, Grok Bot, Apple, and the spreadsheet channel.
+7. **Part VII — Every Repo** — The complete assembly list: 226 projects across 26 layers, each with what it is, the job it does in this build, its licence, and a use / study / careful / skip verdict.
 
 ---
 
@@ -2902,5 +2903,628 @@ One bookkeeper who likes it is fifty warm introductions, from someone the owner 
 **The line:** *"Every month your bookkeeper asks for numbers you have to dig out of four different systems. This just has them. Updated every morning, in a spreadsheet, on your computer."*
 
 Research current as of September 2026. Product names, pricing and feature claims should be re-verified against first-party sources before use in legal, investment or public marketing contexts. Companions: the Playbook, the Build Spec, the Build Plan, the Parts Catalog, An Honest Read.
+
+---
+
+
+# Part VII — Every Repo
+
+The complete assembly list: 226 projects across 26 layers, each with what it is, the job it does in this build, its licence, and a use / study / careful / skip verdict.
+
+*The Complete Deck*
+
+Two hundred and twenty-six projects across twenty-six layers — the full assembly list, not the short one. Each entry says what it is, what job it does in *your* build, what it is licensed under, and whether to use it, read it, handle it carefully, or leave it alone.
+
+*CORE*Load-bearing*USE*Build on this*STUDY*Read it, don't depend on it*CAREFUL*Real catch attached*SKIP*Wrong tool, or a trap
+
+226
+
+unique projects
+
+42
+
+core
+
+70
+
+use
+
+87
+
+study
+
+33
+
+careful
+
+12
+
+skip
+
+Contents
+
+### Twenty-six layers
+
+Ordered roughly from the metal upward: the box, the distribution machine, the execution layer that is the actual product, then the platform above it.
+
+[**00:** Your own repositories14](#s00)[**01:** The OS image and the update spine13](#s01)[**02:** The comparable, read closely4](#s02)[**03:** Boot chain and hardware root of trust7](#s03)[**04:** Apps on the box, and the naming trap5](#s04)[**05:** The kiosk surface4](#s05)[**06:** Containers, sandboxes and the isolation ladder16](#s06)[**07:** Registry, fleet and entitlement — the Red Hat machine11](#s07)[**08:** The pipeline and the policy gate5](#s08)[**09:** Supply chain: signing, transparency, SBOM, scanning11](#s09)[**10:** The execution layer — remote control of a real phone24](#s10)[**11:** The other two execution paths7](#s11)[**12:** Their screen, on their phone3](#s12)[**13:** Agent protocols and the orchestration layer13](#s13)[**14:** Workflow, events and durable execution12](#s14)[**15:** Models and inference — the terabyte of specialists20](#s15)[**16:** Voice13](#s16)[**17:** The data plane9](#s17)[**18:** Getting the data in — email as the universal API5](#s18)[**19:** Identity, authorization, policy, secrets6](#s19)[**20:** Reaching the box without owning it3](#s20)[**21:** Money4](#s21)[**22:** The app store layer11](#s22)[**23:** Surfaces — what the customer and the world actually see4](#s23)[**24:** Read, do not adopt — the IBM and Red Hat shelf4](#s24)[**25:** The live traps16](#s25)
+
+#### How to read the licence column
+
+Licences are recorded as they stood when this project catalogued them, and they change — three entries here changed after they were first written down. A ✓ beside a repository name means that entry was re-verified on the web today; everything else is from the working record and should be re-checked before it becomes load-bearing in a build you ship. GitHub itself is unreachable from the environment this was compiled in, so nothing here was confirmed by opening the repository directly.
+
+00
+
+### Your own repositories
+
+The fourteen that already exist under CultureReset. These are the things you are not cloning from anyone, and the reason the rest of this list is an assembly job rather than a build-from-zero. Names as they appear in the session; rename freely.
+
+Verdicts here are about role in the assembly, not code quality — I have not read these repositories, only the session's description of them.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | CultureReset/the-ghost-ai- | — | *CORE* | **The box.** Where this record, the platform assembly map, the Quadlet unit files and the flow/runner/pack code live. The repository the appliance is cut from. |
+|  | CultureReset/cybercheck-core | — | *CORE* | **The private truth.** Business record, observations, canonical values, provenance. The one place data is authoritative and the one place it is never published from. |
+|  | CultureReset/cybercheck-node | — | *CORE* | **The node runtime.** Runs identically on the box or in the cloud free tier. Same code, different address — this is what makes the free tier a real product and not a demo. |
+|  | CultureReset/cybercheck-cloud | — | *CORE* | **The hosted half.** The node when the customer has no hardware yet. Your entire first twenty-five customers live here before a single box ships. |
+|  | CultureReset/cybercheck-orchestrator | — | *CORE* | **The brain.** Model routing, capability dispatch, the four-state result. What you actually sell when you say you are selling the harness. |
+|  | CultureReset/cybercheck-marketplace | — | *CORE* | **The app store.** The index, the trust ladder, the manifests. Part VI is its spec. |
+|  | CultureReset/cybercheck-web | — | *USE* | **The public projection.** Read-only, write-incapable by construction. The signed static half that the world sees. |
+|  | CultureReset/App-build- | — | *USE* | **App scaffolding.** The generator for a new VAPP — manifest, three targets, the surfaces. This is what a third-party developer starts from. |
+|  | CultureReset/API-layer-unified | — | *USE* | **The seam.** One contract in front of everything so the apps do not learn nine different shapes. The place the capability list is enforced rather than documented. |
+|  | CultureReset/gcr-api-clean | — | *USE* | **API, cleaned.** Keep as the reference implementation of the contract above; fold what survives into API-layer-unified rather than running two. |
+|  | CultureReset/gcr-unified | — | *STUDY* | **Earlier unification attempt.** Read it for the decisions you already made and forgot, then let it go. Two unified layers is zero unified layers. |
+|  | CultureReset/Admin-dashboard-main | — | *USE* | **Your console.** Fleet state, drift alerts, the re-map queue. The screen you sit in front of on the Tuesday an app vendor ships a redesign. |
+|  | CultureReset/Dashboards-users- | — | *USE* | **The owner's console.** Deliberately not the same product as yours. Theirs answers "is my stuff right"; yours answers "which four hundred boxes just broke". |
+|  | CultureReset/Landing-pages- | — | *USE* | **The front door.** Also the per-business public page generator. One codebase, two jobs — worth keeping that way. |
+
+01
+
+### The OS image and the update spine
+
+The Red Hat trick, mechanically: the operating system is a signed OCI image, updates are image pulls, and a failed boot rolls itself back without a phone call. Everything in this layer exists so that shipping an update is a push and not a visit.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+| ✓ | bootc-dev/bootc | Apache-2.0 | *CORE* | **The whole thesis in one binary.** Boots a container image as the operating system and updates it transactionally. Note the org moved — it is bootc-dev/bootc now, not containers/bootc; the old path still redirects, which is exactly how you end up with a stale reference in a build script. |
+|  | ostreedev/ostree | LGPL-2.1 | *USE* | **The layer underneath bootc.** Content-addressed filesystem trees with atomic swap and rollback. You will rarely call it directly, but every strange bootc behaviour is explained here. |
+|  | osbuild/osbuild | Apache-2.0 | *USE* | **Image assembly.** Turns a manifest into a bootable artifact — ISO, qcow2, raw disk. |
+|  | osbuild/bootc-image-builder | Apache-2.0 | *CORE* | **Container image → installable disk.** The step between "I built an image" and "I have something to put on a USB stick." This is your factory. |
+|  | fedora-iot/greenboot | LGPL-2.1 | *CORE* | **Health check on boot, automatic rollback on failure.** The single component that makes remote updates to unattended hardware in four hundred restaurants a survivable business rather than a support catastrophe. Write real health checks, not exit 0. |
+|  | rauc/rauc | LGPL-2.1 | *STUDY* | **The A/B update alternative.** Embedded-grade, bundle-signed, very mature. Correct choice if you ever ship something too small for a container runtime. Not both — pick one. |
+|  | mendersoftware/mender | Apache-2.0 | *CAREFUL* | **OTA update platform with a managed server.** Good technology, but the server is the business model; you are building the server. Study the client-side delta logic, skip the rest. |
+|  | canonical/ubuntu-core | — | *STUDY* | **The snap-based immutable appliance.** The closest commercial analogue to what you are doing. Study the store-and-brand-account model in particular — it is a working example of the control you say you want the least of. |
+|  | home-assistant/operating-system | Apache-2.0 | *STUDY* | **Read this one end to end before you commit.** A consumer appliance OS shipped to hundreds of thousands of non-technical households, with the update system, the recovery path and the "never show a terminal" discipline already solved in public. |
+|  | home-assistant/core | Apache-2.0 | *STUDY* | **The integration model.** Two thousand integrations maintained by strangers without the project collapsing. That governance pattern is your app store's future problem, already solved. |
+|  | ublue-os/bluefin | Apache-2.0 | *STUDY* | **Universal Blue's daily driver.** Proof that image-based desktop Linux is usable by normal people today. Their build pipeline is a working template. |
+|  | ublue-os/main | Apache-2.0 | *STUDY* | **The base images.** How to layer your own thing on top of a distro without forking it. |
+|  | ublue-os/image-template | Apache-2.0 | *USE* | **Start here on day one.** A working custom-bootc-image repo with CI already wired. Saves a week of GitHub Actions archaeology. |
+
+#### The one decision in this layer
+
+bootc or RAUC, and you cannot hedge. bootc gives you one artifact format from laptop to appliance and a registry you already run for everything else. RAUC gives you a smaller, older, more certain thing that works on hardware a container runtime would not fit on. Pick bootc for a mini-PC appliance; the rest of this catalog assumes you did.
+
+02
+
+### The comparable, read closely
+
+Omarchy is the project you were pointed at first, and it remains the closest thing to your opinionated-Linux-for-humans idea that has actually shipped and found an audience.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | basecamp/omarchy | MIT | *STUDY* | **The original.** DHH's opinionated Arch + Hyprland setup. The lesson is not the window manager; it is that taste, defaults and a name did more than any feature. |
+|  | omacom-io/omarchy | MIT | *STUDY* | **The current home.** Check which org is canonical before you cite it anywhere public — this moved once already. |
+|  | omacom-io/omarchy-pkgs | MIT | *STUDY* | **Their package overlay.** How a curated distro layer is maintained by a very small team. |
+|  | omacom-io/omarchy-mirror | MIT | *STUDY* | **Their mirror.** Small, but it is the shape of distribution infrastructure you will need — and cheaper to copy than to design. |
+
+#### Why it is study and not use
+
+Omarchy is mutable Arch with excellent taste. You need immutable, signed and self-rolling-back, because your user is a restaurant owner and your update runs while the dinner rush is on. Take the taste and the positioning. Leave the architecture.
+
+03
+
+### Boot chain and hardware root of trust
+
+You said you want the least control possible. The way to hold almost none while still being able to prove the box is yours is to put the trust in hardware and in signatures, not in an account you can log into.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | torvalds/linux | GPL-2.0 | *USE* | **The kernel.** Relevant decision: stay on in-tree drivers. The moment you need an out-of-tree module for the GPU, image-based updates stop being simple. AMD's in-tree amdgpu is most of why Strix Halo is the right silicon. |
+|  | systemd/systemd | LGPL-2.1 | *USE* | **Init, services, sockets, sysext, credentials.** Learn systemd-sysext and the credentials system specifically — they solve per-device configuration on a read-only OS without a mutable /etc. |
+|  | tpm2-software/tpm2-tss | BSD-2-Clause | *USE* | **TPM access.** Seal the disk key to the measured boot state. The customer's data is unreadable if the drive walks out of the building, and you never hold a key. |
+|  | Foxboron/sbctl | MIT | *USE* | **Secure Boot key management that a human can operate.** Makes signed boot a build step rather than a research project. |
+|  | OP-TEE/optee_os | BSD-2-Clause | *STUDY* | **ARM TrustZone TEE.** Only relevant if you go ARM. On x86 the TPM covers your needs. |
+|  | fwupd/fwupd | LGPL-2.1 | *USE* | **Firmware updates on Linux, properly.** The layer below your OS updates. Ignoring it means shipping known-vulnerable firmware to four hundred businesses. |
+|  | fwupd/lvfs-website | GPL-2.0 | *STUDY* | **The firmware distribution service.** A working model of exactly the thing you are building — signed artifacts, vendor accounts, staged rollout, public metadata. Read the design documents even if you never upload a cab file. |
+
+04
+
+### Apps on the box, and the naming trap
+
+How software that is not the operating system gets onto and off of an immutable machine, and how the box describes what it has to a human being.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | flatpak/flatpak | LGPL-2.1 | *USE* | **Sandboxed desktop apps on an immutable OS.** The answer to "the customer wants Chrome on it" that does not involve mutating the base image. |
+|  | flatpak/xdg-desktop-portal | LGPL-2.1 | *USE* | **The permission broker.** How a sandboxed app asks for a file or the camera and the user answers. Your first-party apps go through the same door as third-party ones — that rule is worth more than any marketing claim about privacy. |
+|  | PackageKit/PackageKit | GPL-2.0 | *USE* | **Distro-neutral package operations.** The thing a graphical installer talks to so your UI never has to know what a package manager is. |
+|  | ximion/appstream | LGPL-2.1 | *CAREFUL* | **The freedesktop metadata standard** for describing software to a store UI — icons, screenshots, summaries, categories. Use the format. **Do not use the word.** Between this and RHEL's AppStream repository you already have two; a third called yours will cost you a week of confused conversations. |
+|  | 89luca89/distrobox | GPL-3.0 | *USE* | **Any distro's tooling inside a container on an immutable host.** How your own developers keep working on a machine that will not let them install a compiler. |
+
+05
+
+### The kiosk surface
+
+The wall-mounted screen is where "a Linux computer made simple" either holds up or dies in front of everyone who works there. Nothing in this layer may ever show a terminal, an error dialog or a login prompt.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | cage-kiosk/cage | MIT | *CORE* | **A Wayland compositor that runs exactly one application fullscreen.** No desktop, no shortcut to a desktop, no way out. That constraint is the product. |
+|  | swaywm/sway | MIT | *STUDY* | **The tiling compositor cage is built from.** Read it when cage cannot do the one thing you need, not before. |
+|  | Quickshell/quickshell | LGPL-3.0 | *STUDY* | **QML shell toolkit.** Relevant if the kiosk grows past a single fullscreen view into panels and overlays. Omarchy-adjacent territory. |
+|  | NoriginMedia/Norigin-Spatial-Navigation | Apache-2.0 | *USE* | **Arrow-key navigation for TV interfaces.** You said smart-TV layout, and this is the unglamorous library that makes a remote control feel right. Nobody notices it working; everyone notices it missing. |
+
+#### The rule for this layer
+
+If a customer can reach a shell by accident, you have shipped a Linux box. If they cannot reach one at all, you have broken your own promise that they own it. The resolution is a deliberate, documented, slightly hidden way in — held down, typed in, never discovered by a dropped tray.
+
+06
+
+### Containers, sandboxes and the isolation ladder
+
+Third-party apps run on a machine sitting in a business's back office, holding that business's operational data. Isolation is not a feature here; it is the whole liability position.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | containers/podman | Apache-2.0 | *CORE* | **Daemonless, rootless containers with systemd integration.** Quadlet — writing .container files that systemd manages as units — is why this beats Docker on an appliance. No daemon to die, no socket to secure. |
+|  | containers/buildah | Apache-2.0 | *USE* | **Build images without a daemon.** Scriptable, minimal, pairs with podman. |
+|  | containers/skopeo | Apache-2.0 | *USE* | **Move and inspect images between registries without pulling them.** Your mirroring and promotion tool. |
+|  | containers/image | Apache-2.0 | *STUDY* | **The library underneath skopeo and podman.** Read when you write your own promotion logic. |
+|  | containers/storage | Apache-2.0 | *STUDY* | **The layer store.** Same reason. |
+|  | containers/bubblewrap | LGPL-2.0 | *USE* | **Unprivileged sandboxing primitive.** What Flatpak uses underneath. The cheapest real isolation you can put around a helper process. |
+|  | google/gvisor | Apache-2.0 | *USE* | **A user-space kernel.** Syscall interception, so a container escape hits gVisor instead of your kernel. The right default for third-party code that touches customer data. |
+|  | google/nsjail | Apache-2.0 | *STUDY* | **Process jail.** Lighter than gVisor, less complete. Good for short-lived tooling. |
+|  | firecracker-microvm/firecracker | Apache-2.0 | *CAREFUL* | **MicroVMs with ~125ms boot.** The strongest isolation short of separate hardware, and real operational weight. Justified only for untrusted code from a developer you have never met — which, if the app store works, is eventually most of it. |
+|  | google/crosvm | BSD-3-Clause | *STUDY* | **The ChromeOS VMM.** Read for how a consumer appliance runs untrusted guests without the user ever hearing the word virtualization. |
+|  | microsandbox/microsandbox | Apache-2.0 | *STUDY* | **MicroVM sandboxing aimed specifically at agent-generated code.** Newer and smaller — watch it rather than depend on it. |
+|  | bytecodealliance/wasmtime | Apache-2.0 | *USE* | **WebAssembly runtime with capability-based security.** A plugin gets exactly the capabilities you hand it and cannot ask for more. This is the enforcement layer the Agent Plugins spec explicitly does not have. |
+|  | extism/extism | BSD-3-Clause | *CORE* | **The practical wrapper around Wasm plugins.** Host SDKs in a dozen languages, plugins in any language that compiles to Wasm. If you want third-party code without third-party risk, this plus wasmtime is the answer — and it is the difference between your store and Grok's. |
+|  | e2b-dev/infra | Apache-2.0 | *STUDY* | **Open infrastructure for AI code sandboxes.** Someone else's production answer to the same question. Read their isolation boundaries. |
+|  | apple/container | Apache-2.0 | *STUDY* | **Apple's container tooling.** Only interesting as a read on where the platform you are positioned against is heading. |
+|  | apple/containerization | Apache-2.0 | *STUDY* | **The framework under it.** Same. |
+
+#### Where the ladder actually lands
+
+First-party app: container + gVisor. Verified third-party app: the same, no exceptions and no shortcuts — identical treatment is the claim. Unverified community app: Wasm via Extism, with a capability list, or a microVM if it genuinely needs a filesystem. Never: a plugin that runs as a subprocess with the node's environment.
+
+07
+
+### Registry, fleet and entitlement — the Red Hat machine
+
+This is the part you are actually copying. Not the operating system: the apparatus that turns 'we publish updates' into a subscription business, with content on one side and entitlement on the other.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | project-zot/zot | Apache-2.0 | *CORE* | **A minimal OCI-native registry.** Runs on the box, runs in the cloud, stores your OS images, your app bundles and your flow packs as OCI artifacts. Small enough to understand completely. |
+|  | quay/quay | Apache-2.0 | *STUDY* | **Red Hat's registry.** Overkill for you now. Read the organisation, robot-account and vulnerability-feed model — that is the shape a developer-facing registry needs eventually. |
+|  | pulp/pulp | GPL-2.0 | *STUDY* | **Content repository management: mirror, version, promote, publish.** The dev → staging → production channel pattern you need, already built by people who ship to enterprises. |
+|  | theforeman/foreman | GPL-3.0 | *STUDY* | **Lifecycle management for fleets of machines.** Heavy. Read the host-group and content-view concepts and implement a hundredth of it. |
+|  | Katello/katello | GPL-2.0 | *STUDY* | **Foreman + Pulp + Candlepin together.** This combination *is* Red Hat Satellite, and Satellite is how Red Hat actually delivers what customers pay for. The single most useful thing in this section to read. |
+|  | candlepin/candlepin | GPL-2.0 | *CORE* | **Subscription and entitlement management.** Who is paid up, what are they entitled to pull, when does it expire. You are building a subscription business for updates; this is that business's ledger, and it already exists. |
+|  | flightctl/flightctl | Apache-2.0 | *CORE* | **Red Hat's edge device management for image-based hosts.** Declarative device state, staged rollout, rollback. Built for exactly your deployment shape — one image, many unattended machines, no on-site staff. The closest thing to a drop-in for your fleet plane. |
+|  | cockpit-project/cockpit | LGPL-2.1 | *CAREFUL* | **Web admin for a Linux host.** Useful for you during development; a promise you do not want to make to a customer. If they can reach Cockpit, they can break the appliance, and the call comes to you. |
+|  | fleetdm/fleet | MIT | *STUDY* | **Device management and reporting at scale via osquery.** Read the reporting model — you need fleet visibility without fleet access, and this is the closest working example. |
+|  | oras-project/oras | Apache-2.0 | *CORE* | **Push and pull arbitrary artifacts to an OCI registry.** The reason your flow packs, app bundles and model manifests all live in the same signed, mirrored, content-addressed place as your OS. One distribution mechanism for everything. |
+|  | google/go-containerregistry | Apache-2.0 | *USE* | **The library for registry work in Go.** crane is in here and is the tool you will actually type. |
+
+#### The four pieces that matter
+
+zot holds the bits. ORAS puts non-image things in it. Candlepin says who may pull. flightctl decides which devices get it and in what order. That is the subscription business, and every one of those four is open source and already written.
+
+08
+
+### The pipeline and the policy gate
+
+How a change becomes a signed artifact that four hundred machines are allowed to pull, with a gate that says no on its own without you in the room.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | tektoncd/pipeline | Apache-2.0 | *STUDY* | **Kubernetes-native CI.** Correct if you are already on Kubernetes. You are not, and you should not start for this. Read the task/pipeline decomposition and do the same shape in whatever you already run. |
+|  | konflux-ci/konflux-ci | Apache-2.0 | *STUDY* | **Red Hat's full supply-chain build service.** Enormous. Read what it enforces — provenance, SBOM, policy — and steal the checklist, not the system. |
+|  | conforma/cli | Apache-2.0 | *CORE* | **The policy gate, formerly Enterprise Contract.** Verifies signature, provenance and policy before an artifact is allowed to be promoted. This is the machine that lets you say "nothing unsigned reaches a customer" as a fact rather than a policy. |
+|  | enterprise-contract/ec-cli | Apache-2.0 | *STUDY* | **The former name.** Noted so an old link in a bookmark does not read as a different tool. |
+|  | argoproj/argo-cd | Apache-2.0 | *CAREFUL* | **GitOps continuous delivery.** Excellent, and Kubernetes-shaped. Take the declared-state-in-git discipline; skip the cluster. |
+
+09
+
+### Supply chain: signing, transparency, SBOM, scanning
+
+The evidence layer. Every claim you make about what is on the box has to be checkable by someone who does not trust you — including, eventually, a customer's insurer.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | sigstore/cosign | Apache-2.0 | *CORE* | **Sign and verify container images and arbitrary artifacts.** Keyless signing via OIDC means you are not managing a private key on a laptop, which is where signing schemes usually die. Non-negotiable for anything that reaches a customer machine. |
+|  | sigstore/rekor | Apache-2.0 | *CORE* | **The transparency log.** An append-only public record of what you signed and when. Put constitution versions and app-map promotions in here, not just OS images — those are the claims that actually need third-party verification. It is also your defence on the day someone alleges you changed a business's data. |
+|  | sigstore/sigstore | Apache-2.0 | *STUDY* | **The client libraries.** For when signing has to happen inside your own code. |
+|  | theupdateframework/python-tuf | Apache-2.0 / MIT | *STUDY* | **TUF: the formal answer to compromised update servers.** Role separation, key rotation, rollback and freeze attack resistance. Sigstore covers most of it in practice; read TUF for the threat model you will be asked about by the first serious customer. |
+|  | anchore/syft | Apache-2.0 | *USE* | **Generate an SBOM from an image or directory.** One command. Do it on every build from the first build, because retrofitting SBOMs across a year of releases is a month of work. |
+|  | anchore/grype | Apache-2.0 | *USE* | **Scan that SBOM for known vulnerabilities.** Pairs with syft. The pair is your "we patch it" claim made mechanical. |
+|  | aquasecurity/trivy | Apache-2.0 | *USE* | **Broader scanner** — images, filesystems, IaC, secrets. Overlaps grype; run one in CI and the other as an independent check, since agreeing scanners tell you little. |
+|  | trufflesecurity/trufflehog | AGPL-3.0 | *USE* | **Finds committed secrets, and verifies whether they are live.** Run it over every third-party app bundle before it enters the store. Note the AGPL: fine as a CI tool you execute, a problem if you link it into a service you distribute. |
+|  | aboutcode-org/scancode-toolkit | Apache-2.0 | *USE* | **License and origin detection across a codebase.** You are assembling a hundred and eighty projects into hardware you sell. This is how you find the GPL component someone vendored into a dependency three levels down, before a customer's lawyer does. |
+|  | CycloneDX/cyclonedx-cli | Apache-2.0 | *USE* | **SBOM format conversion and merging.** You will need one merged SBOM per released image, not forty. |
+|  | spdx/tools-python | Apache-2.0 | *STUDY* | **The other SBOM standard.** Emit whichever the asking party wants; the tooling to convert exists, so do not hold a religious position. |
+
+#### The claim this layer buys you
+
+"I cannot see your data" is architecture. "You can verify what I sent you" is signing plus transparency. The second is the one that survives a hostile question, because the person asking can check it without your cooperation.
+
+10
+
+### The execution layer — remote control of a real phone
+
+The core of the product and the only row in the whole catalog with no upstream that does the whole job. Everything here is a part of the mechanism: see the screen, read the tree, act, and prove the act landed.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+| ✓ | Genymobile/scrcpy | Apache-2.0 | *CORE* | **Mirror and control an Android device over USB or TCP with no app installed on it.** Low latency, rock solid, enormous install base. This is what makes "they can see their own phone on their iPhone" a weekend of work instead of a product. |
+|  | NetrisTV/ws-scrcpy | MIT | *USE* | **scrcpy in a browser over WebSocket.** The owner-facing viewer, without shipping a native app to anyone. |
+| ✓ | openatx/uiautomator2 | MIT | *CORE* | **Python control of Android's UIAutomator: dump the view hierarchy, find elements, tap, type, wait.** This is the executor. It is also precisely what ghost/device.py was reimplementing — replace that file with this library and delete about three hundred lines you now have to maintain. |
+|  | openatx/adbutils | MIT | *USE* | **ADB from Python without shelling out.** The layer under uiautomator2; use it directly for device discovery, install, screenshot and file transfer. |
+| ✓ | mobile-dev-inc/maestro | Apache-2.0 | *CORE* | **Declarative YAML flows for mobile UI, with element matching and implicit waits that actually work.** The hardest, least interesting problem in this whole build is "wait until the screen is really ready", and Maestro has solved it in public. Verified today: still Apache-2.0, ~15.3k stars, releasing every few weeks. |
+|  | mobile-dev-inc/maestro-studio | Apache-2.0 | *CORE* | **Point at an element, get a selector, record a flow.** This is your factory tool — the thing you use on the Tuesday an app vendor ships a redesign and you have to re-map before the fleet notices. It is also what ghost/recorder.py was rebuilding. |
+|  | appium/appium | Apache-2.0 | *STUDY* | **The old guard of mobile automation.** Heavier than you need, but the driver architecture is the reference for supporting a second platform later. |
+|  | appium/appium-inspector | Apache-2.0 | *USE* | **A GUI for inspecting a live app's element tree.** Free debugging for the day a selector matches nothing and the screenshot looks identical. |
+|  | appium/appium-uiautomator2-driver | Apache-2.0 | *STUDY* | **Their Android driver.** Read it when uiautomator2 does something you cannot explain. |
+|  | google-research/android_world | Apache-2.0 | *STUDY* | **A benchmark of 116 tasks across 20 real Android apps.** Use it as your regression suite. Also use its published success rates as the honest ceiling on what unattended UI automation achieves — which is the number your fingerprint gate exists to work around. |
+|  | OpenBMB/AgentCPM-GUI | Apache-2.0 | *STUDY* | **An on-device GUI agent model.** Interesting later, when a flow needs to survive a layout change without a human re-mapping it. Not the v1 mechanism; your v1 advantage is that you do *not* need a model to tap a button. |
+|  | bytedance/UI-TARS | Apache-2.0 | *STUDY* | **A GUI agent model with real benchmark numbers.** Same category, further along. Read the failure analysis rather than the headline scores. |
+|  | microsoft/OmniParser | MIT | *STUDY* | **Turns a screenshot into structured, labelled elements.** The fallback when there is no accessibility tree — for example inside a WebView or a game-engine UI. |
+|  | simular-ai/Agent-S | Apache-2.0 | *STUDY* | **An agent framework for computer use.** Read the memory and retry design. |
+|  | mobile-next/mobile-mcp | Apache-2.0 | *USE* | **Mobile control exposed as an MCP server.** Not an alternative executor — a projection. This is how an assistant asks your device layer to do something without being handed ADB. |
+| ✓ | droidrun/mobilerun | Apache-2.0 | *STUDY* | **LLM-agnostic mobile agent: inspect UI state, read screenshots, tap, swipe, type, plan.** Verified today as a live project. The closest public thing to your executor — read it for their tool surface, and note how much of their complexity comes from letting a model decide. |
+| ✓ | callstackincubator/agent-device | MIT | *USE* | **Mobile automation and verification for coding agents — CLI, MCP server and typed Node API across iOS, Android, TV, web, macOS and Linux.** Note the correct org: it is callstackincubator, not callstack. The word *verification* in their own description is the interesting part; read how they do it. |
+|  | sktyou/OpenGUI | — | *STUDY* | **An Android GUI agent framework for phone-use AI.** Verified to exist; small and young. Read, do not depend. |
+|  | yashab-cyber/opendroid | — | *CAREFUL* | **Appeared in the session's search results.** I could not re-verify its scope today — GitHub is unreachable from this environment. Treat as a lead, not a part, until you have opened it yourself. |
+|  | waydroid/waydroid | GPL-3.0 | *CAREFUL* | **Android in a container on Linux.** Tempting: no physical phone. But it defeats the entire premise — the customer's own SIM, the customer's own logged-in accounts, a real device they can pick up. Useful for your test rig, wrong for the product. |
+|  | block/trailblaze | Apache-2.0 | *STUDY* | **Android UI automation aimed at agents.** Small, recent, directly on your path. |
+|  | google/device-infra | Apache-2.0 | *STUDY* | **Google's own device lab infrastructure.** Read when you have fifty phones on a rack and the problem becomes logistics rather than automation. |
+|  | textbee/textbee | GPL-3.0 | *USE* | **Turns an Android phone into an SMS gateway over its own SIM.** This is the text-message marketing channel, sent from the business's real number, with no Twilio in the path and no per-message rake. Note the GPL-3.0 before it goes in a shipped image. |
+|  | google/artemis | — | *SKIP* | **Appeared in the session as a mobile-automation reference.** I cannot verify it today and cannot confirm the repository is what it was described as. Do not put it in a plan until you have looked. |
+
+#### The row with no upstream
+
+Fingerprint-gated, independently verified remote control is the one job in this catalog that nothing here does. Every project above will happily tap a button and report success. None of them refuse to act because the screen is not the screen they were mapped against, and none read the result back on a different path to prove it landed. That gate and that read-back are the product. Everything else is a part you did not have to build.
+
+11
+
+### The other two execution paths
+
+The verifier must not be the executor. If you write through Android and read back through Android, you have built self-certification with extra steps. These are the independent paths.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | microsoft/playwright | Apache-2.0 | *CORE* | **Browser automation that is reliable enough to bet on.** Two jobs: the vendors that have a usable web interface, and — more importantly — the independent read-back path that proves an Android write actually landed. |
+|  | microsoft/playwright-mcp | Apache-2.0 | *USE* | **Playwright as an MCP server.** Same projection logic as mobile-mcp: the assistant asks, it does not drive. |
+|  | browser-use/browser-use | MIT | *CAREFUL* | **Let a model drive a browser.** Genuinely useful for mapping a new site quickly. Keep it in the factory, out of the runtime — a model improvising on a customer's live booking system is the exact failure mode your whole design avoids. |
+|  | trycua/cua | MIT | *STUDY* | **Computer-use agents in sandboxed VMs.** Read the sandbox boundary. |
+|  | OpenHands/OpenHands | MIT | *STUDY* | **Formerly OpenDevin.** Read the execution-and-verification loop; ignore the coding focus. |
+|  | openinterpreter/open-interpreter | AGPL-3.0 | *CAREFUL* | **Natural language to executed code, locally.** Instructive, and the AGPL makes it a distribution problem for a box you sell. |
+|  | ydotool/ydotool | AGPL-3.0 | *CAREFUL* | **Input automation on Wayland.** Sometimes the only way to drive a stubborn desktop app. Check the licence against your shipping plan. |
+
+#### Say it in the manifest
+
+Each capability should name its write path and its verify path, and the two must differ. "Wrote via Android, verified via browser" is a sentence a customer understands and a claim a sceptic can test. It is also the difference between a run record and a receipt.
+
+12
+
+### Their screen, on their phone
+
+The feature that makes an owner feel they own the thing: pick up an iPhone, see the Android device sitting in the back office, take over.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | LizardByte/Sunshine | GPL-3.0 | *CAREFUL* | **Self-hosted low-latency desktop streaming host.** GPL-3.0 matters if it ships on hardware you sell — read it properly before it is load-bearing. |
+|  | moonlight-stream/moonlight-qt | GPL-3.0 | *STUDY* | **The client side.** Same licence note. |
+|  | Genymobile/scrcpy | Apache-2.0 | *CORE* | **Listed again deliberately.** For the phone specifically, scrcpy plus ws-scrcpy is a simpler and better answer than a desktop streaming stack. Use the streaming pair only if you ever need to show the box's own screen. |
+
+13
+
+### Agent protocols and the orchestration layer
+
+You are selling the harness. This is the wiring the harness is made of — and the standards question is now settled enough to build on.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | modelcontextprotocol/modelcontextprotocol | MIT | *CORE* | **MCP, the specification.** The way a customer's own data becomes available to an assistant without leaving their machine. Your 'attach it and it stays on their computer' promise is this protocol, implemented honestly. |
+|  | modelcontextprotocol/servers | MIT | *USE* | **Reference servers.** Read three, then write yours; the patterns are more useful than the code. |
+|  | modelcontextprotocol/python-sdk | MIT | *USE* | **Python SDK.** The node speaks this. |
+|  | modelcontextprotocol/typescript-sdk | MIT | *USE* | **TypeScript SDK.** The surfaces speak this. |
+| ✓ | a2aproject/A2A | Apache-2.0 | *CORE* | **Agent-to-agent communication.** This is the wire for your zero-data developer story: the developer's agent talks to the business's agent, the answer crosses, the data does not. Verified today: the protocol landscape has converged under Linux Foundation governance, with IBM's ACP folded into this effort rather than competing with it. |
+|  | agentclientprotocol/agent-client-protocol | Apache-2.0 | *STUDY* | **The editor-to-agent protocol.** Adjacent; read for the handshake design. |
+|  | IBM/mcp-context-forge | Apache-2.0 | *CORE* | **ContextForge: an MCP gateway and registry.** Federates many MCP servers behind one endpoint with auth, rate limits and an admin view. You will have dozens of MCP servers per node; without a gateway that becomes unmanageable around server number six. |
+|  | i-am-bee/beeai-framework | Apache-2.0 | *CAREFUL* | **IBM's multi-agent framework, now under the Linux Foundation.** Verified today: real governance, real backing. Still moving fast — read the agent/workflow decomposition, and keep your orchestrator's core independent of it so a breaking release is an afternoon, not a quarter. |
+|  | i-am-bee/beeai-platform | Apache-2.0 | *STUDY* | **The platform around the framework.** Discovery and run management for agents from different frameworks. Closest public analogue to your orchestrator's job. |
+|  | i-am-bee/beeai-code-interpreter | Apache-2.0 | *STUDY* | **Sandboxed code execution for agents.** Compare against Extism before choosing. |
+|  | NousResearch/hermes-agent | Apache-2.0 | *STUDY* | **An agent harness built around tool use.** Read the tool-calling loop. |
+|  | langchain-ai/langgraph | MIT | *CAREFUL* | **Graph-structured agent workflows with checkpointing.** The state machine is the good idea. Take it; resist the rest of the ecosystem, which is a dependency surface you do not need on an appliance. |
+|  | block/goose | Apache-2.0 | *STUDY* | **A local, extensible agent.** Read the extension model — it is close to what your VAPP contract has to do. |
+
+#### Where the dumb agent lives
+
+MCP is how it reaches data. A2A is how it talks to someone else's agent without handing over the data. ContextForge is how you survive having thirty MCP servers per node. Everything else in this section is reading.
+
+14
+
+### Workflow, events and durable execution
+
+A flow that taps four screens across two apps and dies halfway has to be explainable, resumable and — where it cannot resume — compensable. That is a durability problem, not an automation one.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | temporalio/temporal | MIT | *CORE* | **Durable execution: workflows survive crashes, restarts and deploys, with full history.** The compensating-action problem — a price change applied to two of four destinations is worse than one that failed cleanly — is exactly what this is built for. The run history is also your audit trail for free. |
+|  | restatedev/restate | BUSL-1.1 | *CAREFUL* | **Durable execution, lighter to operate.** Note the BUSL licence: source-available, not open source, with a delayed conversion. That is a business-model decision you would be adopting, not just a library. |
+|  | nats-io/nats-server | Apache-2.0 | *USE* | **Messaging with JetStream persistence, in a single small binary.** The right size for a box in a restaurant. Kafka is the wrong size by two orders of magnitude. |
+|  | apache/kafka | Apache-2.0 | *SKIP* | **Not for an appliance.** Listed because it came up, and because knowing why you said no is worth a line. |
+|  | apache/flink | Apache-2.0 | *SKIP* | **Same.** Stream processing at a scale you will never have on one node. |
+|  | ansible/ansible | GPL-3.0 | *USE* | **Agentless configuration and orchestration.** Your provisioning tool for the factory bench, not something that runs on a customer's box. |
+|  | ansible/awx | Apache-2.0 | *STUDY* | **The upstream of Automation Controller.** Read the job-template and credential model. |
+|  | ansible/event-driven-ansible | Apache-2.0 | *STUDY* | **Rules that fire actions from events.** The shape of your drift-detected → re-map-queued pipeline. |
+|  | activepieces/activepieces | MIT | *STUDY* | **Open-source automation with an MCP story.** Read the piece/connector model — it is close to your VAPP shape and genuinely MIT. |
+|  | ComposioHQ/composio | Apache-2.0 | *STUDY* | **A large managed catalogue of tool integrations for agents.** Read how they handle auth per-tool; that problem will eat a month of your life. |
+|  | node-red/node-red | Apache-2.0 | *STUDY* | **Flow-based programming with a visual editor.** Twelve years of evidence about what non-programmers can and cannot assemble. Relevant the day an owner wants to change a flow. |
+|  | n8n-io/n8n | Sustainable Use | *SKIP* | **Not open source.** The Sustainable Use Licence restricts commercial hosting. It gets called open source constantly, including by people selling advice. Using it inside a product you sell is a licensing conversation you do not want to have late. |
+
+15
+
+### Models and inference — the terabyte of specialists
+
+A terabyte of specialised models on the box, one endpoint in front of them, and something that swaps them fast enough that a customer never feels it.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | ggml-org/llama.cpp | MIT | *CORE* | **The engine room.** Quantised inference on ordinary hardware, with an OpenAI-compatible server built in. MIT, no strings, runs on the AMD unified-memory part you picked. |
+|  | mostlygeek/llama-swap | MIT | *CORE* | **Hot-swaps models behind one endpoint, each in its own process.** This is the specific piece that makes 'a terabyte of specialists' work instead of being a directory of files. Process isolation matters: one bad model cannot take the endpoint down. |
+|  | ggml-org/whisper.cpp | MIT | *USE* | **Speech recognition, same engine family.** Use when you want one runtime rather than two. |
+|  | vllm-project/vllm | Apache-2.0 | *CAREFUL* | **High-throughput serving.** Built for many concurrent users on server GPUs. You have one business per box. Right answer for your cloud tier, wrong answer for the appliance. |
+|  | ollama/ollama | MIT | *CAREFUL* | **The easiest local-model experience there is** — and a wrapper around llama.cpp. Perfect for your laptop this week. On a product you sell, go one layer down so you control quantisation, memory and swap behaviour yourself. |
+|  | BerriAI/litellm | MIT | *USE* | **One API shape in front of every provider, local or hosted.** Your neutrality claim, in code: the customer can point at your local models, or their own OpenAI key, and nothing upstream changes. |
+|  | open-webui/open-webui | BSD-3-Clause | *STUDY* | **A polished local-model UI.** Read the model-management screens; that is a UI problem you would otherwise solve badly. |
+|  | huggingface/huggingface_hub | Apache-2.0 | *USE* | **Fetch and cache models programmatically.** Your model catalogue's download path — and worth mirroring into your own registry so a customer's box does not depend on someone else's uptime. |
+|  | instructlab/instructlab | Apache-2.0 | *STUDY* | **Community model tuning with synthetic data generation.** The path from 'the restaurant vertical needs its own adapter' to actually having one, without a research team. |
+|  | ibm-granite/granite-guardian | Apache-2.0 | *USE* | **A small model that checks other models' inputs and outputs for harm.** Cheap insurance on a device that writes to a business's public presence. |
+|  | ibm-granite/granite-speech-models | Apache-2.0 | *STUDY* | **Speech models, Apache-2.0.** An alternative to Whisper with a clean licence. |
+|  | ibm-granite/granite-vision-models | Apache-2.0 | *STUDY* | **Vision models.** Relevant for reading a screenshot when the accessibility tree fails. |
+|  | ibm-granite/granite-tsfm | Apache-2.0 | *STUDY* | **Time-series foundation models.** Demand forecasting, much later. |
+|  | meta-llama/llama-stack | MIT | *STUDY* | **A standardised API surface for inference, safety and agents.** Build to the Responses API shape whether or not you adopt the stack — it is becoming the common denominator. |
+|  | kserve/kserve | Apache-2.0 | *SKIP* | **Kubernetes model serving.** Wrong deployment shape for a box. |
+|  | llm-d/llm-d | Apache-2.0 | *SKIP* | **Distributed serving on Kubernetes.** Same. |
+|  | ROCm/ROCm | MIT | *USE* | **AMD's compute stack.** The reason the hardware choice and the software choice are the same decision. Verify your exact part is supported by the exact ROCm version before you buy a pallet. |
+|  | NVIDIA/Personal-AI-Router | Apache-2.0 | *STUDY* | **Routing between local and remote models.** Read the routing policy; you need the same decision made on cost, privacy and latency. |
+|  | agentscope-ai/QwenPaw | Apache-2.0 | *STUDY* | **An agent runtime worth a read, not a dependency.** |
+|  | xai-org/grok-1 | Apache-2.0 | *STUDY* | **The weights release.** Relevant only as evidence of what 'open' means to the company you are positioning against. |
+
+#### The swap trick worth knowing
+
+Loading a different model costs five to eight seconds. Swapping a LoRA adapter on a loaded base costs roughly two hundred milliseconds. If your verticals can be adapters over one base rather than twenty separate models, the box feels instant and the terabyte becomes a library rather than a queue.
+
+16
+
+### Voice
+
+Wake word, endpointing, transcription, speech. Four small models and one protocol that lets them be swapped independently. This is also the demo people remember.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | rhasspy/wyoming | MIT | *CORE* | **The protocol that lets each voice piece be a separate service.** Swap the TTS without touching the wake word. Home Assistant runs on this in production across a very large install base. |
+|  | dscripka/openWakeWord | Apache-2.0 | *USE* | **Wake word detection, trainable on your own phrase.** "Hey Ghost" is a training run, not a licensing negotiation. |
+|  | snakers4/silero-vad | MIT | *USE* | **Voice activity detection.** Tiny, fast, and the difference between a system that knows when you stopped talking and one that interrupts people. |
+|  | SYSTRAN/faster-whisper | MIT | *USE* | **Whisper via CTranslate2 — several times faster, much less memory.** The practical transcription choice. |
+| ✓ | rhasspy/piper | MIT | *SKIP* | **Archived 6 October 2025.** Verified today. It is still the top result everywhere and still in a great many build guides. Do not start here. |
+| ✓ | OHF-Voice/piper1-gpl | GPL-3.0 | *CAREFUL* | **Where Piper's development actually moved.** Verified today — and note the licence change from MIT to GPL-3.0. If you were planning on Piper because it was MIT, that reason no longer exists, and this is exactly the kind of thing that is expensive to discover after you have shipped hardware. |
+|  | hexgrad/kokoro | Apache-2.0 | *CORE* | **82M parameters, genuinely good voice, Apache-2.0.** The right default now: small enough for the box, clean enough for a product you sell. |
+|  | speaches-ai/speaches | MIT | *USE* | **An OpenAI-compatible server for speech-to-text and text-to-speech.** One familiar API in front of the whole voice stack. |
+|  | pipecat-ai/pipecat | BSD-2-Clause | *USE* | **Real-time voice conversation orchestration** — interruption, turn-taking, barge-in. The things that separate a voice demo from a phone agent that does not infuriate callers. |
+|  | livekit/livekit | Apache-2.0 | *USE* | **WebRTC infrastructure, self-hostable.** The transport when the voice agent has to answer an actual phone call. |
+|  | livekit/agents | Apache-2.0 | *STUDY* | **Their agent framework on top.** Read the turn-taking implementation. |
+|  | fonoster/fonoster | MIT | *STUDY* | **Open-source programmable telephony.** The self-hosted answer to the question you already asked out loud — why am I paying Twilio. |
+|  | home-assistant/hassil | Apache-2.0 | *USE* | **Template-based intent matching.** Most voice commands in a business are eight fixed sentences. Matching them with templates is faster, cheaper and more predictable than asking a model, and it never hallucinates a reservation. |
+
+17
+
+### The data plane
+
+Private truth on the node, signed projections on the read-only edge, and a backup the customer controls and you cannot read.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | postgres/postgres | PostgreSQL | *CORE* | **The node's database.** One node per business, no tenant_id column anywhere — the isolation is the deployment, which is a far stronger claim than a WHERE clause. |
+|  | pgvector/pgvector | PostgreSQL | *USE* | **Vectors inside Postgres.** One database to back up, one to restore, one to reason about. |
+|  | asg017/sqlite-vec | Apache-2.0 / MIT | *USE* | **Vector search in SQLite.** For the small edge case where Postgres is too much machinery. |
+|  | benbjohnson/litestream | Apache-2.0 | *USE* | **Continuous streaming replication of SQLite to object storage.** Disaster recovery for the small database, with no server. |
+|  | restic/restic | BSD-2-Clause | *CORE* | **Encrypted, deduplicated backup to a destination the customer chooses.** Their NAS, their bucket, their key. They are protected from a dead drive; you still hold nothing. This one component is most of the 'no data, no liability' position made real. |
+|  | meilisearch/meilisearch | MIT | *USE* | **Fast, typo-tolerant search with almost no operational burden.** The right size for 'who has crab legs nearby' across one town. |
+|  | qdrant/qdrant | Apache-2.0 | *STUDY* | **A dedicated vector database.** Only if pgvector stops being enough, which it will not for a long time. |
+|  | opensearch-project/OpenSearch | Apache-2.0 | *SKIP* | **Too heavy for a box.** Noted so the question stays answered. |
+|  | supabase/supabase | Apache-2.0 | *CAREFUL* | **Postgres plus auth, storage and realtime, self-hostable.** A fast start and a large surface. If you adopt it, adopt it deliberately as the node's platform rather than letting it arrive one feature at a time. |
+
+#### The thing you cannot add later
+
+Provenance. If you write canonical values for six months and then decide you want to know where each one came from, you have six months of data with no origin and no way to reconstruct it. The observation table goes in before the first ingestion runs, not after the first dispute.
+
+18
+
+### Getting the data in — email as the universal API
+
+Every vendor already emails the business: the booking confirmation, the daily sales summary, the payout notice. That inbox is an integration nobody can revoke.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | apache/tika | Apache-2.0 | *USE* | **Extracts text and metadata from a thousand file formats.** The unglamorous front door for every PDF a vendor sends. |
+|  | docling-project/docling | MIT | *CORE* | **Turns PDFs into structured documents — tables as tables, not as mangled text.** A daily sales summary is a table in a PDF; this is the component that makes it a row in your database. |
+|  | google/langextract | Apache-2.0 | *USE* | **Structured extraction from unstructured text, with the source span recorded.** That last part is the point: every canonical value can point at the exact sentence it came from. |
+|  | google/magika | Apache-2.0 | *USE* | **Reliable file-type detection.** The first check on anything arriving from outside. |
+|  | google/schema-dts | Apache-2.0 | *USE* | **Typed schema.org for TypeScript.** How the public projection becomes machine-readable, which is how a business shows up correctly in an assistant's answer instead of an index's. |
+
+#### Rank the setup paths by friction
+
+First: add your address as a second notification email inside the vendor's own settings — Toast, Square and FareHarbor all allow it, and Gmail is never involved. Second: a Gmail filter and a verified forwarding address, two minutes in a UI they already know. Last resort: an Apps Script. "Run this script" kills conversion at the exact moment the product needs to feel like nothing.
+
+19
+
+### Identity, authorization, policy, secrets
+
+One login, many apps — and a permission model the Agent Plugins specification openly says it does not have. This layer is where your store stops being a copy of someone else's.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | zitadel/zitadel | Apache-2.0 | *CORE* | **Identity and access management, self-hostable, multi-tenant, Apache-2.0.** Lighter than Keycloak to run and operate. This is 'one login, many apps' with nothing phoning home. |
+|  | keycloak/keycloak | Apache-2.0 | *CAREFUL* | **The heavyweight, Red Hat's SSO.** More capable, more to run. Choose it only if you need something Zitadel lacks, and write down what that was. |
+|  | authzed/spicedb | Apache-2.0 | *CORE* | **Google Zanzibar-style fine-grained authorization.** Relationship-based permissions — this user, this business, this capability, this app. The enforcement point for capability lists, and the reason an app cannot quietly read something it was not granted. |
+|  | openfga/openfga | Apache-2.0 | *STUDY* | **The CNCF alternative.** Same model, different trade-offs. Pick one and never run both. |
+|  | open-policy-agent/opa | Apache-2.0 | *USE* | **Policy as code, evaluated anywhere.** The gate that decides whether a capability call is allowed given the constitution, the consent state and the time of day. |
+|  | openbao/openbao | MPL-2.0 | *CORE* | **The open fork of Vault.** Secrets, dynamic credentials, rotation. The customer's vendor logins live here, on their node, encrypted to hardware — not in a config file and not in your cloud. |
+
+#### The gap you are filling, stated plainly
+
+The Agent Plugins specification says, in its own words, that it contains no explicit capability or permission system. Grok's install command is --trust, and trust is binary. Fine on a developer's laptop; not fine on a machine holding a business's operational data. SpiceDB plus OPA plus Extism is the answer, and it is the most defensible thing you are building.
+
+20
+
+### Reaching the box without owning it
+
+You need to support a machine in someone's back office without a standing door into their network — and without a VPN account you could be compelled to use.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | juanfont/headscale | BSD-3-Clause | *USE* | **A self-hosted control plane for Tailscale clients.** You run the coordination, the customer runs the node, and the traffic is still end-to-end encrypted between devices. |
+|  | tailscale/tailscale | BSD-3-Clause | *STUDY* | **The client, and the hosted service.** Read the ACL model even if you self-host the control plane. |
+|  | netbirdio/netbird | BSD-3-Clause | *STUDY* | **The all-in-one alternative.** Simpler to stand up, one more thing you operate. |
+
+#### Support access is a design decision, not a default
+
+The strongest version: no standing access at all. The customer grants a session, it expires, and the grant is recorded in the transparency log. That is harder to build and much easier to say out loud in a sales conversation — and it is the same argument you are already making about data.
+
+21
+
+### Money
+
+Zero percent of the platform, one percent of the payment volume, and a spread you renegotiate as the volume grows. That arrangement needs metering you can defend.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | getlago/lago | AGPL-3.0 | *USE* | **Open-source usage-based billing and metering.** The AGPL is survivable here because you run it as a service rather than distributing it — but make that call deliberately. |
+|  | killbill/killbill | Apache-2.0 | *STUDY* | **Mature subscription billing.** Heavier, Apache-2.0, fifteen years of edge cases already found by other people. |
+|  | dubinc/dub | AGPL-3.0 | *STUDY* | **Link attribution.** The referral and co-op loyalty mechanics need attribution that survives a click; this is a working implementation to read. |
+|  | candlepin/candlepin | GPL-2.0 | *CORE* | **Listed again on purpose.** Lago meters usage. Candlepin decides entitlement — whether this box may pull this update today. Two different jobs, and conflating them is how subscription businesses end up unable to answer 'is this customer paid up' from a single source. |
+
+#### The number to watch
+
+With destination charges the platform carries dispute liability by default, plus negative balances when a business closes holding deposits. Budget 0.1–0.3% of volume for disputes and reserves. That is what turns a one-point spread into roughly seven tenths of one.
+
+22
+
+### The app store layer
+
+The package format is settled, the distribution model is proven, and the trust ladder already exists in three different forms. None of this needs inventing — which is Part VI's whole argument.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+| ✓ | agentplugins/agent-plugins-spec | — | *CORE* | **Agent Plugins 1.0.0 — the package format.** Verified today, and better backed than the session thought: the technical steering committee is Amazon, Cursor, Microsoft, OpenAI and Vercel, under the Agentic AI Foundation. plugin.json, a strict field list, Skills and MCP servers, path containment, PLUGIN_ROOT/PLUGIN_DATA isolation. Your VAPP manifest rides in extensions.io.anextgent. |
+|  | agentskills/agentskills | — | *CORE* | **Agent Skills — the unit inside the package.** SKILL.md with frontmatter and progressive disclosure: about a hundred tokens of name and description loaded for every skill at startup, the body only on activation, resources only on demand. That first tier is your router, and the description field is the trigger rule. |
+|  | neondatabase/agent-skills | Apache-2.0 | *STUDY* | **A real, well-built skill set.** Read the descriptions specifically — they are written as phrase lists that route, which is the technique. |
+| ✓ | vercel/skills | — | *USE* | **The installer pattern, verified today.** Vercel's skills CLI installs across forty-plus agents using a provider registry, a .skillsrc config and a .skill-lock.json that compares directory tree SHAs to detect updates. That lock-file-and-tree-SHA design is what you want on the node, and it comes from a company on the specification's steering committee. |
+|  | junior/skilla | — | *CAREFUL* | **The installer the session identified, with its local registry.json.** I could not re-verify it today — GitHub is unreachable from here and it does not surface in search. Check it yourself; if it has gone quiet, the Vercel CLI above is the better-supported pattern anyway. |
+|  | xai-org/plugin-marketplace | — | *STUDY* | **Index, not store.** The catalogue entry points at someone else's repository at a pinned full-length commit SHA. xAI never hosts the code. That model costs almost nothing to run and puts liability where the code is — read it closely, it is the cheapest distribution design available to you. |
+|  | xai-org/grok-build | — | *STUDY* | **The build tooling around it.** Read the manifest validation. |
+|  | superagent-ai/grok-cli | MIT | *STUDY* | **A third-party client.** Evidence of what the ecosystem does once a format is published. |
+|  | vercel/vercel-plugin | — | *STUDY* | **A real plugin in the wild.** Read one before you specify yours. |
+|  | getsentry/sentry-for-ai | — | *STUDY* | **Another.** Two examples is enough to see the conventions. |
+|  | redhat-openshift-ecosystem/redhat-marketplace-operators | Apache-2.0 | *STUDY* | **How certified content is submitted, reviewed and published.** The submission pipeline for a trust ladder, already written down by people who run one. |
+
+#### The trust ladder, borrowed from people who run one
+
+Red Hat operates four distinct stores, and Automation Hub has three tiers: community content, certified content, and a private hub the customer controls. Map yours to community → verified → the business's own private index. The pinned full SHA is what makes any of it enforceable, because a tag can be moved and a forty-character commit hash cannot.
+
+23
+
+### Surfaces — what the customer and the world actually see
+
+Four surfaces, one record behind them. The owner's console, the kiosk, the public page, and the agent endpoint.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | puckeditor/puck | MIT | *USE* | **A visual editor for React, embeddable in your own app.** The owner rearranges their public page without a developer and without you building a page builder from scratch. |
+|  | shadcn/ui | MIT | *USE* | **Components you copy into your codebase rather than depend on.** No upstream that can break you, no version to chase. The right model for a product with a ten-year support horizon. |
+|  | flutter/flutter | BSD-3-Clause | *CAREFUL* | **One codebase for the owner's phone app.** Real value if the owner app matters; a second language and toolchain for a team of one. Consider a web app first and be honest about whether anyone actually asked for an app. |
+|  | microsoft/PowerToys | MIT | *STUDY* | **Listed because it came up.** Read PowerToys Run as an interaction study for the box's command surface, then move on. |
+
+24
+
+### Read, do not adopt — the IBM and Red Hat shelf
+
+You said Red Hat is the model and Watson was open source. Both true. These are worth reading for how a platform business is structured, and worth not adopting, because each one assumes an operating environment you do not have.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+|  | IBM/watsonx-developer-hub | Apache-2.0 | *STUDY* | **How a large vendor presents an agent platform to developers.** Read the onboarding path — it is the thing you are competing with for a developer's first hour. |
+|  | IBM/watsonx-data | — | *STUDY* | **The data layer.** Read the governance vocabulary; you will need the words. |
+|  | opendatahub-io/opendatahub-operator | Apache-2.0 | *STUDY* | **The upstream of Red Hat's AI platform.** Kubernetes-shaped. Read the component decomposition, which is a good map of what an AI platform is made of. |
+|  | cockpit-project/cockpit | LGPL-2.1 | *STUDY* | **Listed twice deliberately.** As a study item it is the best example of a web UI that manages a Linux host without pretending Linux is not there. |
+
+#### What the IBM and Red Hat reading is actually for
+
+Not the code. The structure: content in one system, entitlement in another, certification as its own track, metering separate from billing, and a policy gate that can say no without a human. That structure is the business you described, and it is documented in public by a company that makes billions running it.
+
+25
+
+### The live traps
+
+Things that will cost you a week or a lawyer if you find them late. Every one of these is currently a top search result for something you will search for.
+
+|  | Project | Licence | Verdict | What it is, and the job it does here |
+|---|---|---|---|---|
+| ✓ | rhasspy/piper | MIT, archived | *SKIP* | **Archived October 2025**, and development moved to a **GPL-3.0** fork. Verified today. Every tutorial still points here. |
+|  | n8n-io/n8n | Sustainable Use | *SKIP* | **Not open source**, despite being described that way nearly everywhere. Commercial hosting is restricted. |
+|  | ximion/appstream | LGPL-2.1 | *CAREFUL* | **The name collision.** This project, RHEL's AppStream repository, and anything of yours called AppStream makes three. Rename yours now, while renaming is a find-and-replace. |
+|  | ollama/ollama | MIT | *CAREFUL* | **Not a trap, a boundary.** Ship llama.cpp; develop on ollama. Shipping a wrapper means debugging someone else's defaults on a customer's box. |
+|  | restatedev/restate | BUSL-1.1 | *CAREFUL* | **Source-available, not open source.** BUSL converts to an open licence on a delay; know the date before you depend on it. |
+|  | trufflesecurity/trufflehog | AGPL-3.0 | *CAREFUL* | **AGPL.** Fine as a tool your CI runs. A distribution question if it is linked into something you ship. |
+|  | openinterpreter/open-interpreter | AGPL-3.0 | *CAREFUL* | **AGPL.** Same reasoning. |
+|  | getlago/lago | AGPL-3.0 | *CAREFUL* | **AGPL.** Run it as a service and it is fine; bundle it and it is not. |
+|  | LizardByte/Sunshine | GPL-3.0 | *CAREFUL* | **GPL-3.0 on hardware you sell** brings the anti-tivoisation provisions into play. Read them properly before this becomes load-bearing. |
+|  | textbee/textbee | GPL-3.0 | *CAREFUL* | **GPL-3.0.** Same question, and this one sits in the SMS marketing feature you already want. |
+|  | 89luca89/distrobox | GPL-3.0 | *CAREFUL* | **GPL-3.0.** A developer tool rather than shipped product, which resolves it — but note it. |
+|  | waydroid/waydroid | GPL-3.0 | *CAREFUL* | **GPL-3.0, and wrong for the product anyway.** The customer's real SIM is the point. |
+|  | google/artemis | — | *SKIP* | **Unverifiable from here.** It was in the session's list; I could not confirm it today. Anything you cannot open is not a part. |
+|  | google/CAGE | — | *SKIP* | **Same.** Confirm before it appears in a plan. |
+|  | yashab-cyber/opendroid | — | *CAREFUL* | **Same.** A lead until you have read it. |
+|  | junior/skilla | — | *CAREFUL* | **Same.** The Vercel skills CLI is the better-supported pattern regardless. |
+
+#### Why this section exists
+
+Licences change, projects get archived, and orgs move. Three of the entries above changed after they were first written down in this project — Piper archived and relicensed, bootc moved orgs, agent-device is under callstackincubator rather than callstack. Re-check anything load-bearing before a build, not after a customer calls.
+
+The order
+
+### Nine steps, and the order matters more than the list
+
+Anyone can clone two hundred and twenty-six repositories in a weekend. The useful question is which three are working by Friday.
+
+1. **scrcpy** — get a real Android phone mirrored on a Linux box with working input. One afternoon, and the first time the idea stops being a description.
+1. **uiautomator2** — dump the view tree of the Google Business Profile app and tap a button from Python. Then delete ghost/device.py.
+1. **Maestro and Maestro Studio** — record one flow by pointing at elements. Compare what their waiting logic does to what yours was going to do.
+1. **The test that decides everything** — install the real apps a Destin charter or a restaurant actually uses. Turn on an accessibility service. See what still runs. This is the one assumption underneath the entire business, and it has still not been run.
+1. **llama.cpp and llama-swap** — one endpoint, two models, hot swap on demand. An hour, and the orchestrator has an engine room.
+1. **wyoming + openWakeWord + silero-vad + faster-whisper + kokoro** — wire five small things together and say a sentence to your box. This is the demo people repeat to other people.
+1. **Playwright** — write the same fact through Android and read it back through the browser. The moment those two agree on a different path, you have the product.
+1. **home-assistant/operating-system** — read the update and recovery design end to end before committing to your own.
+1. **bootc + greenboot** — build one image, boot it, break it on purpose, watch it roll itself back. Now you have a company rather than a script.
+
+#### Steps one to four are the product
+
+Five and six are the demo. Seven is the defensible part. Eight and nine are the company. Step four is the only one that can end the project, which is an argument for running it this week rather than after another document.
+
+Compiled from the full working record. Two hundred and twenty-six projects, twenty-six layers, two hundred and forty-four entries — some listed twice where a project is both a part and a trap. Exactly one job in this catalogue has no upstream: fingerprint-gated remote control with independent read-back. Everything else is a part you did not have to build.
 
 ---
