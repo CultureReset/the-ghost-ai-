@@ -1,0 +1,39 @@
+# Map it once. Push it to everyone.
+#
+#   ghost run flows/google_business.update_hours.yaml \
+#     --var day=Friday --var open=9:00 AM --var close=5:00 PM
+#
+# Element names below are placeholders from a first mapping pass. Re-record
+# against the real app before you ship this:
+#
+#   ghost record google_business.update_hours --app com.google.android.apps.town.businessmessaging
+
+flow: google_business.update_hours
+version: 1
+app: com.google.android.apps.town.businessmessaging
+app_version: "*"
+
+requires: [day, open, close]
+
+# Pre-flight. If these are not on screen, the runner stops and reports DRIFTED
+# instead of tapping blind. This is the single most important block in the file.
+fingerprint:
+  - text: "Business hours"
+  - contains: "Edit"
+
+steps:
+  - wait: {text: "Business hours", timeout: 20}
+  - tap: {text: "Business hours"}
+  - tap: {text: "{{day}}"}
+  - clear: {id: open_time}
+  - type: {id: open_time, value: "{{open}}"}
+  - clear: {id: close_time}
+  - type: {id: close_time, value: "{{close}}"}
+  - tap: {text: "Save"}
+  - wait: {contains: "Business hours", timeout: 20}
+
+# Read it back off the screen. Steps finishing is not proof.
+verify:
+  - contains: "{{day}}"
+  - contains: "{{open}}"
+  - contains: "{{close}}"

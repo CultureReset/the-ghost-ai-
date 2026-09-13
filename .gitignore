@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+runs/
+dist/
+screen.png
