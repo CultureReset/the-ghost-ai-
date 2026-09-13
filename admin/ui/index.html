@@ -127,6 +127,7 @@ const VIEWS = [
   ["actions",      "Actions"],
   ["businesses",   "Entities"],
   ["content",      "Content"],
+  ["edit",         "Edit"],
 ];
 let DATA = {}, CURRENT = "drift";
 
@@ -161,7 +162,8 @@ function tiles(s){
 
 function tabs(){
   document.getElementById("tabs").innerHTML = VIEWS.map(([k, label]) => {
-    const n = DATA[k]?.length ?? 0;
+    // Edit is a form, not a list -- a count beside it would be counting nothing.
+    const n = k === "edit" ? 0 : (DATA[k]?.length ?? 0);
     return `<button data-v="${k}" aria-selected="${k === CURRENT}">${label}` +
            (n ? `<span class="c">${n}</span>` : "") + `</button>`;
   }).join("");
@@ -287,6 +289,11 @@ function render(){
           <td class="num">${r.apps}</td></tr>`).join(""))
         : empty("No businesses", "Nothing enrolled yet."));
 
+
+  } else if (CURRENT === "edit") {
+    v.innerHTML = renderEdit();
+    wireEdit();
+
   } else if (CURRENT === "content") {
     v.innerHTML = `<p class="lede">Maps in the field. <b>A candidate never runs
       against a customer</b> — promotion is deliberate.</p>` +
@@ -302,6 +309,241 @@ function render(){
           <td class="num">${r.bad}</td></tr>`).join(""))
         : empty("No maps recorded", "Nothing has run yet."));
   }
+}
+
+
+/* ------------------------------------------------------------------ editor
+ * The write half. Everything here posts to /api/edit/* and then reloads, so
+ * what you see after a save is what the database actually holds -- never the
+ * optimistic copy the form was holding, which is how an edit that silently
+ * failed still looks saved.
+ */
+let EDSEL = null;   // entity being edited
+const E = () => DATA.editable || {};
+const ents = () => (E().entities || []);
+const cur = () => ents().find(e => e.id === EDSEL) || ents()[0] || null;
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+function renderEdit(){
+  const e = cur();
+  return `<p class="lede">Everything a person is allowed to change by hand.
+    <b>What you type is recorded as something you said</b>, not as the final
+    answer &mdash; the resolver still weighs it against what the apps and the
+    public pages report. Facts the system produced about itself (a heartbeat, a
+    verdict, a serial) are not editable here at all.</p>
+  <div class="ed">
+    <div class="edlist">
+      ${ents().map(x => `<button data-ed="${x.id}" aria-selected="false"
+         aria-current="${x.id === (e && e.id)}">
+         ${x.parent_id ? '<span class="tree2">└ </span>' : ""}${esc(x.name)}
+         <span class="sub">${esc(x.kind)}${x.vertical ? " · " + esc(x.vertical) : ""}</span>
+       </button>`).join("")}
+      <button data-ed="__new" aria-current="${EDSEL === "__new"}">
+        + New business<span class="sub">parent, operation or unit</span></button>
+    </div>
+    <div>${EDSEL === "__new" ? panelEntity(null) : (e ? [
+        panelEntity(e), panelAddress(e), panelHours(e), panelMenu(e),
+        panelBoxes(e)
+      ].join("") : `<div class="panel"><h3>No businesses yet</h3>
+        <p class="why">Add one on the left.</p></div>`)}</div>
+  </div>`;
+}
+
+const field = (k, label, val, extra = "") =>
+  `<div><label for="f_${k}">${esc(label)}</label>
+   <input id="f_${k}" value="${esc(val ?? "")}" ${extra}></div>`;
+
+function panelEntity(e){
+  const opts = (sel) => `<option value="">— none (top level) —</option>` +
+    ents().filter(x => !e || x.id !== e.id)
+      .map(x => `<option value="${x.id}" ${x.id === sel ? "selected" : ""}>
+        ${esc(x.name)}</option>`).join("");
+  return `<div class="panel" id="p_ent">
+    <h3>${e ? "Business" : "New business"}</h3>
+    <p class="why">A business is not one row. Flora-Bama owns a marina, the
+      marina runs dolphin cruises &mdash; each one addressable, each one able to
+      own or inherit its own hours and prices.</p>
+    <div class="fields">
+      ${field("name", "Name", e && e.name)}
+      <div><label for="f_kind">Kind</label><select id="f_kind">
+        ${["parent","location","operation","unit"].map(k =>
+          `<option ${e && e.kind === k ? "selected" : ""}>${k}</option>`).join("")}
+      </select></div>
+      <div><label for="f_vertical">Vertical</label><select id="f_vertical">
+        <option value="">— none —</option>
+        ${["restaurant","charter","marina","trades","artist"].map(k =>
+          `<option ${e && e.vertical === k ? "selected" : ""}>${k}</option>`).join("")}
+      </select></div>
+      <div><label for="f_parent">Sits under</label>
+        <select id="f_parent">${opts(e && e.parent_id)}</select></div>
+    </div>
+    <div class="row2">
+      <button class="act go" onclick="saveEntity('${e ? e.id : ""}')">
+        ${e ? "Save" : "Create"}</button>
+      ${e ? `<button class="act no" onclick="delEntity('${e.id}')">Delete</button>` : ""}
+      <span class="note" id="n_ent"></span>
+    </div></div>`;
+}
+
+function panelAddress(e){
+  return `<div class="panel">
+    <h3>Address</h3>
+    <p class="why">Where it is. The shell puts this under the business name and
+      a directory listing needs it.</p>
+    <div class="fields">
+      ${field("line1", "Street", e.line1)}
+      ${field("city", "City", e.city)}
+      ${field("region", "State", e.region)}
+      ${field("postal", "ZIP", e.postal)}
+    </div>
+    <div class="row2"><button class="act go" onclick="saveAddress('${e.id}')">Save</button>
+      <span class="note" id="n_addr"></span></div></div>`;
+}
+
+function panelHours(e){
+  const mine = (E().hours || []).filter(h => h.entity_id === e.id);
+  const get = wd => mine.find(h => h.weekday === wd);
+  return `<div class="panel">
+    <h3>Hours</h3>
+    <p class="why">Closing after midnight is normal here &mdash; a closing time
+      earlier than the opening time means the next morning, not a mistake.</p>
+    <div class="week">${DAYS.map((d, i) => { const h = get(i); return `
+      <div class="wk">
+        <span class="d">${d}</span>
+        <input id="o_${i}" value="${esc(h ? h.opens : "")}" placeholder="11:00">
+        <input id="c_${i}" value="${esc(h ? h.closes : "")}" placeholder="02:00">
+        <label style="display:flex;gap:6px;align-items:center;text-transform:none;
+          letter-spacing:0;font-size:12px;margin:0;color:var(--ink-2)">
+          <input type="checkbox" id="x_${i}" ${h ? "" : "checked"}
+            style="width:auto"> closed</label>
+      </div>`; }).join("")}</div>
+    <div class="row2"><button class="act go" onclick="saveHours('${e.id}')">Save the week</button>
+      <span class="note" id="n_hours"></span></div></div>`;
+}
+
+function panelMenu(e){
+  const secs = (E().sections || []).filter(s => s.entity_id === e.id);
+  const items = (E().items || []).filter(i => i.entity_id === e.id);
+  return `<div class="panel">
+    <h3>Menu</h3>
+    <p class="why">86ing an item takes effect immediately and asks nobody.
+      It is the one thing that has to work in two seconds on a Friday night.</p>
+    ${secs.map(s => `<div style="margin-bottom:16px">
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px">${esc(s.name)}</div>
+      ${items.filter(i => i.section_id === s.id).map(i => `<div class="itemrow">
+        <input value="${esc(i.name)}" id="in_${i.id}">
+        <input value="${i.price_cents == null ? "" : (i.price_cents/100).toFixed(2)}"
+          id="ip_${i.id}" placeholder="0.00">
+        <button class="act ${i.available ? "" : "no"}"
+          onclick="toggle86('${i.id}', ${i.available ? 0 : 1})">
+          ${i.available ? "86 it" : "86'd"}</button>
+        <button class="act" onclick="saveItem('${i.id}')">Save</button>
+      </div>`).join("") || `<div class="note">No items.</div>`}
+      <div class="itemrow" style="margin-top:8px">
+        <input id="new_${s.id}" placeholder="Add an item…">
+        <input id="newp_${s.id}" placeholder="0.00">
+        <span></span>
+        <button class="act go" onclick="addItem('${s.id}')">Add</button>
+      </div></div>`).join("")}
+    <div class="row2">
+      <input id="newsec" placeholder="New section (Starters, Raw Bar…)"
+        style="max-width:260px">
+      <button class="act" onclick="addSection('${e.id}')">Add section</button>
+      <span class="note" id="n_menu"></span></div></div>`;
+}
+
+function panelBoxes(e){
+  const mine = (E().devices || []);
+  return `<div class="panel">
+    <h3>Boxes</h3>
+    <p class="why">You can say which business a box belongs to, what to call it
+      and which channel it follows. <b>Serial, version and health are not
+      editable</b> &mdash; the box writes those about itself, and a fleet you can
+      type into tells you what somebody meant to deploy.</p>
+    ${mine.map(d => `<div class="itemrow" style="grid-template-columns:minmax(0,1fr) 150px 110px 90px">
+      <input id="dl_${d.id}" value="${esc(d.label || "")}" placeholder="Where it sits">
+      <select id="de_${d.id}">
+        <option value="">— unassigned —</option>
+        ${ents().map(x => `<option value="${x.id}" ${x.id === d.entity_id ? "selected" : ""}>
+          ${esc(x.name)}</option>`).join("")}</select>
+      <select id="dc_${d.id}">${["stable","beta","canary"].map(c =>
+        `<option ${d.channel === c ? "selected" : ""}>${c}</option>`).join("")}</select>
+      <button class="act" onclick="saveDevice('${d.id}')">Save</button>
+     </div>
+     <div class="note" style="margin:0 0 12px">
+       ${esc(d.serial || "no serial")} · ${esc(d.os_version || "?")} ·
+       ${pill(d.health, {ok:"ok",degraded:"warn",down:"bad"}[d.health] || "dim")}
+     </div>`).join("") || `<div class="note">No boxes enrolled. On the box:
+       <span class="mono">python3 -m fleet.report --db node.sqlite --enroll</span></div>`}
+    <span class="note" id="n_dev"></span></div>`;
+}
+
+function wireEdit(){
+  document.querySelectorAll("[data-ed]").forEach(b =>
+    b.onclick = () => { EDSEL = b.dataset.ed; render(); });
+}
+
+const val = id => (document.getElementById(id) || {}).value;
+async function post(path, body, noteId){
+  const n = document.getElementById(noteId);
+  try{
+    const r = await fetch("/api/edit/" + path,
+      { method:"POST", body: JSON.stringify(body) });
+    const d = await r.json();
+    if(!r.ok){ if(n){ n.className="note bad"; n.textContent = d.error; } return null; }
+    if(n){ n.className="note ok"; n.textContent = "Saved."; }
+    return d;
+  }catch(err){
+    if(n){ n.className="note bad"; n.textContent = String(err); }
+    return null;
+  }
+}
+
+async function saveEntity(id){
+  const d = await post("entity", { id: id || undefined, name: val("f_name"),
+    kind: val("f_kind"), vertical: val("f_vertical") || null,
+    parent_id: val("f_parent") || null }, "n_ent");
+  if(d){ EDSEL = d.id; await load(); }
+}
+async function delEntity(id){
+  const d = await post("entity/del", { id }, "n_ent");
+  if(d){ EDSEL = null; await load(); }
+}
+async function saveAddress(id){
+  if(await post("location", { entity_id:id, line1:val("f_line1"),
+    city:val("f_city"), region:val("f_region"), postal:val("f_postal") }, "n_addr"))
+    await load();
+}
+async function saveHours(id){
+  const days = DAYS.map((_, i) => document.getElementById("x_"+i).checked
+    ? { weekday:i, closed:true }
+    : { weekday:i, opens:val("o_"+i), closes:val("c_"+i) });
+  if(await post("hours", { entity_id:id, days }, "n_hours")) await load();
+}
+async function addSection(id){
+  const name = val("newsec"); if(!name) return;
+  if(await post("menu/section", { entity_id:id, name }, "n_menu")) await load();
+}
+async function addItem(sid){
+  const name = val("new_"+sid); if(!name) return;
+  const p = val("newp_"+sid);
+  if(await post("menu/item", { section_id:sid, name,
+      price_cents: p ? Math.round(parseFloat(p)*100) : null }, "n_menu"))
+    await load();
+}
+async function saveItem(id){
+  const p = val("ip_"+id);
+  if(await post("menu/item", { id, name: val("in_"+id),
+      price_cents: p ? Math.round(parseFloat(p)*100) : null }, "n_menu"))
+    await load();
+}
+async function toggle86(id, to){
+  if(await post("menu/item", { id, available: to }, "n_menu")) await load();
+}
+async function saveDevice(id){
+  if(await post("device", { id, label: val("dl_"+id),
+      entity_id: val("de_"+id) || null, channel: val("dc_"+id) }, "n_dev"))
+    await load();
 }
 
 async function load(){
@@ -328,3 +570,42 @@ setInterval(load, 30000);
 </script>
 </body>
 </html>
+<style>
+  /* ---- editor -------------------------------------------------------- */
+  .ed{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px}
+  .edlist{border:1px solid var(--line);border-radius:3px;background:var(--panel);
+    overflow:hidden;align-self:start}
+  .edlist button{display:block;width:100%;text-align:left;padding:10px 13px;
+    border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink-2);
+    font:inherit;cursor:pointer}
+  .edlist button:last-child{border-bottom:0}
+  .edlist button:hover{background:var(--panel-2);color:var(--ink)}
+  .edlist button[aria-current="true"]{background:var(--panel-2);color:var(--ink);
+    box-shadow:inset 2px 0 0 var(--amber)}
+  .edlist .sub{display:block;font-size:11px;color:var(--muted);margin-top:1px}
+  .panel{border:1px solid var(--line);border-radius:3px;background:var(--panel);
+    padding:18px;margin-bottom:14px}
+  .panel h3{margin:0 0 3px;font-size:15px;font-weight:600}
+  .panel .why{color:var(--ink-2);font-size:12.5px;margin:0 0 15px;max-width:74ch}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:11px}
+  label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:5px}
+  input,select,textarea{width:100%;background:var(--ground);color:var(--ink);
+    border:1px solid var(--line-2);border-radius:3px;padding:8px 10px;
+    font:inherit;font-size:13px}
+  input:focus,select:focus{outline:0;border-color:var(--amber)}
+  input[readonly]{color:var(--muted);background:#101315}
+  .row2{display:flex;gap:9px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .week{display:grid;gap:7px;margin-top:4px}
+  .wk{display:grid;grid-template-columns:104px 110px 110px auto;gap:9px;
+    align-items:center}
+  .wk .d{font-size:13px;color:var(--ink-2)}
+  .wk label{display:none}
+  .itemrow{display:grid;grid-template-columns:minmax(0,1fr) 110px 96px 92px;
+    gap:9px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+  .itemrow:last-child{border-bottom:0}
+  .note{font-size:12px;color:var(--ink-2);margin-top:10px}
+  .note.bad{color:var(--bad)} .note.ok{color:var(--ok)}
+  .tree2{color:var(--muted)}
+</style>

@@ -12,7 +12,11 @@ import argparse, json, os, sqlite3, sys, uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-UI = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ui")
+HERE = os.path.dirname(os.path.abspath(__file__))
+UI = os.path.join(HERE, "ui")
+sys.path.insert(0, HERE)
+
+import edit as editmod   # noqa: E402  (needs HERE on the path)
 
 
 def rows(db, sql, args=()):
@@ -117,6 +121,35 @@ def q_content(db):
           FROM app_map m ORDER BY m.app, m.map_version DESC""")
 
 
+def q_editable(db):
+    """Everything the editor needs to draw a form, in one shape.
+
+    Deliberately one payload rather than a route per form: the editor is a
+    single screen and a second round-trip per panel would mean it can render
+    half-populated, which looks like data loss to whoever is typing."""
+    ent = rows(db, """SELECT e.id, e.name, e.kind, e.vertical, e.parent_id, e.slug,
+                             l.line1, l.line2, l.city, l.region, l.postal
+                        FROM entity e LEFT JOIN location l ON l.entity_id = e.id
+                       ORDER BY (e.parent_id IS NOT NULL), e.name""")
+    return {
+        "entities": ent,
+        "hours": rows(db, """SELECT entity_id, weekday, opens, closes FROM hours
+                              ORDER BY entity_id, weekday"""),
+        "sections": rows(db, """SELECT ms.id, ms.name, ms.sort, m.entity_id
+                                  FROM menu_section ms JOIN menu m ON m.id=ms.menu_id
+                                 ORDER BY m.entity_id, ms.sort"""),
+        "items": rows(db, """SELECT mi.id, mi.section_id, mi.name, mi.description,
+                                    mi.price_cents, mi.available, m.entity_id
+                               FROM menu_item mi
+                               JOIN menu_section ms ON ms.id = mi.section_id
+                               JOIN menu m ON m.id = ms.menu_id
+                              ORDER BY m.entity_id, ms.sort, mi.sort, mi.name"""),
+        "devices": rows(db, """SELECT id, entity_id, label, kind, serial,
+                                      os_version, channel, health
+                                 FROM device ORDER BY label"""),
+    }
+
+
 def q_summary(db):
     """The tiles. A denial is not a failure: the postcondition was not met, but
     nobody tried and nothing broke. Counting the two together would make a day
@@ -145,6 +178,7 @@ def q_summary(db):
 
 
 ROUTES = {"drift": q_drift, "fleet": q_fleet, "approvals": q_approvals,
+          "editable": q_editable,
           "actions": q_actions, "inconsistent": q_inconsistent,
           "businesses": q_businesses, "content": q_content, "summary": q_summary}
 
@@ -216,6 +250,22 @@ class Handler(BaseHTTPRequestHandler):
                             json.dumps(detail)))
                 db.commit()
                 return self._json(200, {"ok": True, "id": body["id"], "stage": stage})
+
+            # Everything a person may change by hand lives in edit.py, which
+            # bypasses the executor on purpose -- an owner typing their own
+            # closing time is not an agent acting for them. Keeping it behind
+            # one prefix means the whole bypass is auditable in one place.
+            if u.path.startswith("/api/edit/"):
+                name = u.path[len("/api/edit/"):]
+                fn = editmod.ROUTES.get(name)
+                if not fn:
+                    return self._json(404, {"error": f"no such editor: {name}"})
+                try:
+                    return self._json(200, fn(db, body))
+                except editmod.Bad as b:
+                    return self._json(b.code, {"error": b.msg})
+                except sqlite3.IntegrityError as e:
+                    return self._json(409, {"error": str(e)})
 
             self._json(404, {"error": "no such route"})
         except KeyError as e:

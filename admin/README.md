@@ -27,11 +27,40 @@ Seven views, each answering one question:
 | **Actions** | What was requested, and what actually happened? |
 | **Entities** | The graph — a business is not one row. |
 | **Content** | Which maps are in the field, and which are only candidates? |
+| **Edit** | Everything a person is allowed to change by hand. |
+
+## The edit half
+
+`edit.py` holds everything a person may change by hand — businesses and the
+graph they sit in, addresses, hours, menu sections and items, and which
+business a box belongs to. It is a separate file because every function in it
+bypasses the executor, which is correct (an owner typing their own closing time
+is not an agent acting on their behalf) and is exactly the kind of thing that
+should be auditable in one place rather than scattered through a server.
+
+Two rules hold across all of it:
+
+**A person's edit is an observation, not an answer.** Typing your hours writes
+`observation` rows with source `owner`; the resolver then decides, the same way
+it decides everything else. Writing `canonical` directly would make the owner a
+special case the audit trail cannot see, and the next resolver run would
+silently overwrite it.
+
+**Nothing here can edit a fact the system produced about itself.** A heartbeat,
+a serial, an OS version, an action's verdict, a drift's occurrence count. You
+can say which business a box belongs to and what to call it. You cannot tell it
+what version it is running — a fleet table you can type into reports what
+somebody meant to deploy rather than what is deployed.
+
+Deletes refuse while anything real hangs off the row, and a business cannot be
+made a descendant of itself: without that check a two-click mistake makes
+`entity_ancestry` recurse forever and takes down every screen that reads it.
 
 ## What it will not do
 
-It reads. It writes exactly two things: a drift's state as you work it, and a
-decision on an action held for approval.
+It reads, and it accepts the edits above. Beyond those it writes exactly two
+things: a drift's state as you work it, and a decision on an action held for
+approval.
 
 It does not execute. Approving moves an action to `PLANNED` so the executor may
 pick it up — the executor still fingerprints the screen, still refuses an
