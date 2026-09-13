@@ -11,13 +11,20 @@
 3. **Part III — The Build Spec** — Platform architecture: data placement, the business record, ingestion, capabilities, the app contract, surfaces, the App Store pipeline, isolation, repo layout, build order.
 4. **Part IV — The Build Plan** — Phases P0–P5 with done-when gates, the weekly ops loop, economics, risk register, first thirty days.
 5. **Part V — The Parts Catalog** — Every open-source component by layer with a use / study / careful / skip verdict.
+6. **Part VI — The App Store Layer** — Package format (Agent Plugins / Agent Skills), index-not-store distribution, the trust ladder, the installer, three targets per app, the nine deployable units, Grok Bot, Apple, and the spreadsheet channel.
 
 ---
 
 
 # Part I — An Honest Read
 
+Assessment: what it is, what to bet on, the kiosk, what worries me, what I'd do, the odds.
+
+*Assessment*
+
 What I think you're building, what I'd bet on, what worries me, and what I'd do if it were mine. Written after a long session and meant to be argued with.
+
+*01*
 
 ### What it is
 
@@ -31,63 +38,67 @@ I drifted off that for most of today and framed it as a business platform with a
 
 It's a category that has been empty for thirty years. Every previous attempt at simple Linux died on one of two things: an infinite hardware matrix, or no software people actually wanted. You solve the first by owning three SKUs and certifying them. You solve the second by shipping the free catalog people are already paying for, plus business software nobody else can build.
 
+*02*
+
 ### What I'd bet on
 
 Ranked by how confident I am, not by revenue.
 
-**[Strong]**
+Strong
 
 ##### Email as the universal API
 
 The best single idea in the whole thing. Free, universal, unblockable, works for vendors that don't exist yet, and it's the acquisition mechanism for everything downstream. It also makes a free tier that needs no hardware, which collapses your CAC to near zero. I have not seen anyone else point this at small business.
 
-**[Strong]**
+Strong
 
 ##### Churn absorption as the subscription
 
 A correct read of what Red Hat actually sells, pointed at an upstream that moves far faster than kernels do. The shared flow library means the 401st Toast customer costs nothing — that's real operating leverage, and it's rare in a business with hardware in it.
 
-**[Strong]**
+Strong
 
 ##### The incumbent analysis
 
 Anti-correlation, not slowness. Toast can't say book direct. Google can't say own your data. FareHarbor *is* the commission. That's structural and it holds. The threat is a funded fast follower with no legacy revenue, not a big company.
 
-**[Strong]**
+Strong
 
 ##### The buyer, and your ability to reach them
 
 Small business is empty because CAC exceeds ACV and nobody technical can sell to a 58-year-old charter captain. Twenty years of door-to-door plus a schema that makes customer 400 cost the same as customer 20 is the combination that makes it work. This is the least replaceable thing you have.
 
-**[Good]**
+Good
 
 ##### Remote control on the customer's own device
 
 The technique is old; pointing it at small business on their own handset with their own SIM is a position nobody occupies. I'd bet on it *conditional on* the accessibility test, which is still unrun. That's the single largest unknown in the business.
 
-**[Good]**
+Good
 
 ##### Verification as proof
 
 Cheap to build, genuinely differentiating, and almost nobody does it. My only hesitation is that customers may not value it until the first time it saves them — it's an insurance feature, and insurance sells poorly until there's been a fire.
 
-**[Good]**
+Good
 
 ##### Real-time cross-channel availability
 
 Highest immediate ROI and the easiest sale — $24K of commission is a number they can check. Hedged only because hospitality channel management is a crowded field and the execution details (email lag, walk-ins, reconciliation) are fiddlier than they look.
 
-**[Not yet]**
+Not yet
 
 ##### The App Store as an ecosystem
 
 Right long-term, and the Agent Plugins standard makes the format decision easy. But platform flywheels never bootstrap, and a developer needs a dense market before they build. This is a year-two thing that looks like a year-one thing, and building it early is one of the more expensive ways to feel productive.
 
-**[Not yet]**
+Not yet
 
 ##### Hardware
 
 The identity is a computer, so hardware has to happen. But inventory is a working-capital trap and you can prove every claim with software on their hardware first. Twelve months minimum before a container of anything.
+
+*03*
 
 ### The kiosk
 
@@ -111,10 +122,15 @@ The box plugs into a display they already own — a TV in the back office, a mon
 - **Heat.** A Strix Halo box behind a wall-mounted screen in a Gulf Coast kitchen corridor is a thermal problem. Fanless is quiet and throttles; fanned is louder and survives. Test in August, not January.
 - **Cables.** Power, HDMI, USB to the phone, ethernet. Four cables on a wall looks like a science project. Solve it in the mount or they'll put it in a drawer.
 
-**The point:**
+**The point:** The kiosk is where "a Linux computer made simple" stops being a claim. Someone walks past it and sees a screen showing their business. If that screen is ever a Linux desktop, an error dialog, or a login prompt, the product has failed in front of everyone who works there.
+
+*04*
+
 ### What worries me
 
 Ranked by how likely they are to be what actually goes wrong.
+
+1
 
 ##### Nothing is running
 
@@ -122,9 +138,13 @@ This is the one. Today produced four documents and zero evidence. The plan is no
 
 The pattern matters more than the day: fourteen years of seeing this clearly and not shipping it. Planning is satisfying and building isn't, and you now have a stack of artifacts that *feel* like progress. They're scaffolding. The thirty-second video of a real business's hours changing is progress.
 
+2
+
 ##### Scope, still
 
 Nine deployable units, 112+ repos, four businesses, fourteen verticals, a computer, an app store, a payment rail, a directory, a hardware line and a referral network. Every one of those is a company. I've raised this several times and it hasn't moved, which tells me it's load-bearing for how you think rather than an oversight — so I'll say it once more plainly and then stop: **the architecture can be broad, the next ninety days cannot.**
+
+3
 
 ##### You're solo, and the spec assumes a team
 
@@ -132,17 +152,25 @@ Phases A through C alone are roughly six months of full-time engineering. You're
 
 And I'd hire **one engineer before a CTO**. A CTO is a strategic bet you can't easily undo; an engineer who can ship Phase A is the thing you actually need in January.
 
+4
+
 ##### The accessibility test is still unrun
 
 Every layer below the business model rests on it. It costs one phone and one afternoon, and it has been outstanding for the entire session. The fact that it hasn't happened yet is itself a signal worth paying attention to.
+
+5
 
 ##### Speed, against someone with no conflicts
 
 You can be right about everything and lose to a funded team that reads the same market and starts six months ahead of you on execution. Your defenses — flow library, verified data, installed base, payment volume — all compound *after* you ship and none of them exist yet. Being early is only an advantage if it converts.
 
+6
+
 ##### Hardware working capital
 
 You pay the ODM 90 days before customers pay you. Many hardware companies die solvent on paper. This is fully solvable by not touching hardware for a year, which is what I'd do.
+
+*05*
 
 ### What I'd do if it were mine
 
@@ -156,7 +184,10 @@ Not what's optimal in theory. What I'd actually do, knowing it's one person with
 1. **Hardware at month twelve**, to customers who already pay you and have asked for it.
 1. **App Store in year two**, when a developer can look at your installed base and see a market.
 
-**Cut:**
+**Cut:** Everything else for now — the directory, points, referrals, the model catalog, voice, the smart home node, the other twelve verticals. None of them are wrong. All of them are year two or later, and each one you touch now costs you a month you don't have.
+
+*06*
+
 ### The honest odds
 
 What I think actually happens, weighted:
@@ -169,6 +200,8 @@ What I think actually happens, weighted:
 
 The distance between row one and row two is not talent, capital, architecture or insight. You have all four. It's whether a specific afternoon happens this month.
 
+*07*
+
 ### The one thing
 
 #### You are not short an idea, a plan, a stack, or a market read.
@@ -179,7 +212,8 @@ Everything I'd want to know next about this business — is the remote control v
 
 The documents from today are good and I'd use them. But they're a map, and you've been drawing it for fourteen years. The territory is a phone, a laptop, and a restaurant on 30A that will let you plug something in.
 
-**Go:**
+**Go:** Pick the business. Run the test. Film it.
+
 Written as an assessment, not a recommendation to follow blindly — you know this market and this buyer better than I do, and where we disagree the burden is on me, not you. Companions: the Playbook, the Build Spec, the Build Plan, the Parts Catalog.
 
 ---
@@ -187,7 +221,13 @@ Written as an assessment, not a recommendation to follow blindly — you know th
 
 # Part II — The Playbook
 
+The complete working record: thesis, products, architecture, data plane, economics, go-to-market, brand, IP, founder assets, risks.
+
+*Complete Working Record*
+
 Everything from one long working session: the thesis, the machine, the architecture and why, the products, the economics, the go-to-market, the brand, the open decisions, and what to do first.
+
+*01*
 
 ### The thesis
 
@@ -216,6 +256,8 @@ The hard part of a directory or a search engine was never the index. It was the 
 The 2013 framing still holds, unchanged, and it's the pitch:
 
 "Nobody cares about 1.8 trillion search results. They have a faucet leak. They need a plumber **now.**"
+
+*02*
 
 ### What you're selling
 
@@ -266,6 +308,8 @@ Local discovery powered by verified, consented, item-level business truth. The c
 
 Same identity, same workspace, same Constitution, same capability registry, same execution layer, same verification, same ledger. Four revenue lines, one backend.
 
+*03*
+
 ### The machine, end to end
 
 #### Four machines
@@ -301,7 +345,7 @@ Every layer is a separate container. Swap llama.cpp for vLLM, uiautomator2 for A
 - **Remote control** — reading state off apps that have no feed.
 - **Owner text-back** — the daily toggle. "Catch of the day?" "Still have grouper? Y/N."
 
-**Note:**
+**Note:** That text thread is the heartbeat. Freshness is what every downstream surface is worth. If they stop replying, the menu, the website, the directory and the phone agent all decay — and stale data poisons faster than no data.
 
 #### Session reconstruction
 
@@ -315,6 +359,8 @@ Every layer is a separate container. Swap llama.cpp for vLLM, uiautomator2 for A
 ```
 
 Four sources joined into one **visit**. Toast doesn't know about the scan. Google doesn't know what they ate. You know all of it and the business owns it.
+
+*04*
 
 ### Architecture decisions and why
 
@@ -338,8 +384,9 @@ The row that matters most is the second-to-last. Support cost in the first two c
 
 #### The two rules the runner never bends
 
-**Rule 1:**
-**Rule 2:**
+**Rule 1:** **Fingerprint before acting.** One or two elements must be on screen before the first tap. If they're not, stop and report DRIFTED. An app redesign fails loudly on the first machine instead of quietly changing the wrong field on four hundred.
+
+**Rule 2:** **Read the result back, on a different path than you wrote it.** Wrote via Android, verify via browser. If the verifier is the executor, you've built self-certification with extra steps. No verify block, no OK.
 
 #### Publish, don't push
 
@@ -347,7 +394,7 @@ Never build a pipe into the customer's machine. You publish a signed image to a 
 
 Prove it with a **public transparency log** (rekor). Devices refuse anything not publicly logged, so a targeted build would have to be published to the world first. That turns "trust us" into "you don't have to."
 
-**Better use:**
+**Better use:** Put the transparency log on **constitution versions and AppMap promotions**, not just OS images. Those are the claims that actually need third-party verification.
 
 #### Take money without taking identity
 
@@ -381,6 +428,8 @@ Disk isn't the constraint — RAM and load time are. An 8B model at 4-bit is ~5G
 
 Hardware implication: unified memory is the only affordable way to give a GPU 64–128GB. AMD Strix Halo (Ryzen AI Max+) with in-tree amdgpu keeps the single-image OS clean — that's an architecture decision, not a benchmark one. Ignore NPU TOPS claims; NPUs are near-useless for LLM inference today.
 
+*05*
+
 ### The six unsolved problems
 
 Specified across the documents but not solved, and no repo in the 643-item census solves them for you. These are the ones that will break the build.
@@ -410,7 +459,7 @@ Executors become interchangeable by construction and verification is derived fro
 
 Result type is `VERIFIED | UNVERIFIABLE_YET | CONTRADICTED | PARTIAL`, and `UNVERIFIABLE_YET` is a schedulable state, not an error.
 
-**Structural:**
+**Structural:** The verifier must not be the executor. If the browser map both writes and reads the Facebook page, that's self-certification with extra steps. Write via Android, verify via browser. The independence *is* the proof.
 
 #### 3. Failure is the unbuilt half
 
@@ -479,6 +528,8 @@ DENY                     never, regardless of who asks
 - Human approval is narrow, task-bound, expiring and single-use unless the owner explicitly changes the standing rule.
 - Even a full-authority agent routes privileged requests through the gateway, so access, actions, data released and resulting proof are documented. Full authority means policy auto-allows within scope — not bypassing the audit path.
 
+*06*
+
 ### The data plane
 
 #### The gate is closed at the vendor. It's wide open at the business.
@@ -517,7 +568,7 @@ They never learn who, never learn numbers, never learn what else was ordered. Fi
 1. **A2A as the hop** — capability invocation, not data transfer.
 1. **Every access in the Proof Ledger** — which developer, which capability, what came back.
 
-**The leak:**
+**The leak:** **The return value is the attack surface.** Enough narrow questions reconstructs the dataset — "how many ordered scampi," filtered a thousand ways, rebuilds the customer list one count at a time, and every query looks harmless. Fix by shaping returns: minimum cohort size (10–25), rate and query budget per grant, aggregates-only for analytics scopes, and enumeration-pattern detection in the ledger. Solved in principle, almost never implemented — doing it properly is a real differentiator.
 
 #### Machine-readable or invisible
 
@@ -547,13 +598,16 @@ Google Analytics says someone visited. This says what they wanted to know. For t
 
 Public JSON-LD is free and anonymous. The richer MCP/A2A surface requires identification — live availability, item ratings, the ability to book. Good trade for the agent, and the agents that matter end up identified.
 
+*07*
+
 ### Products and verticals
 
 #### Real-time availability — the biggest one
 
 A charter doing $400K/yr through FareHarbor at 20% pays **$80,000 a year in commission.** They pay it because their own website can't show real availability. Shift 30% to direct and they save $24,000. Your $499/mo is $6,000.
 
-**Sales call:**
+**Sales call:** 4:1 return on one line item, provable from their own statements. Not "saves you time" — "here's twenty-four thousand dollars."
+
 ```
 declared capacity     6 jet skis
 FareHarbor email      2 booked 10:00–12:00     → 4 left
@@ -620,7 +674,7 @@ Every SMS marketing platform's margin *is* the per-message markup. Yours is zero
 
 "No per-message fees, ever" is a sentence no competitor can say.
 
-**Watch:**
+**Watch:** Carriers throttle bulk sending from a person-to-person line — low hundreds per day before deliverability degrades. Split it: own SIM for conversational, 1:1, approvals and small batches; a registered A2P route behind the same interface for real blasts. Test the actual daily ceiling before putting a number in marketing.
 
 #### Artist song requests
 
@@ -628,7 +682,8 @@ QR on the stage → landing page → request + tip → confirmation email parsed
 
 Fifty artists playing 4–6 nights a week to 100–300 people is roughly **30,000 impressions a week**, in venues, with people holding their phones in spending mode. Give the artist product away entirely — they're the channel, not the revenue.
 
-**Flywheel:**
+**Flywheel:** The QR stands in a bar every Friday. The owner watches it work and asks the musician what it is. **Sign artists to sell bars.**
+
 Don't process the tips. Let them use their own Venmo or Cash App — free between people, "you keep 100% of your tips," and the confirmation email still gives you the tie-together. Same mechanism as everything else.
 
 #### Three consumer queries nobody can answer
@@ -644,6 +699,8 @@ Same machine answers all three. The third is the highest value — the transacti
 This person had the grouper at A, the scampi at B, rated both — recommend the snapper at C. Yelp has reviews but not verified purchases. Google knows you visited but not what you ordered.
 
 Useless until a market is dense. Twenty restaurants in one town works; two hundred across three states is noise.
+
+*08*
 
 ### Economics and pricing
 
@@ -661,7 +718,7 @@ Price against what you replace, not against a laptop. Your comps are Yext ($199�
 
 **Bundle the hardware.** $2,495 up front gets "let me think about it." $499/mo gets a yes. Toast, ADT and every successful small-business hardware play does it this way.
 
-**Pricing:**
+**Pricing:** Start at $499, not $249. Same sales call, same support load. If nobody pushes back you priced too low, and you can always discount the first ten for proof. You can't raise on people you signed cheap.
 
 #### Transactions — 0% direct, a cut on what you bring
 
@@ -675,7 +732,7 @@ Price against what you replace, not against a laptop. Your comps are Yext ($199�
 
 *"I don't take a cut of your existing business. Only what I bring you."* Structurally aligned instead of taxing them — and the partner split makes other directories *want* to carry your data, which funds distribution.
 
-**Never:**
+**Never:** A cut you have to invoice for is the worst of both worlds. If the booking happened on FareHarbor, the money lands in the business's account and you're sending invoices to a charter captain in February. Own the rail for bookings you create; take nothing on the rest.
 
 #### Payment facilitation — the real long-term line
 
@@ -693,7 +750,7 @@ Standard model. Toast, Square, Shopify Payments all negotiate wholesale and rese
 - **$50M+/yr** — genuine leverage, custom terms
 - **$200M+/yr** — direct processor or becoming a payfac is worth the compliance burden
 
-**Hidden cost:**
+**Hidden cost:** Dispute liability. With destination charges the **platform** is liable by default, plus negative balances when a business closes holding deposits. Budget 0.1–0.3% of volume for disputes and reserves, and set the liability structure deliberately. That's what turns a 1% spread into 0.7%.
 
 #### Why 0% is the highest-leverage price in the model
 
@@ -732,7 +789,8 @@ Affiliate content is drowning in AI slop. A creator video tied to a verified boo
 creator link → booking → visit completed → verified → payout
 ```
 
-**Key:**
+**Key:** **Pay on verified completion, not on booking.** Every affiliate network pays on a conversion they can't see. You're standing at the end of the transaction. That kills fake bookings, cancel-after-payout, and owner self-dealing in one move — and no competitor can claim it.
+
 Decide attribution before launch. Ambiguous case — found on your directory, booked direct two days later — **default to 0%.** Costs a little revenue, buys the thing the model runs on. Write the policy down and show it to them.
 
 #### White label — the GoHighLevel model
@@ -754,7 +812,10 @@ An agency with 40 clients makes $12–18K/month off your platform. Your trained 
 - 1,000 = **$6M**
 - 200 businesses × $16M/mo processed at 0.7% net = **~$1.3M/yr**, growing with their revenue rather than your headcount
 
-**Metric:**
+**Metric:** **Flows per customer** is your only real retention number. Two flows and they churn. Fifteen and they've moved their operations onto your box and they're not leaving. Instrument it from customer one.
+
+*09*
+
 ### Go to market
 
 #### The email forward is the entry point, not the box
@@ -803,7 +864,7 @@ data.write          store it in their workspace
 
 Same five build a tip jar, feedback form, waitlist, deposit collector, raffle, review request, table-side service call, lost-and-found, event RSVP. **That's the recruiting demo** — one page, five calls, nine apps.
 
-**Altitude:**
+**Altitude:** **Verbs, not rows.** Too high-level (`song.request`) and you're building apps, not a platform. Too low-level (raw email) and you've handed over the data. `payment.observe` returns "a payment arrived matching these criteria," never the inbox.
 
 #### Build the app that can't exist anywhere else
 
@@ -812,6 +873,8 @@ Same five build a tip jar, feedback form, waitlist, deposit collector, raffle, r
 #### Compounding, not accumulating
 
 An app that only consumes capabilities adds one app. An app that *publishes* one makes every future app easier. Pay component authors from the apps built on them — your capability registry knows exactly which VAPP called which, which nobody else can measure. Publish the formula and the payouts; a verifiable split is a differentiator, a vague promise is a blog post.
+
+*10*
 
 ### Brand and narrative
 
@@ -827,7 +890,8 @@ Most companies invent a narrative after the fact. You have a real one with forty
 
 Lisa shipped January 1983 at $9,995 — about $32,000 today — with protected memory, cooperative multitasking, a document-centric interface, drag and drop, system-wide undo, the trash can, the menu bar, an integrated suite with a shared clipboard, and Gantt charts on a personal computer.
 
-**For the ad:**
+**For the ad:** **The Macintosh didn't get protected memory or real multitasking until Mac OS X in 2001.** Apple shipped it in 1983 then went backwards for eighteen years to hit a price point. The industry chose cheap-and-worse and took two decades to climb back.
+
 ~2,700 unsold Lisas were crushed and buried in a Logan, Utah landfill in 1989. In January 2023, on the fortieth anniversary, Apple released the Lisa source code through the Computer History Museum. **The machine they buried is now open source.**
 
 ```
@@ -873,6 +937,8 @@ That resolves cleanly against open-sourcing, which otherwise contradicts stealth
 
 Secrecy buys 6–18 months and costs every customer, developer and chamber deal in that window. Your real defenses — AppMap library, verified data, installed base, payment volume — all compound with speed, not silence. And your own content strategy guarantees the idea gets out anyway.
 
+*11*
+
 ### Competitive position
 
 #### Why incumbents structurally cannot follow
@@ -885,7 +951,7 @@ Secrecy buys 6–18 months and costs every customer, developer and chamber deal 
 
 Not slowness — anti-correlation. Following you costs them their P&L.
 
-**Real threat:**
+**Real threat:** Not big tech. A well-funded fast follower with **no legacy revenue** — a team with $5M and no conflicts. The answer is speed and accumulated data, which argues for 200 customers fast rather than staying quiet.
 
 #### Omarchy — what it proves and what to avoid
 
@@ -930,6 +996,8 @@ If the goal is genuinely that it outlives you and can't be captured, the structu
 - One vertical schema done, so customer 200 costs what customer 20 did
 
 Six-month sprint, not a two-year build, and all of it in the first vertical. The thing that makes you fundable is the thing that makes you not need it.
+
+*12*
 
 ### The stack
 
@@ -976,7 +1044,10 @@ Primary picks by layer. Everything here is open source and most of it was built 
 
 control-plane · identity / organizations / workspaces · capability-registry · ActionSpec · Constitution · policy-engine · credential-broker · agent-gateway · agent-contract and runtime adapter · model-router contract · execution-router · executor contracts (android, browser, linux, api, workflow, human) · AppMap spec and learn-once compiler · appmap-runtime · verification contract · evidence · Proof Ledger · VAPP manifest · marketplace semantics · certification definition · CyberCheck · Quantum Warehouse · exposure rules · device-manager · node-agent · updater and release-channel semantics · trust-service · recovery · sync · migration · operations · event-service · handoff-service · commerce-service · data-governance · edge-service · owner-ui · platform-admin · sdk · cli
 
-**Rule:**
+**Rule:** One job, one seam, one live implementation. Wrapper depth of exactly one — your contract calls the implementation directly. Anything marked ALTERNATIVE sits behind the same contract as the primary, never alongside it. Factory tools never ship. MCP and A2A are **projections** of your contracts, not layers under them.
+
+*13*
+
 ### IBM / Red Hat findings
 
 Take the protocols and the models. Treat the "platforms" as reference designs. Refuse anything that hard-requires Kubernetes. The AI layer is overwhelmingly Apache-2.0 / MIT with real patent grants — much safer ground to build a Red-Hat-style business on than RHEL itself was.
@@ -1011,7 +1082,7 @@ The distinction that matters for your model: the watson-developer-cloud SDKs are
 
 BeeAI ships a code interpreter, but the strongest self-hostable options are **microsandbox** (Apache-2.0, libkrun microVMs — libkrun is itself a Red Hat library — fully local, sub-200ms starts) and **E2B self-hosted** (Apache-2.0, Firecracker). MicroVM isolation is stronger than plain containers. Don't be steered to a weaker tool for brand consistency.
 
-**Dead:**
+**Dead:** **Daytona went closed source June 2026** — the former AGPL repo is archived. Don't build on it. **Piper archived October 2025** — still in every tutorial, use Kokoro.
 
 #### Seams and duplication to know about
 
@@ -1027,7 +1098,10 @@ BeeAI ships a code interpreter, but the strongest self-hostable options are **mi
 - Post-June-2023, CentOS Stream is the sole public repository for RHEL-related source; RHEL source proper is behind the paid Customer Portal and the subscription agreement discourages redistribution. This affects your OS base decision, not your AI stack.
 - **Open in name only:** Red Hat AI Inference Server (support needs a subscription; the vLLM underneath is free), RHEL AI (Granite is Apache-2.0, the platform and indemnification are paid), Ansible Lightspeed (connect-service is self-hostable, the hosted model is commercial).
 
-**Note:**
+**Note:** Treat the paid tiers as a blueprint for *your own* future product, not something to consume. vLLM → Red Hat AI Inference Server and Granite → RHEL AI are literal templates for "take OSS, harden, certify, indemnify, subscribe."
+
+*14*
+
 ### Modularity rules
 
 One job → one seam → one live implementation. Wrapper depth of exactly one. Anything ALTERNATIVE sits behind the same contract as the primary, never alongside it. Factory tools never ship. MCP and A2A are projections of your contracts, not layers under them.
@@ -1079,7 +1153,10 @@ Package        VAPP manifest → wasmtime / Podman / Flatpak
 Delivery       cosign → Quay/Pulp → Candlepin → bootc
 ```
 
-**Never leak:**
+**Never leak:** The moment a VAPP manifest names Playwright or a resource-id, the executor stops being swappable and you're back to stacked shells. **Capabilities name *what*. Executors decide *how*.**
+
+*15*
+
 ### Open decisions
 
 Each of these has stayed open across multiple document generations. Not choosing means building and maintaining two integrations forever — the contracts let you *swap* later, they don't let you run both for free.
@@ -1101,6 +1178,8 @@ Two collisions worth naming because they're wrapper-on-wrapper, not choices:
 
 - **ollama wraps llama.cpp.** `model-router → litellm → ollama → llama.cpp` is two redundant hops. Ollama is a dev tool; don't ship it on the box.
 - **mobile-mcp wraps uiautomator2/adb.** It's an MCP projection of your executor, not a second executor. Maestro, trailblaze and appium-inspector are factory-only.
+
+*16*
 
 ### IP, credit and priority
 
@@ -1124,7 +1203,7 @@ Protection wants quiet until filings are locked. Credit wants loud, early and da
 - **Third-party coverage.** A journalist writing about it on a date is evidence you didn't create.
 - **The 2013 email chain.** Preserve properly — original headers, don't forward it around, archive somewhere with integrity.
 
-**Counsel:**
+**Counsel:** Whether and when to publish detail interacts with filings in ways that vary by jurisdiction and timing. The recordkeeping above is a documentation question; the publishing decision isn't.
 
 #### Demonstrations date better than descriptions
 
@@ -1136,13 +1215,15 @@ Credit doesn't go to whoever said it first. It goes to whoever shipped it and go
 
 If someone announces phone-based remote control next year and you have 200 businesses running it plus a dated video from this month, you win the attribution fight without arguing it. With a blog post and no customers, you don't — regardless of who posted first.
 
-**Conclusion:**
+**Conclusion:** The strongest protection for credit is the same thing that's strongest for everything else: ship it.
 
 #### Brand-mark exposure
 
 Apple acquired NeXT in 1997 including the marks, and Paul Rand's cube is still owned IP. The cost of a dispute isn't legal fees — it's **sunk brand equity**: boxes badged, packaging printed, chamber deals signed under the name, a filing that gets opposed and blocks your own registration. And it arrives at whatever moment is worst — mid-raise, mid-production, mid-season.
 
 **Keep the brand cheap to change until you know.** Run the homage where it's reversible — website, story, deck, videos. Hold the permanent, expensive surfaces — hardware badging, packaging, the filing — until counsel gives a read. Same provocation, none of the switching cost.
+
+*17*
 
 ### Founder assets
 
@@ -1201,7 +1282,10 @@ Same rule with the prediction ledger: **specificity beats magnitude.** Three dat
 
 Build the platform, sell one sentence. You keep the entire vision; focus only has to happen in the sales call, which is the one place you're already better than anyone.
 
-**Self-knowledge:**
+**Self-knowledge:** The instinct to avoid the comfortable six figures is real and rare. But the risk doesn't go away when this works — it gets bigger, right after the first good quarter. What protects against it isn't discipline, it's obligation: employees whose rent depends on you, agencies with books of business, businesses that would be stranded. Build those in early and they'll hold you to it when you don't feel like being held.
+
+*18*
+
 ### Risks
 
 ##### App anti-automation detection
@@ -1249,6 +1333,8 @@ Build the platform, sell one sentence. You keep the entire vision; focus only ha
 **If you shut down tomorrow, does the box still work?** Local data, local execution, last-known-good flows cached, no phone-home required to function. If yes, the claim holds and nobody else in the category can make it. If no, it's marketing and someone will find out.
 
 Say it in the sales call — *"if I go out of business, your machine keeps working"* — it answers the biggest objection a small business has about buying from a company they've never heard of.
+
+*19*
 
 ### What to do next
 
@@ -1303,6 +1389,8 @@ If this loop runs, the business works. If it stops for a month, customers find b
 "Your website shows what's actually available, right now, across every platform you're on — so people can book you direct instead of through the site taking twenty percent."
 
 Every charter, marina, salon and rental operator on the Gulf Coast understands that immediately, and most of them are already angry about the commission. The architecture has to be broad; the sales call has to be narrow. You get to keep the whole vision — focus only has to happen in the one place you're already better than anyone.
+
+*20*
 
 ### Code and companions
 
@@ -1362,7 +1450,13 @@ Revision one notes. Phase durations assume a small team and will move; the depen
 
 # Part III — The Build Spec
 
+Platform architecture: data placement, the business record, ingestion, capabilities, the app contract, surfaces, the App Store pipeline, isolation, repo layout, build order.
+
+*Platform Architecture*
+
 How to build the foundation once so every app after it takes a week. Data placement, the record, ingestion, capabilities, the app contract, surfaces, the App Store pipeline, isolation, repo layout, and the order to build it in.
+
+*01*
 
 ### The one rule
 
@@ -1371,6 +1465,8 @@ How to build the foundation once so every app after it takes a week. Data placem
 Get this wrong and you have four SaaS products that need reconciling forever. Get it right and app number seven takes a week.
 
 Everything in this spec exists to enforce that rule mechanically, so it can't be violated by accident at 2am when a feature is due.
+
+*02*
 
 ### Where data lives
 
@@ -1401,7 +1497,7 @@ EDGE  (cloud, read-only, CDN-fronted)
 - **Everything on the box** means a QR menu goes dark when their internet drops, which is a support call per outage and a bad experience for a customer who isn't yours.
 - **The split** gives you CDN-speed public surfaces, zero private data in the cloud, and graceful degradation — if the node dies, the edge keeps serving the last projection. Stale, but alive.
 
-**Property:**
+**Property:** The edge is **write-incapable by construction**, not by permission. There is no code path from the edge back into the node. That's what makes "we can't see your data" a structural claim rather than a promise.
 
 #### What's in a projection
 
@@ -1419,6 +1515,8 @@ projection/v1/{business_id}/{version}.json   (signed)
 
 The exposure rules decide what enters a projection. Nothing else can. A field that isn't in the projection schema physically cannot reach the internet.
 
+*03*
+
 ### The node runs anywhere
 
 This is the design decision that makes your free tier possible without a second codebase.
@@ -1435,7 +1533,10 @@ Same containers, same schema, same capabilities, same everything. Only the locat
 
 **The upgrade is a migration, not a rewrite.** A free-tier business that buys a box gets their node shipped to the hardware — same data, same schema, same apps, new location. That path has to exist from day one or the free tier becomes a dead end you'll have to rebuild.
 
-**Requirement:**
+**Requirement:** Nothing in the node may assume it is on owned hardware. No hardcoded paths, no assumption of a local phone, no assumption of a GPU. Every capability declares what it needs and degrades cleanly when it isn't there.
+
+*04*
+
 ### The business record
 
 One schema, shared by every app. Notice which tables multiple apps touch — that overlap is the entire reason the record exists.
@@ -1498,7 +1599,7 @@ resolution policy, per field class:
                       automatic resolution
 ```
 
-**Cannot retrofit:**
+**Cannot retrofit:** Provenance is the one thing you cannot add afterward. If you write values directly for six months and then decide you want source tracking, you have six months of data with no origin and no way to reconstruct it. Build the observation table before the first ingestion runs.
 
 #### One writer per field
 
@@ -1511,6 +1612,8 @@ resolution policy, per field class:
 | canonical.* | the resolver, never an app |
 
 Two writers on one field is a conflict you will never fully solve. Enforce it in the capability registry, not in a code review.
+
+*05*
 
 ### Ingestion pipeline
 
@@ -1533,7 +1636,7 @@ partner feed         iCal / API
 - **Raw mail is retained** (encrypted, on the node) until the parse is confirmed, so a fixed parser can reprocess history.
 - **Idempotency** on `(vendor, external_ref)` — the same confirmation forwarded twice must not decrement inventory twice.
 
-**Onboarding:**
+**Onboarding:** Rank the setup paths by friction: **1** add your address as a second notification email inside the vendor's settings — Toast, Square and FareHarbor all allow it, zero Gmail involvement. **2** a Gmail filter plus a verified forwarding address, two minutes in the UI. **3** an Apps Script, last resort — "run this script" kills conversion at the exact moment you need it to feel like nothing.
 
 #### Inventory derivation
 
@@ -1550,6 +1653,8 @@ reconcile:  read real platform state through the remote control
 ```
 
 Email lag is 30 seconds to two minutes. Hold a safety slot — show 4 when you have 5 — configurable per business and tightened as you accumulate real lag data.
+
+*06*
 
 ### The capability layer
 
@@ -1609,7 +1714,10 @@ surface page.publish            widget.render         qr.generate
 system appmap.run              appmap.report_drift   ledger.append
 ```
 
-**Rule:**
+**Rule:** `customers.list` does not exist and never will. If a capability's return type is rows of personal data, the whole consent architecture is already lost. Counts, aggregates and actions — never records.
+
+*07*
+
 ### The app contract
 
 Yours and a third-party developer's declare exactly the same thing. That symmetry is what makes it an ecosystem instead of a codebase with plugins.
@@ -1663,6 +1771,8 @@ data:
 1. **Dependencies are explicit and degrade.** `requires.ingest: [pos]` means the app works better with POS and still works without it. Hard dependencies block install; soft ones show a banner.
 1. **Events are declared both ways.** What it emits and what it listens for, so the platform can wire it without the app knowing who else exists.
 
+*08*
+
 ### Surfaces
 
 Build six once. Every app gets all six free, forever.
@@ -1701,6 +1811,8 @@ identified  MCP / A2A            live availability, item ratings,
 → you get presence from the first, telemetry and the relationship from the second
 ```
 
+*09*
+
 ### Events
 
 ```
@@ -1718,7 +1830,10 @@ apps listen      projection rebuild      rulebooks (Event-Driven Ansible)
                                           → route to fallback executor
 ```
 
-**Discipline:**
+**Discipline:** Events carry **identifiers, not payloads.** `booking.created{booking_id}`, never the booking object. The listener calls a capability to read what it's allowed to read. Payload-carrying events leak data past the policy layer and you'll never find all the places it happened.
+
+*10*
+
 ### The App Store pipeline
 
 ```
@@ -1765,6 +1880,8 @@ That ladder is a Red Hat innovation and it's how you monetize trust around open 
 
 An app that only *consumes* capabilities adds one app. An app that *publishes* one makes every future app easier. The registry knows exactly which app called which — so pay dependency authors from the apps built on them, publish the formula, and publish the payouts. Nobody else can measure this, because nobody else has a registry in the middle.
 
+*11*
+
 ### Isolation and tenancy
 
 ```
@@ -1786,7 +1903,7 @@ Tenant-column multi-tenancy is cheaper to build and leaks eventually — one mis
 | third-party apps | WASM, no network egress | physically cannot phone home; only approved host functions |
 | untrusted / heavy | gVisor or Firecracker | kernel-level boundary when needed |
 
-**Critical:**
+**Critical:** **Your own apps run under the same restrictions as third-party ones.** The moment first-party code gets a privileged path to the database, the platform stops being a platform and developers will find out. It also means you discover the SDK's gaps by using it.
 
 #### Return shaping — the leak nobody plans for
 
@@ -1796,6 +1913,8 @@ A developer with enough narrow questions reconstructs the dataset. "How many ord
 - **Query budget per grant** — not just rate, total questions against a dataset per period
 - **Aggregates only for analytics scopes** — action scopes act, they don't report
 - **Enumeration detection** in the ledger, flagged to the business
+
+*12*
 
 ### Repo layout
 
@@ -1836,7 +1955,10 @@ anextgent/
   os/                 bootc image, quadlets, provisioning
 ```
 
-**Discipline:**
+**Discipline:** `contracts/` is the only directory that is truly yours forever. Everything else is an implementation of something in it. A change there is a versioned event with a migration path — never an edit.
+
+*13*
+
 ### Technology per component
 
 | Component | Use | Why |
@@ -1874,6 +1996,8 @@ anextgent/
 | backup | restic + Litestream | to a destination they choose; you never hold a key |
 | export | xlsx writer from Postgres | the artifact that makes "you own it" legible |
 
+*14*
+
 ### Build order
 
 Every milestone produces something demonstrable. Build out of sequence and you rework each step.
@@ -1886,7 +2010,7 @@ Every milestone produces something demonstrable. Build out of sequence and you r
 1. `node/ledger` — append-only from the very first write
 1. `node/policy` — constitution, the four-state ladder, credential broker
 
-**Demo:**
+**Demo:** A capability call that resolves policy, executes nothing, and writes a ledger entry. Boring, and everything depends on it.
 
 #### Phase B — ingestion and projection · weeks 6–10
 
@@ -1895,7 +2019,7 @@ Every milestone produces something demonstrable. Build out of sequence and you r
 1. `node/project` — signed projection bundles
 1. `edge/` — page renderer, widget, QR target, JSON-LD, MCP, `llms.txt`, agent card
 
-**Demo:**
+**Demo:** A business forwards booking emails and a live public page appears with real availability. **That alone is the free tier** — no box, no phone, no install.
 
 #### Phase C — the app host · weeks 11–14
 
@@ -1905,7 +2029,7 @@ Every milestone produces something demonstrable. Build out of sequence and you r
 1. Install, grant, revoke
 1. `sdk/` — init, run, test against a seeded sandbox node
 
-**Demo:**
+**Demo:** A hello-world app with fifteen lines of manifest gets a public page, a widget, a QR code, an agent endpoint and a settings screen — none of which it wrote.
 
 #### Phase D — the first apps · weeks 15–22
 
@@ -1931,6 +2055,8 @@ In dependency order. Each needs the one before it.
 1. bootc image, quadlets, factory provisioning, cert rack
 1. Node migration — cloud tier to owned hardware
 
+*15*
+
 ### The first four apps
 
 | App | Reads | Writes | Surfaces | Needs |
@@ -1945,6 +2071,8 @@ In dependency order. Each needs the one before it.
 #### Song requests is the proof the platform is real
 
 QR on a stage → page → request → payment confirmation parsed → identity matched → artist notified. **Zero new architecture.** Five capabilities you already built. If it takes a week, the foundation works. If it takes a month, something in Phases A–C is wrong and you should fix that before app number six.
+
+*16*
 
 ### What breaks if you skip
 
@@ -1963,7 +2091,8 @@ QR on a stage → page → request → payment confirmation parsed → identity 
 
 Seven of those ten are **not recoverable** — they'd require rebuilding the foundation with live customers on it. They're all in Phase A and B, they're all cheap to do first, and every one of them is boring.
 
-**Still true:**
+**Still true:** None of Phase E matters if an accessibility service can't run on the apps a Destin charter operator actually uses. One phone, one afternoon, before week 23.
+
 Build spec, revision one. Phase durations assume a small team and will move; the dependency order between phases should not. Companion documents: the Playbook (strategy and economics), the Build Plan (phases and go-to-market), the Parts Catalog (component list with verdicts).
 
 ---
@@ -1971,7 +2100,21 @@ Build spec, revision one. Phase durations assume a small team and will move; the
 
 # Part IV — The Build Plan
 
+Phases P0–P5 with done-when gates, the weekly ops loop, economics, risk register, first thirty days.
+
+*Build Plan · Small Business AI Appliance*
+
 A box that runs a small business by operating the apps that business already uses — on a real Android handset with a real SIM — and a subscription that exists because those apps never stop changing.
+
+BuyerSmall business owner
+
+Price~$200/mo + hardware
+
+SoldSubscription to upkeep
+
+StackFully open source
+
+First shipSoftware, not hardware
 
 *01 — The thesis*
 
@@ -1983,13 +2126,23 @@ Your upstream is different and far more volatile: **the user interfaces of the a
 
 Yours breaks too. The difference is that it breaks for about six hours.
 
+01
+
 A vendor ships a UI change to their app.
+
+02
 
 Post-action verification fails across the fleet. You know before any customer does.
 
+03
+
 You re-map that one flow. Once.
 
+04
+
 The fix is signed and pushed to every customer overnight.
+
+05
 
 **Nobody noticed anything happened.**
 
@@ -2052,6 +2205,8 @@ Three things need your OK. Each with a draft, a dollar amount, and a screenshot 
 
 Numbered because it is a real dependency chain, not a menu. Each phase exists to retire one specific risk before you spend money on the next.
 
+P0Weeks 1–4
+
 #### Prove remote control on one flow
 
 One laptop, one Android phone, one app, one task. Resist every urge to generalize.
@@ -2060,7 +2215,9 @@ One laptop, one Android phone, one app, one task. Resist every urge to generaliz
 - Record a human changing business hours in Google Business Profile
 - Replay it. Screenshot the end state and read it back to confirm
 
-**Done when:**
+**Done when:** You say "update my hours to 9 to 5" and get back a screenshot proving it happened.
+
+P1Weeks 5–12
 
 #### Flow library and approval board
 
@@ -2071,7 +2228,9 @@ Turn one trick into a system. This is where the product becomes real.
 - Approval queue UI, first version, on a plain monitor
 - Ten flows across three real businesses in your own city
 
-**Done when:**
+**Done when:** Three businesses run five flows each, unattended, for two straight weeks.
+
+P2Weeks 13–20
 
 #### Ship software, not hardware
 
@@ -2080,7 +2239,9 @@ Sell it before you manufacture anything. Customers bring their own mini PC and p
 - Installer, licensing, billing, onboarding that a non-technical owner can finish alone
 - Twenty to forty flows across two verticals — pick restaurants and one service trade
 
-**Done when:**
+**Done when:** Twenty-five businesses are paying monthly and you have not shipped a single box.
+
+P3Weeks 21–32
 
 #### Build the churn machine
 
@@ -2091,7 +2252,9 @@ The actual company. Everything before this was a demo; this is the thing custome
 - Weekly release train: canary 5%, staged rollout, human-readable changelog
 - A certification rack running every supported app version
 
-**Done when:**
+**Done when:** A real app redesign is detected, re-mapped, and pushed fleet-wide inside 24 hours — and no customer opens a ticket.
+
+P4Weeks 33–48
 
 #### The appliance
 
@@ -2102,7 +2265,9 @@ Only now does hardware make sense, because you know exactly what people use it f
 - Ten-foot tile UI in Wayland kiosk mode
 - ODM order, factory provisioning, certification suite in CI
 
-**Done when:**
+**Done when:** One hundred units pass the full certification suite and ship to existing software customers first.
+
+P5Year 2
 
 #### Widen
 
@@ -2117,13 +2282,23 @@ Only now does hardware make sense, because you know exactly what people use it f
 
 If this loop runs, the business works. If it stops for a month, customers start finding broken flows before you do — and that is the only way this product dies.
 
+Mon
+
 Fleet health. Which verifications failed over the weekend, and on which app versions.
+
+Tue – Wed
 
 Re-map broken flows. Test against the certification rack, not a developer's phone.
 
+Thu
+
 Build and sign the flow pack. Canary to 5% of the fleet. Watch.
 
+Fri
+
 Staged rollout to everyone. Changelog written for a restaurant owner, not an engineer.
+
+Ongoing
 
 Onboard new apps customers ask for. Add models to the catalog. Grow the library that every customer shares.
 
@@ -2196,7 +2371,13 @@ Working plan, revision one. Phase durations assume a small team and will move; t
 
 # Part V — The Parts Catalog
 
+Every open-source component by layer with a use / study / careful / skip verdict.
+
+*Companion to the Build Plan*
+
 Every open-source component the appliance needs, grouped by layer, with a verdict on each. Opinions included — a list of sixty repositories without them is just more work for you.
+
+*Use* Build on this *Study* Read it, don't depend on it *Careful* Real catch attached *Skip* Wrong tool here
 
 *The spine*
 
@@ -2204,21 +2385,39 @@ Every open-source component the appliance needs, grouped by layer, with a verdic
 
 Everything else in this catalog is supporting cast. If you only cloned these nine, you would still have the shape of the machine.
 
+Genymobile/scrcpy
+
 Mirror and control the Android handset. Solved problem — do not rebuild it.
+
+mobile-dev-inc/maestro
 
 Declarative YAML mobile flows. The shape your flow library should take.
 
+ggml-org/llama.cpp
+
 Local inference, GGUF weights, LoRA adapter loading.
+
+mostlygeek/llama-swap
 
 Hot-swaps models behind one OpenAI-compatible endpoint. Your model manager, already written.
 
+rhasspy/wyoming
+
 The protocol that wires wake word → speech → intent → voice into one pipeline.
+
+containers/bootc
 
 The OS as a signed container image. Atomic swap, automatic rollback.
 
+sigstore/cosign
+
 Sign every image and flow pack; publish to a public transparency log.
 
+modelcontextprotocol
+
 How agents call tools. Adopt the standard instead of inventing a plugin format.
+
+home-assistant/operating-system
 
 Your closest living analogue. Read this one before you write anything.
 
@@ -2230,10 +2429,10 @@ Four projects have already solved large parts of what you are attempting. Time s
 
 | Project | License | What it gives you | Verdict |
 |---|---|---|---|
-| [home-assistant/operating-system](https://github.com/home-assistant/operating-system) | Apache-2.0 | **The single most important repo in this catalog.** An immutable appliance OS with A/B boot slots, RAUC over-the-air updates, and a non-technical owner on the other end. Same problem you have, already shipped to millions of devices. | Study |
-| [home-assistant/core](https://github.com/home-assistant/core) | Apache-2.0 | The automation engine, the device abstraction, and **the Assist voice pipeline**. Also the business template: Nabu Casa sells the hardware and a cloud subscription while the Open Home Foundation holds the project. That is your model with the serial numbers filed off. | Study |
-| [ublue-os/bluefin](https://github.com/ublue-os/bluefin) · [ublue-os](https://github.com/ublue-os/main) | Apache-2.0 | Universal Blue builds polished, opinionated desktops as bootc images in public CI. The best worked example of the exact build pipeline you need for the OS layer. | Use |
-| [omacom/omarchy](https://github.com/omacom/omarchy) | MIT | Read manual/ for documentation standard, themes/ for how theming becomes a product feature, and install/hardware/ as a list of components to avoid. Do not adopt its mutable-Arch update model. | Study |
+| [home-assistant/operating-system](https://github.com/home-assistant/operating-system) | Apache-2.0 | **The single most important repo in this catalog.** An immutable appliance OS with A/B boot slots, RAUC over-the-air updates, and a non-technical owner on the other end. Same problem you have, already shipped to millions of devices. | *Study* |
+| [home-assistant/core](https://github.com/home-assistant/core) | Apache-2.0 | The automation engine, the device abstraction, and **the Assist voice pipeline**. Also the business template: Nabu Casa sells the hardware and a cloud subscription while the Open Home Foundation holds the project. That is your model with the serial numbers filed off. | *Study* |
+| [ublue-os/bluefin](https://github.com/ublue-os/bluefin) · [ublue-os](https://github.com/ublue-os/main) | Apache-2.0 | Universal Blue builds polished, opinionated desktops as bootc images in public CI. The best worked example of the exact build pipeline you need for the OS layer. | *Use* |
+| [omacom/omarchy](https://github.com/omacom/omarchy) | MIT | Read manual/ for documentation standard, themes/ for how theming becomes a product feature, and install/hardware/ as a list of components to avoid. Do not adopt its mutable-Arch update model. | *Study* |
 
 *Layer 01*
 
@@ -2241,13 +2440,13 @@ Four projects have already solved large parts of what you are attempting. Time s
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| [containers/bootc](https://github.com/containers/bootc) | Apache-2.0 | **Your OS pipeline.** Boot a machine directly from an OCI container image. Build in CI, sign, push; devices pull and swap atomically. | Use |
-| [ostreedev/ostree](https://github.com/ostreedev/ostree) | LGPL-2.1 | The content-addressed filesystem underneath bootc. Gives you file-level deduplicated deltas, so a full OS update downloads like a patch. | Use |
-| [fedora-iot/greenboot](https://github.com/fedora-iot/greenboot) | LGPL-2.1 | **The auto-rollback.** Runs health checks after boot; a failed check reverts to the previous image before the owner ever sees a problem. This is what makes updates un-scary. | Use |
-| [rauc/rauc](https://github.com/rauc/rauc) | LGPL-2.1 | Classic A/B slot updater — what Home Assistant OS runs. The right choice only if you go Buildroot/Yocto embedded instead of OCI images. | Careful |
-| [osbuild/osbuild](https://github.com/osbuild/osbuild) | Apache-2.0 | Turns your bootc image into installable media — ISO, raw disk, the factory flash artifact. | Use |
-| systemd-sysupdate | LGPL-2.1 | Minimal A/B image updater already in systemd. Worth knowing, but bootc gives you more for the same effort. | Study |
-| [mendersoftware/mender](https://github.com/mendersoftware/mender) | Apache-2.0 | Full fleet OTA with a management server. Capable, but the server-side fleet model conflicts with your pull-only, no-access posture. | Skip |
+| [containers/bootc](https://github.com/containers/bootc) | Apache-2.0 | **Your OS pipeline.** Boot a machine directly from an OCI container image. Build in CI, sign, push; devices pull and swap atomically. | *Use* |
+| [ostreedev/ostree](https://github.com/ostreedev/ostree) | LGPL-2.1 | The content-addressed filesystem underneath bootc. Gives you file-level deduplicated deltas, so a full OS update downloads like a patch. | *Use* |
+| [fedora-iot/greenboot](https://github.com/fedora-iot/greenboot) | LGPL-2.1 | **The auto-rollback.** Runs health checks after boot; a failed check reverts to the previous image before the owner ever sees a problem. This is what makes updates un-scary. | *Use* |
+| [rauc/rauc](https://github.com/rauc/rauc) | LGPL-2.1 | Classic A/B slot updater — what Home Assistant OS runs. The right choice only if you go Buildroot/Yocto embedded instead of OCI images. | *Careful* |
+| [osbuild/osbuild](https://github.com/osbuild/osbuild) | Apache-2.0 | Turns your bootc image into installable media — ISO, raw disk, the factory flash artifact. | *Use* |
+| systemd-sysupdate | LGPL-2.1 | Minimal A/B image updater already in systemd. Worth knowing, but bootc gives you more for the same effort. | *Study* |
+| [mendersoftware/mender](https://github.com/mendersoftware/mender) | Apache-2.0 | Full fleet OTA with a management server. Capable, but the server-side fleet model conflicts with your pull-only, no-access posture. | *Skip* |
 
 *Layer 02*
 
@@ -2255,13 +2454,13 @@ Four projects have already solved large parts of what you are attempting. Time s
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| systemd-boot + UKI | LGPL-2.1 | Unified kernel images signed as one object. Simpler than GRUB2 and avoids its licensing entanglement entirely. | Use |
-| [Foxboron/sbctl](https://github.com/Foxboron/sbctl) | MIT | Secure Boot key management that a human can actually operate. Pair with mokutil so owners can enroll their own keys and unlock the machine. | Use |
-| [sigstore/cosign](https://github.com/sigstore/cosign) | Apache-2.0 | **Signs every OS image and flow pack.** Devices verify before staging. Keys live in an HSM. | Use |
-| [sigstore/rekor](https://github.com/sigstore/rekor) | Apache-2.0 | **The transparency log.** Devices refuse anything not publicly logged, which makes a targeted backdoor impossible rather than merely promised. This is the repo that turns your privacy claim into a proof. | Use |
-| [project-zot/zot](https://github.com/project-zot/zot) | Apache-2.0 | Lightweight OCI-native registry. Simpler to self-host than Harbor and enough for a fleet in the thousands. | Use |
-| [fwupd/fwupd](https://github.com/fwupd/fwupd) | LGPL-2.1 | Firmware updates through LVFS. Cheap to add and it makes the appliance feel like a real product rather than a PC in a case. | Use |
-| [tpm2-software/tpm2-tss](https://github.com/tpm2-software/tpm2-tss) | BSD-2 | Device identity sealed in the TPM. Backs entitlement without a user account, and disk encryption without a password prompt on a wall-mounted box. | Use |
+| systemd-boot + UKI | LGPL-2.1 | Unified kernel images signed as one object. Simpler than GRUB2 and avoids its licensing entanglement entirely. | *Use* |
+| [Foxboron/sbctl](https://github.com/Foxboron/sbctl) | MIT | Secure Boot key management that a human can actually operate. Pair with mokutil so owners can enroll their own keys and unlock the machine. | *Use* |
+| [sigstore/cosign](https://github.com/sigstore/cosign) | Apache-2.0 | **Signs every OS image and flow pack.** Devices verify before staging. Keys live in an HSM. | *Use* |
+| [sigstore/rekor](https://github.com/sigstore/rekor) | Apache-2.0 | **The transparency log.** Devices refuse anything not publicly logged, which makes a targeted backdoor impossible rather than merely promised. This is the repo that turns your privacy claim into a proof. | *Use* |
+| [project-zot/zot](https://github.com/project-zot/zot) | Apache-2.0 | Lightweight OCI-native registry. Simpler to self-host than Harbor and enough for a fleet in the thousands. | *Use* |
+| [fwupd/fwupd](https://github.com/fwupd/fwupd) | LGPL-2.1 | Firmware updates through LVFS. Cheap to add and it makes the appliance feel like a real product rather than a PC in a case. | *Use* |
+| [tpm2-software/tpm2-tss](https://github.com/tpm2-software/tpm2-tss) | BSD-2 | Device identity sealed in the TPM. Backs entitlement without a user account, and disk encryption without a password prompt on a wall-mounted box. | *Use* |
 
 *Layer 03*
 
@@ -2271,16 +2470,16 @@ Everything else in this catalog is assembly. This layer is where your actual pro
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| [Genymobile/scrcpy](https://github.com/Genymobile/scrcpy) | Apache-2.0 | **Mirroring and manual control.** Low-latency Android screen on the Linux box with input passthrough. Ships a server-side component you can drive programmatically. Non-negotiable. | Use |
-| AccessibilityService (Android SDK) | — | **You write this yourself and it is the heart of the product.** It hands you the semantic UI tree — real buttons with real IDs and text — plus gesture dispatch. Structure beats pixels by a wide margin. | Use |
-| [mobile-dev-inc/maestro](https://github.com/mobile-dev-inc/maestro) | Apache-2.0 | **Read this for the flow format.** Declarative YAML UI flows with built-in waiting and assertions — exactly the shape your flow library wants, and it already solved the tedious parts of element matching. | Use |
-| [openatx/uiautomator2](https://github.com/openatx/uiautomator2) | MIT | Python control of Android UI. The fastest path to a working prototype in week one, before you write your own service. | Use |
-| [droidrun/mobilerun](https://github.com/droidrun/mobilerun) | open source | LLM-agnostic agent that inspects UI state, taps, types, and plans multi-step flows via CLI or Python. Closest working reference to your agent loop. | Study |
-| [sktyou/OpenGUI](https://github.com/sktyou/OpenGUI) | open source | Android GUI agent built on standard AccessibilityService APIs, with a local REST API for remote driving. Good architecture reference for the service you will write. | Study |
-| [OpenBMB/AgentCPM-GUI](https://github.com/OpenBMB/AgentCPM-GUI) | Apache-2.0 | An 8B on-device GUI agent model that takes phone screenshots and executes tasks. Your vision fallback when the accessibility tree goes blind on a WebView or canvas. | Use |
-| [google-research/android_world](https://github.com/google-research/android_world) | Apache-2.0 | **Your test harness.** A benchmark of real Android tasks. Do not guess at your flow reliability — measure it against a standard suite and watch the number move. | Use |
-| [appium/appium](https://github.com/appium/appium) | Apache-2.0 | The mature, heavyweight option. Built for CI test farms, not a live appliance — the ceremony costs more than it returns here. | Skip |
-| [waydroid/waydroid](https://github.com/waydroid/waydroid) | GPL-3.0 | Android in a container on the Linux box. Tempting, but it forfeits the real SIM and gets flagged by exactly the POS and banking apps you need. **The physical handset is the whole point.** | Skip |
+| [Genymobile/scrcpy](https://github.com/Genymobile/scrcpy) | Apache-2.0 | **Mirroring and manual control.** Low-latency Android screen on the Linux box with input passthrough. Ships a server-side component you can drive programmatically. Non-negotiable. | *Use* |
+| AccessibilityService (Android SDK) | — | **You write this yourself and it is the heart of the product.** It hands you the semantic UI tree — real buttons with real IDs and text — plus gesture dispatch. Structure beats pixels by a wide margin. | *Use* |
+| [mobile-dev-inc/maestro](https://github.com/mobile-dev-inc/maestro) | Apache-2.0 | **Read this for the flow format.** Declarative YAML UI flows with built-in waiting and assertions — exactly the shape your flow library wants, and it already solved the tedious parts of element matching. | *Use* |
+| [openatx/uiautomator2](https://github.com/openatx/uiautomator2) | MIT | Python control of Android UI. The fastest path to a working prototype in week one, before you write your own service. | *Use* |
+| [droidrun/mobilerun](https://github.com/droidrun/mobilerun) | open source | LLM-agnostic agent that inspects UI state, taps, types, and plans multi-step flows via CLI or Python. Closest working reference to your agent loop. | *Study* |
+| [sktyou/OpenGUI](https://github.com/sktyou/OpenGUI) | open source | Android GUI agent built on standard AccessibilityService APIs, with a local REST API for remote driving. Good architecture reference for the service you will write. | *Study* |
+| [OpenBMB/AgentCPM-GUI](https://github.com/OpenBMB/AgentCPM-GUI) | Apache-2.0 | An 8B on-device GUI agent model that takes phone screenshots and executes tasks. Your vision fallback when the accessibility tree goes blind on a WebView or canvas. | *Use* |
+| [google-research/android_world](https://github.com/google-research/android_world) | Apache-2.0 | **Your test harness.** A benchmark of real Android tasks. Do not guess at your flow reliability — measure it against a standard suite and watch the number move. | *Use* |
+| [appium/appium](https://github.com/appium/appium) | Apache-2.0 | The mature, heavyweight option. Built for CI test farms, not a live appliance — the ceremony costs more than it returns here. | *Skip* |
+| [waydroid/waydroid](https://github.com/waydroid/waydroid) | GPL-3.0 | Android in a container on the Linux box. Tempting, but it forfeits the real SIM and gets flagged by exactly the POS and banking apps you need. **The physical handset is the whole point.** | *Skip* |
 
 #### Test detection before you build anything on this layer
 
@@ -2292,13 +2491,13 @@ Some apps refuse to run with an active accessibility service. Install every app 
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | MIT | **The engine.** GGUF weights, quantization tooling, LoRA adapter loading, an OpenAI-compatible server, and first-class AMD support through ROCm and Vulkan. | Use |
-| [mostlygeek/llama-swap](https://github.com/mostlygeek/llama-swap) | MIT | **Your model manager, already written.** A single Go binary that sits in front of llama.cpp or vLLM, inspects the requested model, starts the right process, proxies the call, and evicts idle instances. Process isolation means one model crashing cannot take the others down. | Use |
-| [vllm-project/vllm](https://github.com/vllm-project/vllm) | Apache-2.0 | Higher throughput and multi-LoRA serving, at the cost of a much heavier runtime. Right for a business box serving several staff at once; overkill for a single owner. | Careful |
-| [ollama/ollama](https://github.com/ollama/ollama) | MIT | Easiest developer experience and great for your first two weeks. Hands you less control over quantization and memory than you will eventually want. | Careful |
-| [huggingface/huggingface_hub](https://github.com/huggingface/huggingface_hub) | Apache-2.0 | The client behind your one-click catalog. You mirror, quantize, test on your own SKU, sign, and serve — the customer never sees a model card or a config file. | Use |
-| [ROCm/ROCm](https://github.com/ROCm/ROCm) | MIT | The AMD compute stack for Strix Halo. In-tree kernel driver is precisely what keeps your single-image OS architecture clean — the reason to pick AMD over NVIDIA here is architectural, not benchmark-driven. | Use |
-| [open-webui/open-webui](https://github.com/open-webui/open-webui) | BSD-3 | A complete chat front end you can point at your stack today. Useful as internal tooling and as a design reference; not the ten-foot UI you will ship. | Study |
+| [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | MIT | **The engine.** GGUF weights, quantization tooling, LoRA adapter loading, an OpenAI-compatible server, and first-class AMD support through ROCm and Vulkan. | *Use* |
+| [mostlygeek/llama-swap](https://github.com/mostlygeek/llama-swap) | MIT | **Your model manager, already written.** A single Go binary that sits in front of llama.cpp or vLLM, inspects the requested model, starts the right process, proxies the call, and evicts idle instances. Process isolation means one model crashing cannot take the others down. | *Use* |
+| [vllm-project/vllm](https://github.com/vllm-project/vllm) | Apache-2.0 | Higher throughput and multi-LoRA serving, at the cost of a much heavier runtime. Right for a business box serving several staff at once; overkill for a single owner. | *Careful* |
+| [ollama/ollama](https://github.com/ollama/ollama) | MIT | Easiest developer experience and great for your first two weeks. Hands you less control over quantization and memory than you will eventually want. | *Careful* |
+| [huggingface/huggingface_hub](https://github.com/huggingface/huggingface_hub) | Apache-2.0 | The client behind your one-click catalog. You mirror, quantize, test on your own SKU, sign, and serve — the customer never sees a model card or a config file. | *Use* |
+| [ROCm/ROCm](https://github.com/ROCm/ROCm) | MIT | The AMD compute stack for Strix Halo. In-tree kernel driver is precisely what keeps your single-image OS architecture clean — the reason to pick AMD over NVIDIA here is architectural, not benchmark-driven. | *Use* |
+| [open-webui/open-webui](https://github.com/open-webui/open-webui) | BSD-3 | A complete chat front end you can point at your stack today. Useful as internal tooling and as a design reference; not the ten-foot UI you will ship. | *Study* |
 
 *Layer 05*
 
@@ -2308,14 +2507,14 @@ Do not assemble this from scratch. The Wyoming protocol already defines the whol
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| [rhasspy/wyoming](https://github.com/rhasspy/wyoming) | MIT | **The glue.** A simple protocol connecting each voice stage as an independent service. Adopt it and every component below becomes swappable without rewriting your pipeline. | Use |
-| [dscripka/openWakeWord](https://github.com/dscripka/openWakeWord) | Apache-2.0 | Wake word detection. Train your own brand word — the phrase people say to your box is part of the product, not a config value. | Use |
-| [snakers4/silero-vad](https://github.com/snakers4/silero-vad) | MIT | Voice activity detection — knowing when the speaker stopped. Small, fast, and the difference between a natural exchange and an awkward one. | Use |
-| [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | MIT | Speech to text. Sub-second on real hardware. Pair with [whisper.cpp](https://github.com/ggml-org/whisper.cpp) if you want one inference runtime across the whole box. | Use |
-| [hexgrad/kokoro](https://github.com/hexgrad/kokoro) | Apache-2.0 | **Text to speech, 82M parameters.** Natural output at a size that runs alongside everything else. This is your voice. | Use |
-| [rhasspy/piper](https://github.com/rhasspy/piper) | MIT | **Archived October 2025 and read-only.** Still works, still recommended in old tutorials — do not start a new product on it. Go to Kokoro. | Skip |
-| [pipecat-ai/pipecat](https://github.com/pipecat-ai/pipecat) | BSD-2 | Real-time conversational voice with interruption handling and barge-in. Reach for it when the wall box needs to hold a phone conversation rather than answer a command. | Study |
-| [speaches-ai/speaches](https://github.com/speaches-ai/speaches) | MIT | Wraps local speech-to-text and text-to-speech behind an OpenAI-compatible API. Convenient seam if you ever want to swap a cloud voice in for a customer who asks. | Use |
+| [rhasspy/wyoming](https://github.com/rhasspy/wyoming) | MIT | **The glue.** A simple protocol connecting each voice stage as an independent service. Adopt it and every component below becomes swappable without rewriting your pipeline. | *Use* |
+| [dscripka/openWakeWord](https://github.com/dscripka/openWakeWord) | Apache-2.0 | Wake word detection. Train your own brand word — the phrase people say to your box is part of the product, not a config value. | *Use* |
+| [snakers4/silero-vad](https://github.com/snakers4/silero-vad) | MIT | Voice activity detection — knowing when the speaker stopped. Small, fast, and the difference between a natural exchange and an awkward one. | *Use* |
+| [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | MIT | Speech to text. Sub-second on real hardware. Pair with [whisper.cpp](https://github.com/ggml-org/whisper.cpp) if you want one inference runtime across the whole box. | *Use* |
+| [hexgrad/kokoro](https://github.com/hexgrad/kokoro) | Apache-2.0 | **Text to speech, 82M parameters.** Natural output at a size that runs alongside everything else. This is your voice. | *Use* |
+| [rhasspy/piper](https://github.com/rhasspy/piper) | MIT | **Archived October 2025 and read-only.** Still works, still recommended in old tutorials — do not start a new product on it. Go to Kokoro. | *Skip* |
+| [pipecat-ai/pipecat](https://github.com/pipecat-ai/pipecat) | BSD-2 | Real-time conversational voice with interruption handling and barge-in. Reach for it when the wall box needs to hold a phone conversation rather than answer a command. | *Study* |
+| [speaches-ai/speaches](https://github.com/speaches-ai/speaches) | MIT | Wraps local speech-to-text and text-to-speech behind an OpenAI-compatible API. Convenient seam if you ever want to swap a cloud voice in for a customer who asks. | *Use* |
 
 *Layer 06*
 
@@ -2323,11 +2522,11 @@ Do not assemble this from scratch. The Wyoming protocol already defines the whol
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| [modelcontextprotocol](https://github.com/modelcontextprotocol/servers) | MIT | **How agents call tools.** Spec plus SDKs plus a library of existing servers. Every capability on your box becomes an MCP server, and you inherit an ecosystem instead of inventing a plugin format. | Use |
-| [node-red/node-red](https://github.com/node-red/node-red) | Apache-2.0 | Visual flow automation with a huge node library, genuinely open licensed, and light enough to run on the appliance. The right engine under your trigger-and-action layer. | Use |
-| [n8n-io/n8n](https://github.com/n8n-io/n8n) | Sustainable Use | Excellent product, but **not open source** — its license restricts commercial hosting and redistribution. Shipping it inside a product you sell needs a commercial agreement. Know this before you build on it. | Careful |
-| [temporalio/temporal](https://github.com/temporalio/temporal) | MIT | Durable execution — a flow survives a crash, a reboot, or a phone that fell asleep mid-task, and resumes exactly where it stopped. Heavy, but retries and resumability are not optional when real invoices are involved. | Careful |
-| [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | MIT | Stateful agent graphs with checkpointing and human-in-the-loop interrupts — which maps almost directly onto your approval board. | Study |
+| [modelcontextprotocol](https://github.com/modelcontextprotocol/servers) | MIT | **How agents call tools.** Spec plus SDKs plus a library of existing servers. Every capability on your box becomes an MCP server, and you inherit an ecosystem instead of inventing a plugin format. | *Use* |
+| [node-red/node-red](https://github.com/node-red/node-red) | Apache-2.0 | Visual flow automation with a huge node library, genuinely open licensed, and light enough to run on the appliance. The right engine under your trigger-and-action layer. | *Use* |
+| [n8n-io/n8n](https://github.com/n8n-io/n8n) | Sustainable Use | Excellent product, but **not open source** — its license restricts commercial hosting and redistribution. Shipping it inside a product you sell needs a commercial agreement. Know this before you build on it. | *Careful* |
+| [temporalio/temporal](https://github.com/temporalio/temporal) | MIT | Durable execution — a flow survives a crash, a reboot, or a phone that fell asleep mid-task, and resumes exactly where it stopped. Heavy, but retries and resumability are not optional when real invoices are involved. | *Careful* |
+| [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | MIT | Stateful agent graphs with checkpointing and human-in-the-loop interrupts — which maps almost directly onto your approval board. | *Study* |
 
 *Layer 07*
 
@@ -2335,13 +2534,13 @@ Do not assemble this from scratch. The Wyoming protocol already defines the whol
 
 | Project | License | Role | Verdict |
 |---|---|---|---|
-| [flutter/flutter](https://github.com/flutter/flutter) | BSD-3 | **One codebase for the wall screen and the phone app.** Permissive license with no commercial-embedded complications, unlike the Qt/QML route Omarchy took — which matters the moment you sell hardware. | Use |
-| [cage-kiosk/cage](https://github.com/cage-kiosk/cage) | MIT | A Wayland compositor that runs exactly one application fullscreen. Your ten-foot UI in kiosk mode, with no desktop for anyone to fall out of. | Use |
-| [flatpak/flatpak](https://github.com/flatpak/flatpak) | LGPL-2.1 | Sandboxed apps versioned separately from the OS. Pair with [xdg-desktop-portal](https://github.com/flatpak/xdg-desktop-portal) so file, camera and mic access is granted per app by a person, not assumed. | Use |
-| [89luca89/distrobox](https://github.com/89luca89/distrobox) | GPL-3.0 | **The escape hatch.** Full mutable Linux with root in a container, quarantined from the host. This is how you offer total freedom without any risk to the appliance. | Use |
-| [asg017/sqlite-vec](https://github.com/asg017/sqlite-vec) | Apache-2.0 / MIT | Vector search inside SQLite. One file holds the business's whole memory — easy to encrypt, easy to back up, easy to hand back when they leave. | Use |
-| [restic/restic](https://github.com/restic/restic) | BSD-2 | Encrypted backup to a destination the customer chooses — their NAS, their bucket. They are protected from a dead drive; you never hold a key. | Use |
-| [juanfont/headscale](https://github.com/juanfont/headscale) | BSD-3 | Self-hosted control plane for a WireGuard mesh, so the phone app reaches the box directly. Keeps your "no pipe into the customer's machine" posture intact. | Use |
+| [flutter/flutter](https://github.com/flutter/flutter) | BSD-3 | **One codebase for the wall screen and the phone app.** Permissive license with no commercial-embedded complications, unlike the Qt/QML route Omarchy took — which matters the moment you sell hardware. | *Use* |
+| [cage-kiosk/cage](https://github.com/cage-kiosk/cage) | MIT | A Wayland compositor that runs exactly one application fullscreen. Your ten-foot UI in kiosk mode, with no desktop for anyone to fall out of. | *Use* |
+| [flatpak/flatpak](https://github.com/flatpak/flatpak) | LGPL-2.1 | Sandboxed apps versioned separately from the OS. Pair with [xdg-desktop-portal](https://github.com/flatpak/xdg-desktop-portal) so file, camera and mic access is granted per app by a person, not assumed. | *Use* |
+| [89luca89/distrobox](https://github.com/89luca89/distrobox) | GPL-3.0 | **The escape hatch.** Full mutable Linux with root in a container, quarantined from the host. This is how you offer total freedom without any risk to the appliance. | *Use* |
+| [asg017/sqlite-vec](https://github.com/asg017/sqlite-vec) | Apache-2.0 / MIT | Vector search inside SQLite. One file holds the business's whole memory — easy to encrypt, easy to back up, easy to hand back when they leave. | *Use* |
+| [restic/restic](https://github.com/restic/restic) | BSD-2 | Encrypted backup to a destination the customer chooses — their NAS, their bucket. They are protected from a dead drive; you never hold a key. | *Use* |
+| [juanfont/headscale](https://github.com/juanfont/headscale) | BSD-3 | Self-hosted control plane for a WireGuard mesh, so the phone app reaches the box directly. Keeps your "no pipe into the customer's machine" posture intact. | *Use* |
 
 *Assembly*
 
@@ -2362,5 +2561,346 @@ In order. Each step produces something you can see working before the next one s
 Steps one through three are the product. Steps four and five are the demo. Steps six and seven are the company. Anyone can clone all sixty repos in this catalog in a weekend; the useful question is which three you have working by Friday.
 
 Licenses noted where they affect shipping hardware commercially — verify each against its repository before you depend on it, since projects relicense. Two flagged above are live traps: Piper is archived, and n8n is not open source.
+
+---
+
+
+# Part VI — The App Store Layer
+
+Package format (Agent Plugins / Agent Skills), index-not-store distribution, the trust ladder, the installer, three targets per app, the nine deployable units, Grok Bot, Apple, and the spreadsheet channel.
+
+*Research + Design*
+
+The package format, the distribution model, the trust ladder, the installer, and what Grok Bot and Apple are actually shipping. Everything from the second half of the session.
+
+*01*
+
+### The package format — don't invent one
+
+Two published vendor-neutral specs already exist, with a technical charter and a reference validator. Your own ledger said "BUILD YOUR EXTENSIONS, reuse plugin standards underneath." Here is the standard.
+
+#### Agent Plugins 1.0.0 — agent-plugins.org
+
+`plugin.json` at the package root. Strict allowed-field list:
+
+```
+$schema  name  version  description  author
+homepage  repository  license  keywords  extensions
+```
+
+- Bundles exactly two component types in v1: **Skills** (from `skills/`) and **MCP servers** (via `mcp.json`)
+- Directory-based, not archives. SemVer recommended.
+- Path containment — anything resolving outside the plugin root is rejected
+- Subprocess isolation via `PLUGIN_ROOT` and `PLUGIN_DATA`
+- `$schema` declares the target spec version; a schema change requires a new spec release
+
+**The gap:** Straight from the spec: **"The specification contains no explicit capability or permission system."** That's where you go, and `extensions` is the designed entry point.
+
+#### Agent Skills — agentskills.io
+
+`SKILL.md` with YAML frontmatter: `name`, `description` (max 1024 chars), `license`, `compatibility`, `metadata`, `allowed-tools`.
+
+**Progressive disclosure**, which maps exactly onto your dumb-agent design:
+
+```
+~100 tokens    name + description, loaded at startup for EVERY skill  → routing
+<5000 tokens   the SKILL.md body, loaded only on activation           → instructions
+as needed      scripts/ references/ assets/                           → resources
+```
+
+That first tier *is* your router. And the description doubles as the trigger rule — the real Neon skill reads as a list of phrases: *"object storage" or "S3-compatible storage" → …; "database" or "Postgres" → …*
+
+Reference validator: `skills-ref validate ./my-skill`.
+
+#### Your VAPP manifest
+
+```
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "restaurant-menu",
+  "version": "1.2.0",
+  "description": "QR menu with verified item ratings.",
+  "license": "Apache-2.0",
+  "extensions": {
+    "io.anextgent": {
+      "vertical": "restaurant",
+      "reads":    ["item.list", "review.aggregate_by_item", "business.get"],
+      "writes":   ["visit.record_scan"],
+      "surfaces": { "public_page": {...}, "qr": {...}, "agent_api": {...} },
+      "settings": { "show_ratings": {...} },
+      "requires": { "ingest": ["pos"] },
+      "events":   { "emits": [...], "listens": [...] }
+    }
+  }
+}
+```
+
+**Five things you get free:** a VAPP is a valid Agent Plugin and installs in any conformant client · skilla is your installer · the local `registry.json` pattern is your `install` table · path containment and `PLUGIN_ROOT` are your sandbox boundary, already specified · `skills-ref` is a validator you didn't write.
+
+**Caveat:** both specs are young. Check governance and adoption before depending on their roadmap — though `extensions` means your fields don't ride on their evolution either way.
+
+*02*
+
+### The distribution model — steal xAI's
+
+Read from the actual `xai-org/plugin-marketplace` repo, not from marketing.
+
+#### The repo is an index, not a store.
+
+From their CONTRIBUTING: *"This repo is an index: a PR doesn't ship a plugin's source."* They host nothing. The catalog holds pointers.
+
+```
+{
+  "name": "vercel",
+  "description": "Vercel deployment platform integration...",
+  "category": "deployment",
+  "source": {
+    "source": "url",
+    "url": "https://github.com/vercel/vercel-plugin.git",
+    "sha": "df0f55213f7b8db23a3ee7f27511ed344cdb2c74"
+  },
+  "homepage": "...", "keywords": [...], "domains": ["vercel.com"]
+}
+```
+
+This is the direct answer to *"I want the least control possible."* You don't hold the code. You hold the index and the signature. Zero hosting cost, zero distribution liability, the developer keeps ownership — and you still control what enters the catalog.
+
+#### Four mechanics to copy exactly
+
+- **Full 40-character commit SHA.** No branches, no tags, no abbreviated SHAs — the validator rejects all of them. Their reason: *"A moving ref would let a later force-push ship new code to everyone silently."* One line of validation, enormous value.
+- **Generated index.** `generate-plugin-index.py` fetches each pinned SHA and extracts the real components. The catalog metadata is *derived* from the pinned code, so it can't drift or lie about what a package contains.
+- **Local plugins need a README and a valid manifest.** Remote ones vendor nothing.
+- **CI validator** — `validate-catalog.py`. That's your certification tier one, free.
+
+Review also checks source legitimacy — official org versus a throwaway account, repo exists, brand matches source. Cheap, manual, and it stops the obvious attacks.
+
+**Their gap:** `plugin.json` has **no permission model** — no capabilities, no scopes, no risk levels. Trust is binary: `grok plugin install <name> --trust`. Fine for a developer's laptop. Not fine for a business's operational data. That's your improvement.
+
+*03*
+
+### The trust ladder — Red Hat's four stores
+
+**Naming trap:** **RHEL "AppStream" is not an app store.** In RHEL 8+ the distro splits into BaseOS and AppStream *repositories*. Since `ximion/appstream` (the freedesktop metadata standard) is also on your list, you have three AppStreams in play. Rename yours before it costs a week.
+
+| Thing | Layer | What to take |
+|---|---|---|
+| Ecosystem Catalog | index | Index-not-store, certification badges visible in the listing, hardware certification as its own track |
+| Red Hat Marketplace | commerce | Entitlement and metering bound to the catalog entry — Candlepin + Lago in your stack |
+| Automation Hub | content | **Your actual model.** See below. |
+| Developer Hub (Backstage) | developer portal | Software catalog, templates, docs. Later. |
+
+#### Why Automation Hub, not the container catalog
+
+Ansible **Collections** are packaged, versioned capability content — modules, roles, plugins, playbooks bundled as one installable unit. That's structurally a VAPP, not an application. And the three-tier structure is exactly what you need:
+
+```
+GALAXY                  free, public, community
+                        anyone with a GitHub account publishes
+                        no support claim, no guarantee
+
+AUTOMATION HUB          curated, certified, supported
+                        subscription-gated
+                        explicit support lifecycle per collection
+
+PRIVATE AUTOMATION HUB  the org runs their own
+                        signs and publishes their own content
+                        air-gap capable
+
+clients check Hub first, fall back to Galaxy
+```
+
+| Red Hat | Yours |
+|---|---|
+| Galaxy | community — anyone publishes, no guarantee |
+| Automation Hub certified | verified / certified — you tested it, you support it |
+| Private Automation Hub | the per-business catalog on their node |
+
+#### Certification isn't overhead. It's the revenue line.
+
+The catalog is free discovery; certification and the support commitment are what people pay for. That's the Red Hat innovation and it's the one you're copying at the business level.
+
+**What Red Hat gives you:** the backend — catalog, certification, signing, entitlement, lifecycle, tiering. The boring, hard-to-design half, already solved.
+
+**What it doesn't:** the frontend. Their stores serve enterprise IT buyers evaluating vendor software over weeks. There is no Red Hat equivalent of a per-business grant screen. Nobody in that lineage has ever had to make install feel like nothing.
+
+*04*
+
+### The installer — you already listed it
+
+`junior/skilla` — item #107 on your build list. MIT, pure bash, needs only `git` and `jq`. It already does the whole job:
+
+- Clones a repo, discovers `skills/<name>/SKILL.md`
+- Resolves declared `requires:` dependencies
+- Installs to `.agents/skills/` (project) or `~/.agents/skills/` (global)
+- **Tracks installs in a small `registry.json`** so `list`, `update` and `remove` work cleanly
+- For Agent Plugins 1.0.0 packages: validates the manifest, installs the whole package, expands `${PLUGIN_ROOT}` and `${PLUGIN_DATA}` in MCP config
+
+**Don't build:** An installer. That `registry.json` pattern is your `install` table on the node — proven, tiny, and already written.
+
+*05*
+
+### Three targets per app
+
+Apple ships one artifact: a binary that runs on a device. Yours ships up to three deployment targets in one package, and the store has to understand all of them.
+
+```
+NODE half      runs in WASM on the business's node
+               ingestion parsers · capability providers · automations
+               scheduled jobs · event handlers
+               sees private data, never leaves the node
+
+PUBLIC half    rendered by the edge from declared blocks
+               page · widget · QR target · JSON-LD · MCP
+               ZERO auth, fully cacheable, consumed by people who are
+               not your customers and will never log in
+
+OWNER half     wall screen tiles and phone app views
+               also declared blocks, rendered by the platform
+```
+
+It maps cleanly onto what Agent Plugins already gives you:
+
+```
+skills/                     → what the agent can do   (node half)
+mcp.json                    → tools it exposes        (node half)
+extensions.io.anextgent
+  ├─ reads / writes         → capability wiring       (node half)
+  ├─ surfaces.public_page   → blocks                  (public half)
+  ├─ surfaces.qr / widget   → blocks                  (public half)
+  └─ settings               → owner UI schema         (owner half)
+```
+
+Your store is also **three-sided** where Apple's is two: developer → business → that business's customers. Certification checks all three halves; the grant screen covers only the node half, because the public half touches nothing private by construction.
+
+*06*
+
+### Nine deployable units
+
+Contracts make things go together. Deployments make them separate. One repo everything depends on, that depends on nothing.
+
+```
+1  contracts          schemas, capability defs, manifest, ActionSpec
+2  app-store          Agent Plugins registry: catalog, SHA pinning,
+                      generated index, validator, CI
+3  flow-engine        map once → replay → fingerprint → verify → push
+4  ingest             email → structured business data, versioned parsers
+5  record + resolver  canonical truth with provenance and conflict policy
+6  edge               record → public page, widget, JSON-LD, MCP
+7  control-plane      capability registry, policy, constitution, ledger
+8  voice              Wyoming pipeline wired to a structured record
+9  os                 bootc image, kiosk shell, app store, recovery
+```
+
+Nine projects that compose — the way Foreman, Katello, Pulp and Candlepin compose. Each one is something someone else would run without the rest.
+
+#### Five rules that make it actually modular
+
+1. **No shared database between components.** If two read the same tables they're one component wearing two names. This is the rule that breaks first and costs most.
+1. **Every dependency crosses a contract.** A never imports B — it calls a declared interface with a fake available for testing.
+1. **Each ships its own container and starts alone.** If it crashes without another running, the boundary is wrong.
+1. **Each has its own version and cadence.** `contracts` is semver'd; everything declares which version it implements.
+1. **Each has a README that doesn't mention the others.** That's the real test.
+
+**Warning:** Modular **boundaries** from day one. Modular **deployment** only when you need it. Nine services with a team of one means you spend the year on plumbing. Define the boundaries, run them in one process, split later when you've felt the pain.
+
+The App Store is the right one to build separately first — zero dependency on the record, the node, or any app existing. It forces the manifest to be right before anything is built on it, and it's the piece with the clearest open-source story.
+
+*07*
+
+### Grok Bot
+
+Launched 11 August 2026, early beta. Template marketplace 28 August. Grok Build plugin marketplace June 2026, 220 plugins.
+
+#### What it is
+
+"An agent with a computer" — a **cloud-based desktop** with its own filesystem, terminal and apps. Role-based bots with their own logins, always-on. Uses apps, browses the web, writes and runs code. Taught by prompts **or screen recordings**. Bots trigger each other. Routines and event triggers. MCP servers, plugins, skills — Gmail, Calendar, Drive, multiple accounts per service.
+
+Control: natural-language permission rules, **a separate review agent that approves or blocks**, allow/block lists, explicit authorization for significant actions, escalation to humans.
+
+**Access:** requires a $120–200/mo Cursor or SuperGrok Heavy subscription. Cursor Pro lists it at $20/mo, Pro+ $60, Ultra $200, with unpublished weekly allowances. **Grok Bot is not open source** — Grok Build (the coding agent and TUI) is, and the marketplace index is.
+
+#### The overlap is real
+
+- Agent with its own computer and its own logins
+- **Taught by screen recording** — that's record-and-replay
+- **Natural-language permission rules** — that's a Constitution
+- **A separate reviewer that approves** — actor isn't approver, same principle as verifier ≠ executor
+- Human escalation, a template marketplace, routines and event triggers
+
+#### Seven ways it is structurally not your product
+
+1. **It's a cloud computer.** The thing you're positioned against, and they can't flip it — cloud is their business model.
+1. **The buyer is a knowledge worker.** Personal CRM, fitness coaching, code generation, searching Slack and Notion. Not a charter captain.
+1. **The plugins are enterprise SaaS.** Workspace, Slack, M365, Salesforce, Jira. Not Toast, Square, FareHarbor, Vagaro, Clover — the exact set small businesses run.
+1. **No physical device, no real SIM.** A cloud desktop cannot operate an Android app needing a logged-in mobile session with SMS 2FA on the business's own number.
+1. **No verification layer.** The reviewer approves *before*. Nothing independently confirms the world changed *after*.
+1. **No business data plane.** No canonical truth, no verified reviews, no availability aggregation, no consented grant model.
+1. **No payment rail.**
+
+**Liability:** Their terms put account risk on the customer. A business banned from Toast for automated access on a cloud VM is the business's problem. Yours: their device, their logins, human speed, a person approving each action, and a screenshot of what happened. Same activity, very different risk profile — and that's a sales answer, not just a legal one.
+
+*08*
+
+### Apple
+
+September 9, 2026 event. Foldable iPhone (Duo/Ultra) at $1,999, iPhone 18/18 Pro, AirPods 5, Watch Series 12 — with John Ternus debuting as CEO.
+
+#### They are building a version of this, and it's gated
+
+- **Siri rebuilt** — LLM-based, multi-step requests, running on **Google Gemini models underneath**
+- **App Intents is the mechanism.** WWDC 2026 declared it "the central building block" of agentic iOS. Siri reaches into an app, retrieves information and invokes actions *without opening it*. Shipping with the fall OS releases.
+- **Apple Business** — Business Connect, Business Manager and Business Essentials merged into one platform in April 2026. Siri and Maps pull recommendations directly from it, across a billion devices.
+- **Maps ads launched summer 2026** in the US and Canada, sold through the same platform.
+
+#### The gate, precisely
+
+App Intents = a capability registry. Apple Business = a business record. Agentic Siri = an orchestrator. Same architecture. But both sides require **voluntary adoption on Apple's terms**: the developer must implement App Intents, and the business must claim and maintain a listing.
+
+**Apple cannot operate an app that didn't cooperate. You can.** That's not a gap they can close — it's a consequence of being the platform.
+
+#### 58% of U.S. businesses haven't claimed their Apple listing. Only 16% actively manage it.
+
+Apple has a billion devices, free tooling, Siri distribution and an ads business riding on it — and 84% of businesses don't maintain the data. Not because they don't care. Because maintaining it is unpaid work.
+
+That is exactly what your text-back toggle solves. **Apple has the distribution and no mechanism. You have the mechanism.**
+
+#### Three pieces of ammunition
+
+- **Maps ads are real and shipped this summer.** Apple now monetizes the listing — renting a business access to its own presence. Fact, not rhetoric. It belongs in the 1984 remake.
+- **Siri runs on Gemini.** A $3-trillion company rented someone else's model. Models are commodity; the substrate isn't.
+- **Apple just made local business data strategically important.** Every small business is about to hear they need to manage their Apple listing. You arrive with the thing that does it automatically.
+
+**Move:** **Feed Apple, don't fight it.** Apple Business becomes one more syndication destination. Your businesses rank in Siri while competitors' listings sit unclaimed — and the sales line is *"Siri is answering questions about you right now with bad data. I fix that too."*
+
+Where they genuinely threaten you: the consumer discovery query. If Siri answers "who has crab legs nearby" from Apple Business data across a billion devices, that's your query on their distribution. It only works when the data is current, and 84% of it isn't.
+
+*09*
+
+### The export and the bookkeeper
+
+The box structures their private data into something they own — a spreadsheet, regenerated every morning, sitting on their machine.
+
+- **It makes "you own it" legible.** A charter captain doesn't understand a consented federated data plane. He understands a file with all his stuff in it.
+- **It's the shutdown test answered with an object.** "If I go out of business your machine keeps working" is a claim. A spreadsheet updated this morning is proof.
+- **It kills API dependency for reads permanently.** No rate limits, no partner program, no access to lose.
+- **Spreadsheets are where every small business already lives** — their bookkeeper, accountant, lender and insurance agent all work in Excel.
+- **Portability increases retention.** Products that make leaving easy keep people.
+
+#### Four design calls
+
+1. **The spreadsheet is an export, not the source.** Canonical stays in Postgres on the node; the workbook is regenerated from it. Otherwise you inherit corruption and no referential integrity.
+1. **Local file by default, not Google Sheets.** Sheets sends the data to Google, which contradicts everything else. Optional sync to a destination they pick.
+1. **One workbook per domain, stable schema.** Never reorder or rename columns — their accountant has formulas pointed at those cells.
+1. **The agent queries the database, not the spreadsheet.** Humans read the workbook.
+
+#### Bookkeepers are an unworked channel
+
+Each one serves 30–80 small businesses. Every month they chase numbers scattered across four systems — it's literally their billable time being wasted. Hand them a client whose numbers arrive clean and on time and they will ask what it is.
+
+One bookkeeper who likes it is fifty warm introductions, from someone the owner already trusts with their money. Same shape as the chamber play, better qualified, and nobody is competing for that relationship.
+
+**The line:** *"Every month your bookkeeper asks for numbers you have to dig out of four different systems. This just has them. Updated every morning, in a spreadsheet, on your computer."*
+
+Research current as of September 2026. Product names, pricing and feature claims should be re-verified against first-party sources before use in legal, investment or public marketing contexts. Companions: the Playbook, the Build Spec, the Build Plan, the Parts Catalog, An Honest Read.
 
 ---
