@@ -1,0 +1,29 @@
+{
+  "app": "com.google.android.apps.business",
+  "app_version": "4.12.0",
+  "map_version": 1,
+  "capability": "business.update_hours",
+  "executor": "android",
+  "state": "promoted",
+  "learned_from": "recorded",
+  "fingerprint": [
+    { "id": "com.google.android.apps.business:id/profile_header" },
+    { "text": "Business hours" }
+  ],
+  "steps": [
+    { "verb": "launch", "package": "com.google.android.apps.business" },
+    { "verb": "tap",   "select": { "text": "Business hours" } },
+    { "verb": "tap",   "select": { "desc": "{{weekday}}" } },
+    { "verb": "clear", "select": { "id": "com.google.android.apps.business:id/open_time" } },
+    { "verb": "type",  "select": { "id": "com.google.android.apps.business:id/open_time" },  "text": "{{opens}}" },
+    { "verb": "clear", "select": { "id": "com.google.android.apps.business:id/close_time" } },
+    { "verb": "type",  "select": { "id": "com.google.android.apps.business:id/close_time" }, "text": "{{closes}}" },
+    { "verb": "tap",   "select": { "text": "Save" } },
+    { "verb": "assert","select": { "contains": "Updated" } }
+  ],
+  "verify": {
+    "executor": "browser",
+    "field": "com.google.android.apps.business:id/close_time",
+    "expect": "{{closes}}"
+  }
+}
