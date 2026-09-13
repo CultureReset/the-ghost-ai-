@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>The App Store Layer</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --surface-2:#E9EBE6;
+    --ink:#181B19; --ink-2:#474C48; --muted:#757B74;
+    --rule:#D7DAD3; --rule-strong:#B9BDB4;
+    --accent:#A4601A; --accent-soft:#F1E4D2;
+    --go:#2E6B4C; --warn:#93582A; --stop:#8C3B34;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+      --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+      --rule:#2E3438; --rule-strong:#414850;
+      --accent:#D79A4E; --accent-soft:#33291B;
+      --go:#66AC85; --warn:#C68A52; --stop:#C8756C;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+    --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+    --rule:#2E3438; --rule-strong:#414850;
+    --accent:#D79A4E; --accent-soft:#33291B;
+    --go:#66AC85; --warn:#C68A52; --stop:#C8756C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding-inline:20px}
+  .col{max-width:700px}
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2rem,5.2vw,3.1rem);font-weight:700;letter-spacing:-.022em;line-height:1.05}
+  h2{font-size:clamp(1.4rem,3.1vw,1.85rem);font-weight:650;letter-spacing:-.016em;line-height:1.15}
+  h3{font-size:1.1rem;font-weight:650;letter-spacing:-.006em}
+  h4{font-size:.96rem;font-weight:600}
+  p{margin:0}
+  a{color:var(--accent)}
+  strong{font-weight:600}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .lede{font-size:1.15rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.93rem;color:var(--muted);line-height:1.55}
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:20px;padding-block:52px 36px}
+  .mast h1{max-width:15ch}.mast .lede{max-width:58ch}
+  nav.toc{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:20px 22px;margin-block:32px;box-shadow:var(--shadow)}
+  nav.toc h4{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:500}
+  nav.toc ol{margin:0;padding:0;list-style:none;columns:2;column-gap:32px}
+  nav.toc li{break-inside:avoid;margin-bottom:6px;font-size:.93rem}
+  nav.toc a{text-decoration:none}
+  nav.toc .n{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--muted);margin-right:8px}
+  @media (max-width:640px){nav.toc ol{columns:1}}
+  section{padding-block:44px;border-bottom:1px solid var(--rule);scroll-margin-top:16px}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:9px;margin-bottom:22px;max-width:690px}
+  .stack{display:flex;flex-direction:column;gap:15px}
+  pre{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:15px 17px;overflow-x:auto;font-family:"JetBrains Mono",monospace;
+    font-size:.8rem;line-height:1.6;color:var(--ink-2);margin:0}
+  code{font-family:"JetBrains Mono",monospace;font-size:.86em}
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;
+    background:var(--surface);box-shadow:var(--shadow);margin-block:6px}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:.89rem}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.45}
+  thead th{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:500;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+    border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.k{font-family:Archivo,sans-serif;font-weight:600;color:var(--ink);white-space:nowrap}
+  td.num{font-family:"JetBrains Mono",monospace;white-space:nowrap}
+  ul.tight,ol.tight{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:7px}
+  ul.tight li,ol.tight li{font-size:.96rem;line-height:1.5;color:var(--ink-2)}
+  ul.tight li::marker,ol.tight li::marker{color:var(--rule-strong)}
+  ul.tight li strong,ol.tight li strong{color:var(--ink)}
+  .callout{background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:19px 22px;display:flex;flex-direction:column;gap:9px}
+  .callout h3{color:var(--ink)}
+  .callout p{font-size:.99rem;line-height:1.55;color:var(--ink-2)}
+  .flag{display:flex;gap:11px;align-items:baseline;padding:12px 15px;background:var(--surface);
+    border:1px solid var(--rule);border-left:2px solid var(--accent);border-radius:0 3px 3px 0}
+  .flag.go{border-left-color:var(--go)}.flag.stop{border-left-color:var(--stop)}
+  .flag .lbl{font-family:"JetBrains Mono",monospace;font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent);white-space:nowrap;font-weight:500}
+  .flag.go .lbl{color:var(--go)}.flag.stop .lbl{color:var(--stop)}
+  .flag span:last-child{font-size:.93rem;line-height:1.5;color:var(--ink-2)}
+  footer{padding-block:32px 56px;color:var(--muted);font-size:.88rem;line-height:1.6}
+  @media (max-width:620px){body{font-size:16px}section{padding-block:34px}pre{font-size:.73rem}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <span class="eyebrow">Research + Design</span>
+    <h1>The App Store Layer</h1>
+    <p class="lede">The package format, the distribution model, the trust ladder, the installer, and
+      what Grok Bot and Apple are actually shipping. Everything from the second half of the session.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><span class="n">01</span><a href="#format">The package format</a></li>
+    <li><span class="n">02</span><a href="#dist">The distribution model</a></li>
+    <li><span class="n">03</span><a href="#trust">The trust ladder</a></li>
+    <li><span class="n">04</span><a href="#installer">The installer</a></li>
+    <li><span class="n">05</span><a href="#targets">Three targets per app</a></li>
+    <li><span class="n">06</span><a href="#units">Nine deployable units</a></li>
+    <li><span class="n">07</span><a href="#grok">Grok Bot</a></li>
+    <li><span class="n">08</span><a href="#apple">Apple</a></li>
+    <li><span class="n">09</span><a href="#export">The export and the bookkeeper</a></li>
+  </ol>
+</nav>
+
+<section id="format">
+  <div class="sec-head">
+    <span class="eyebrow">01</span>
+    <h2>The package format — don't invent one</h2>
+    <p class="note">Two published vendor-neutral specs already exist, with a technical charter and a
+      reference validator. Your own ledger said "BUILD YOUR EXTENSIONS, reuse plugin standards
+      underneath." Here is the standard.</p>
+  </div>
+  <div class="col stack">
+    <h3>Agent Plugins 1.0.0 — agent-plugins.org</h3>
+    <p><code>plugin.json</code> at the package root. Strict allowed-field list:</p>
+    <pre>$schema  name  version  description  author
+homepage  repository  license  keywords  extensions</pre>
+    <ul class="tight">
+      <li>Bundles exactly two component types in v1: <strong>Skills</strong> (from <code>skills/</code>) and <strong>MCP servers</strong> (via <code>mcp.json</code>)</li>
+      <li>Directory-based, not archives. SemVer recommended.</li>
+      <li>Path containment — anything resolving outside the plugin root is rejected</li>
+      <li>Subprocess isolation via <code>PLUGIN_ROOT</code> and <code>PLUGIN_DATA</code></li>
+      <li><code>$schema</code> declares the target spec version; a schema change requires a new spec release</li>
+    </ul>
+    <div class="flag" style="margin-top:4px"><span class="lbl">The gap</span><span>Straight from the
+      spec: <strong>"The specification contains no explicit capability or permission system."</strong>
+      That's where you go, and <code>extensions</code> is the designed entry point.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:24px">
+    <h3>Agent Skills — agentskills.io</h3>
+    <p><code>SKILL.md</code> with YAML frontmatter: <code>name</code>, <code>description</code>
+      (max 1024 chars), <code>license</code>, <code>compatibility</code>, <code>metadata</code>,
+      <code>allowed-tools</code>.</p>
+    <p><strong>Progressive disclosure</strong>, which maps exactly onto your dumb-agent design:</p>
+    <pre>~100 tokens    name + description, loaded at startup for EVERY skill  → routing
+&lt;5000 tokens   the SKILL.md body, loaded only on activation           → instructions
+as needed      scripts/ references/ assets/                           → resources</pre>
+    <p>That first tier <em>is</em> your router. And the description doubles as the trigger rule —
+      the real Neon skill reads as a list of phrases: <em>"object storage" or "S3-compatible storage"
+      → …; "database" or "Postgres" → …</em></p>
+    <p class="note">Reference validator: <code>skills-ref validate ./my-skill</code>.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:24px">
+    <h3>Your VAPP manifest</h3>
+    <pre>{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "restaurant-menu",
+  "version": "1.2.0",
+  "description": "QR menu with verified item ratings.",
+  "license": "Apache-2.0",
+  "extensions": {
+    "io.anextgent": {
+      "vertical": "restaurant",
+      "reads":    ["item.list", "review.aggregate_by_item", "business.get"],
+      "writes":   ["visit.record_scan"],
+      "surfaces": { "public_page": {...}, "qr": {...}, "agent_api": {...} },
+      "settings": { "show_ratings": {...} },
+      "requires": { "ingest": ["pos"] },
+      "events":   { "emits": [...], "listens": [...] }
+    }
+  }
+}</pre>
+    <p><strong>Five things you get free:</strong> a VAPP is a valid Agent Plugin and installs in any
+      conformant client · skilla is your installer · the local <code>registry.json</code> pattern is
+      your <code>install</code> table · path containment and <code>PLUGIN_ROOT</code> are your sandbox
+      boundary, already specified · <code>skills-ref</code> is a validator you didn't write.</p>
+    <p class="note"><strong>Caveat:</strong> both specs are young. Check governance and adoption
+      before depending on their roadmap — though <code>extensions</code> means your fields don't ride
+      on their evolution either way.</p>
+  </div>
+</section>
+
+<section id="dist">
+  <div class="sec-head">
+    <span class="eyebrow">02</span>
+    <h2>The distribution model — steal xAI's</h2>
+    <p class="note">Read from the actual <code>xai-org/plugin-marketplace</code> repo, not from
+      marketing.</p>
+  </div>
+  <div class="col stack">
+    <div class="callout">
+      <h3>The repo is an index, not a store.</h3>
+      <p>From their CONTRIBUTING: <em>"This repo is an index: a PR doesn't ship a plugin's
+        source."</em> They host nothing. The catalog holds pointers.</p>
+    </div>
+    <pre>{
+  "name": "vercel",
+  "description": "Vercel deployment platform integration...",
+  "category": "deployment",
+  "source": {
+    "source": "url",
+    "url": "https://github.com/vercel/vercel-plugin.git",
+    "sha": "df0f55213f7b8db23a3ee7f27511ed344cdb2c74"
+  },
+  "homepage": "...", "keywords": [...], "domains": ["vercel.com"]
+}</pre>
+    <p>This is the direct answer to <em>"I want the least control possible."</em> You don't hold the
+      code. You hold the index and the signature. Zero hosting cost, zero distribution liability, the
+      developer keeps ownership — and you still control what enters the catalog.</p>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>Four mechanics to copy exactly</h3>
+    <ul class="tight">
+      <li><strong>Full 40-character commit SHA.</strong> No branches, no tags, no abbreviated SHAs — the validator rejects all of them. Their reason: <em>"A moving ref would let a later force-push ship new code to everyone silently."</em> One line of validation, enormous value.</li>
+      <li><strong>Generated index.</strong> <code>generate-plugin-index.py</code> fetches each pinned SHA and extracts the real components. The catalog metadata is <em>derived</em> from the pinned code, so it can't drift or lie about what a package contains.</li>
+      <li><strong>Local plugins need a README and a valid manifest.</strong> Remote ones vendor nothing.</li>
+      <li><strong>CI validator</strong> — <code>validate-catalog.py</code>. That's your certification tier one, free.</li>
+    </ul>
+    <p class="note">Review also checks source legitimacy — official org versus a throwaway account,
+      repo exists, brand matches source. Cheap, manual, and it stops the obvious attacks.</p>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <div class="flag stop"><span class="lbl">Their gap</span><span><code>plugin.json</code> has
+      <strong>no permission model</strong> — no capabilities, no scopes, no risk levels. Trust is
+      binary: <code>grok plugin install &lt;name&gt; --trust</code>. Fine for a developer's laptop.
+      Not fine for a business's operational data. That's your improvement.</span></div>
+  </div>
+</section>
+
+<section id="trust">
+  <div class="sec-head">
+    <span class="eyebrow">03</span>
+    <h2>The trust ladder — Red Hat's four stores</h2>
+  </div>
+  <div class="col stack">
+    <div class="flag stop"><span class="lbl">Naming trap</span><span><strong>RHEL "AppStream" is not
+      an app store.</strong> In RHEL 8+ the distro splits into BaseOS and AppStream <em>repositories</em>.
+      Since <code>ximion/appstream</code> (the freedesktop metadata standard) is also on your list,
+      you have three AppStreams in play. Rename yours before it costs a week.</span></div>
+  </div>
+  <div class="tablewrap" style="margin-top:18px">
+    <table>
+      <thead><tr><th>Thing</th><th>Layer</th><th>What to take</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Ecosystem Catalog</td><td>index</td><td>Index-not-store, certification badges visible in the listing, hardware certification as its own track</td></tr>
+        <tr><td class="k">Red Hat Marketplace</td><td>commerce</td><td>Entitlement and metering bound to the catalog entry — Candlepin + Lago in your stack</td></tr>
+        <tr><td class="k">Automation Hub</td><td>content</td><td><strong>Your actual model.</strong> See below.</td></tr>
+        <tr><td class="k">Developer Hub (Backstage)</td><td>developer portal</td><td>Software catalog, templates, docs. Later.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>Why Automation Hub, not the container catalog</h3>
+    <p>Ansible <strong>Collections</strong> are packaged, versioned capability content — modules,
+      roles, plugins, playbooks bundled as one installable unit. That's structurally a VAPP, not an
+      application. And the three-tier structure is exactly what you need:</p>
+    <pre>GALAXY                  free, public, community
+                        anyone with a GitHub account publishes
+                        no support claim, no guarantee
+
+AUTOMATION HUB          curated, certified, supported
+                        subscription-gated
+                        explicit support lifecycle per collection
+
+PRIVATE AUTOMATION HUB  the org runs their own
+                        signs and publishes their own content
+                        air-gap capable
+
+clients check Hub first, fall back to Galaxy</pre>
+  </div>
+  <div class="tablewrap" style="margin-top:16px">
+    <table>
+      <thead><tr><th>Red Hat</th><th>Yours</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Galaxy</td><td>community — anyone publishes, no guarantee</td></tr>
+        <tr><td class="k">Automation Hub certified</td><td>verified / certified — you tested it, you support it</td></tr>
+        <tr><td class="k">Private Automation Hub</td><td>the per-business catalog on their node</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <div class="callout">
+      <h3>Certification isn't overhead. It's the revenue line.</h3>
+      <p>The catalog is free discovery; certification and the support commitment are what people pay
+        for. That's the Red Hat innovation and it's the one you're copying at the business level.</p>
+    </div>
+    <p style="margin-top:12px"><strong>What Red Hat gives you:</strong> the backend — catalog,
+      certification, signing, entitlement, lifecycle, tiering. The boring, hard-to-design half,
+      already solved.</p>
+    <p><strong>What it doesn't:</strong> the frontend. Their stores serve enterprise IT buyers
+      evaluating vendor software over weeks. There is no Red Hat equivalent of a per-business grant
+      screen. Nobody in that lineage has ever had to make install feel like nothing.</p>
+  </div>
+</section>
+
+<section id="installer">
+  <div class="sec-head">
+    <span class="eyebrow">04</span>
+    <h2>The installer — you already listed it</h2>
+  </div>
+  <div class="col stack">
+    <p><code>junior/skilla</code> — item #107 on your build list. MIT, pure bash, needs only
+      <code>git</code> and <code>jq</code>. It already does the whole job:</p>
+    <ul class="tight">
+      <li>Clones a repo, discovers <code>skills/&lt;name&gt;/SKILL.md</code></li>
+      <li>Resolves declared <code>requires:</code> dependencies</li>
+      <li>Installs to <code>.agents/skills/</code> (project) or <code>~/.agents/skills/</code> (global)</li>
+      <li><strong>Tracks installs in a small <code>registry.json</code></strong> so <code>list</code>, <code>update</code> and <code>remove</code> work cleanly</li>
+      <li>For Agent Plugins 1.0.0 packages: validates the manifest, installs the whole package, expands <code>${PLUGIN_ROOT}</code> and <code>${PLUGIN_DATA}</code> in MCP config</li>
+    </ul>
+    <div class="flag go"><span class="lbl">Don't build</span><span>An installer. That
+      <code>registry.json</code> pattern is your <code>install</code> table on the node — proven,
+      tiny, and already written.</span></div>
+  </div>
+</section>
+
+<section id="targets">
+  <div class="sec-head">
+    <span class="eyebrow">05</span>
+    <h2>Three targets per app</h2>
+    <p class="note">Apple ships one artifact: a binary that runs on a device. Yours ships up to three
+      deployment targets in one package, and the store has to understand all of them.</p>
+  </div>
+  <div class="col stack">
+    <pre>NODE half      runs in WASM on the business's node
+               ingestion parsers · capability providers · automations
+               scheduled jobs · event handlers
+               sees private data, never leaves the node
+
+PUBLIC half    rendered by the edge from declared blocks
+               page · widget · QR target · JSON-LD · MCP
+               ZERO auth, fully cacheable, consumed by people who are
+               not your customers and will never log in
+
+OWNER half     wall screen tiles and phone app views
+               also declared blocks, rendered by the platform</pre>
+    <p>It maps cleanly onto what Agent Plugins already gives you:</p>
+    <pre>skills/                     → what the agent can do   (node half)
+mcp.json                    → tools it exposes        (node half)
+extensions.io.anextgent
+  ├─ reads / writes         → capability wiring       (node half)
+  ├─ surfaces.public_page   → blocks                  (public half)
+  ├─ surfaces.qr / widget   → blocks                  (public half)
+  └─ settings               → owner UI schema         (owner half)</pre>
+    <p>Your store is also <strong>three-sided</strong> where Apple's is two: developer → business →
+      that business's customers. Certification checks all three halves; the grant screen covers only
+      the node half, because the public half touches nothing private by construction.</p>
+  </div>
+</section>
+
+<section id="units">
+  <div class="sec-head">
+    <span class="eyebrow">06</span>
+    <h2>Nine deployable units</h2>
+    <p class="note">Contracts make things go together. Deployments make them separate. One repo
+      everything depends on, that depends on nothing.</p>
+  </div>
+  <div class="col stack">
+    <pre>1  contracts          schemas, capability defs, manifest, ActionSpec
+2  app-store          Agent Plugins registry: catalog, SHA pinning,
+                      generated index, validator, CI
+3  flow-engine        map once → replay → fingerprint → verify → push
+4  ingest             email → structured business data, versioned parsers
+5  record + resolver  canonical truth with provenance and conflict policy
+6  edge               record → public page, widget, JSON-LD, MCP
+7  control-plane      capability registry, policy, constitution, ledger
+8  voice              Wyoming pipeline wired to a structured record
+9  os                 bootc image, kiosk shell, app store, recovery</pre>
+    <p>Nine projects that compose — the way Foreman, Katello, Pulp and Candlepin compose. Each one is
+      something someone else would run without the rest.</p>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>Five rules that make it actually modular</h3>
+    <ol class="tight">
+      <li><strong>No shared database between components.</strong> If two read the same tables they're one component wearing two names. This is the rule that breaks first and costs most.</li>
+      <li><strong>Every dependency crosses a contract.</strong> A never imports B — it calls a declared interface with a fake available for testing.</li>
+      <li><strong>Each ships its own container and starts alone.</strong> If it crashes without another running, the boundary is wrong.</li>
+      <li><strong>Each has its own version and cadence.</strong> <code>contracts</code> is semver'd; everything declares which version it implements.</li>
+      <li><strong>Each has a README that doesn't mention the others.</strong> That's the real test.</li>
+    </ol>
+    <div class="flag stop" style="margin-top:6px"><span class="lbl">Warning</span><span>Modular
+      <strong>boundaries</strong> from day one. Modular <strong>deployment</strong> only when you need
+      it. Nine services with a team of one means you spend the year on plumbing. Define the
+      boundaries, run them in one process, split later when you've felt the pain.</span></div>
+    <p class="note" style="margin-top:12px">The App Store is the right one to build separately first
+      — zero dependency on the record, the node, or any app existing. It forces the manifest to be
+      right before anything is built on it, and it's the piece with the clearest open-source story.</p>
+  </div>
+</section>
+
+<section id="grok">
+  <div class="sec-head">
+    <span class="eyebrow">07</span>
+    <h2>Grok Bot</h2>
+    <p class="note">Launched 11 August 2026, early beta. Template marketplace 28 August. Grok Build
+      plugin marketplace June 2026, 220 plugins.</p>
+  </div>
+  <div class="col stack">
+    <h3>What it is</h3>
+    <p>"An agent with a computer" — a <strong>cloud-based desktop</strong> with its own filesystem,
+      terminal and apps. Role-based bots with their own logins, always-on. Uses apps, browses the
+      web, writes and runs code. Taught by prompts <strong>or screen recordings</strong>. Bots trigger
+      each other. Routines and event triggers. MCP servers, plugins, skills — Gmail, Calendar, Drive,
+      multiple accounts per service.</p>
+    <p>Control: natural-language permission rules, <strong>a separate review agent that approves or
+      blocks</strong>, allow/block lists, explicit authorization for significant actions, escalation
+      to humans.</p>
+    <p class="note"><strong>Access:</strong> requires a $120–200/mo Cursor or SuperGrok Heavy
+      subscription. Cursor Pro lists it at $20/mo, Pro+ $60, Ultra $200, with unpublished weekly
+      allowances. <strong>Grok Bot is not open source</strong> — Grok Build (the coding agent and TUI)
+      is, and the marketplace index is.</p>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>The overlap is real</h3>
+    <ul class="tight">
+      <li>Agent with its own computer and its own logins</li>
+      <li><strong>Taught by screen recording</strong> — that's record-and-replay</li>
+      <li><strong>Natural-language permission rules</strong> — that's a Constitution</li>
+      <li><strong>A separate reviewer that approves</strong> — actor isn't approver, same principle as verifier ≠ executor</li>
+      <li>Human escalation, a template marketplace, routines and event triggers</li>
+    </ul>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>Seven ways it is structurally not your product</h3>
+    <ol class="tight">
+      <li><strong>It's a cloud computer.</strong> The thing you're positioned against, and they can't flip it — cloud is their business model.</li>
+      <li><strong>The buyer is a knowledge worker.</strong> Personal CRM, fitness coaching, code generation, searching Slack and Notion. Not a charter captain.</li>
+      <li><strong>The plugins are enterprise SaaS.</strong> Workspace, Slack, M365, Salesforce, Jira. Not Toast, Square, FareHarbor, Vagaro, Clover — the exact set small businesses run.</li>
+      <li><strong>No physical device, no real SIM.</strong> A cloud desktop cannot operate an Android app needing a logged-in mobile session with SMS 2FA on the business's own number.</li>
+      <li><strong>No verification layer.</strong> The reviewer approves <em>before</em>. Nothing independently confirms the world changed <em>after</em>.</li>
+      <li><strong>No business data plane.</strong> No canonical truth, no verified reviews, no availability aggregation, no consented grant model.</li>
+      <li><strong>No payment rail.</strong></li>
+    </ol>
+    <div class="flag" style="margin-top:6px"><span class="lbl">Liability</span><span>Their terms put
+      account risk on the customer. A business banned from Toast for automated access on a cloud VM
+      is the business's problem. Yours: their device, their logins, human speed, a person approving
+      each action, and a screenshot of what happened. Same activity, very different risk profile —
+      and that's a sales answer, not just a legal one.</span></div>
+  </div>
+</section>
+
+<section id="apple">
+  <div class="sec-head">
+    <span class="eyebrow">08</span>
+    <h2>Apple</h2>
+    <p class="note">September 9, 2026 event. Foldable iPhone (Duo/Ultra) at $1,999, iPhone 18/18 Pro,
+      AirPods 5, Watch Series 12 — with John Ternus debuting as CEO.</p>
+  </div>
+  <div class="col stack">
+    <h3>They are building a version of this, and it's gated</h3>
+    <ul class="tight">
+      <li><strong>Siri rebuilt</strong> — LLM-based, multi-step requests, running on <strong>Google Gemini models underneath</strong></li>
+      <li><strong>App Intents is the mechanism.</strong> WWDC 2026 declared it "the central building block" of agentic iOS. Siri reaches into an app, retrieves information and invokes actions <em>without opening it</em>. Shipping with the fall OS releases.</li>
+      <li><strong>Apple Business</strong> — Business Connect, Business Manager and Business Essentials merged into one platform in April 2026. Siri and Maps pull recommendations directly from it, across a billion devices.</li>
+      <li><strong>Maps ads launched summer 2026</strong> in the US and Canada, sold through the same platform.</li>
+    </ul>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>The gate, precisely</h3>
+    <p>App Intents = a capability registry. Apple Business = a business record. Agentic Siri = an
+      orchestrator. Same architecture. But both sides require <strong>voluntary adoption on Apple's
+      terms</strong>: the developer must implement App Intents, and the business must claim and
+      maintain a listing.</p>
+    <p><strong>Apple cannot operate an app that didn't cooperate. You can.</strong> That's not a gap
+      they can close — it's a consequence of being the platform.</p>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <div class="callout">
+      <h3>58% of U.S. businesses haven't claimed their Apple listing. Only 16% actively manage it.</h3>
+      <p>Apple has a billion devices, free tooling, Siri distribution and an ads business riding on
+        it — and 84% of businesses don't maintain the data. Not because they don't care. Because
+        maintaining it is unpaid work.</p>
+      <p>That is exactly what your text-back toggle solves. <strong>Apple has the distribution and no
+        mechanism. You have the mechanism.</strong></p>
+    </div>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <h3>Three pieces of ammunition</h3>
+    <ul class="tight">
+      <li><strong>Maps ads are real and shipped this summer.</strong> Apple now monetizes the listing — renting a business access to its own presence. Fact, not rhetoric. It belongs in the 1984 remake.</li>
+      <li><strong>Siri runs on Gemini.</strong> A $3-trillion company rented someone else's model. Models are commodity; the substrate isn't.</li>
+      <li><strong>Apple just made local business data strategically important.</strong> Every small business is about to hear they need to manage their Apple listing. You arrive with the thing that does it automatically.</li>
+    </ul>
+    <div class="flag go" style="margin-top:6px"><span class="lbl">Move</span><span><strong>Feed Apple,
+      don't fight it.</strong> Apple Business becomes one more syndication destination. Your
+      businesses rank in Siri while competitors' listings sit unclaimed — and the sales line is
+      <em>"Siri is answering questions about you right now with bad data. I fix that
+      too."</em></span></div>
+    <p class="note" style="margin-top:12px">Where they genuinely threaten you: the consumer discovery
+      query. If Siri answers "who has crab legs nearby" from Apple Business data across a billion
+      devices, that's your query on their distribution. It only works when the data is current, and
+      84% of it isn't.</p>
+  </div>
+</section>
+
+<section id="export">
+  <div class="sec-head">
+    <span class="eyebrow">09</span>
+    <h2>The export and the bookkeeper</h2>
+  </div>
+  <div class="col stack">
+    <p>The box structures their private data into something they own — a spreadsheet, regenerated
+      every morning, sitting on their machine.</p>
+    <ul class="tight">
+      <li><strong>It makes "you own it" legible.</strong> A charter captain doesn't understand a consented federated data plane. He understands a file with all his stuff in it.</li>
+      <li><strong>It's the shutdown test answered with an object.</strong> "If I go out of business your machine keeps working" is a claim. A spreadsheet updated this morning is proof.</li>
+      <li><strong>It kills API dependency for reads permanently.</strong> No rate limits, no partner program, no access to lose.</li>
+      <li><strong>Spreadsheets are where every small business already lives</strong> — their bookkeeper, accountant, lender and insurance agent all work in Excel.</li>
+      <li><strong>Portability increases retention.</strong> Products that make leaving easy keep people.</li>
+    </ul>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Four design calls</h3>
+    <ol class="tight">
+      <li><strong>The spreadsheet is an export, not the source.</strong> Canonical stays in Postgres on the node; the workbook is regenerated from it. Otherwise you inherit corruption and no referential integrity.</li>
+      <li><strong>Local file by default, not Google Sheets.</strong> Sheets sends the data to Google, which contradicts everything else. Optional sync to a destination they pick.</li>
+      <li><strong>One workbook per domain, stable schema.</strong> Never reorder or rename columns — their accountant has formulas pointed at those cells.</li>
+      <li><strong>The agent queries the database, not the spreadsheet.</strong> Humans read the workbook.</li>
+    </ol>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <div class="callout">
+      <h3>Bookkeepers are an unworked channel</h3>
+      <p>Each one serves 30–80 small businesses. Every month they chase numbers scattered across four
+        systems — it's literally their billable time being wasted. Hand them a client whose numbers
+        arrive clean and on time and they will ask what it is.</p>
+      <p>One bookkeeper who likes it is fifty warm introductions, from someone the owner already
+        trusts with their money. Same shape as the chamber play, better qualified, and nobody is
+        competing for that relationship.</p>
+    </div>
+    <p style="margin-top:14px"><strong>The line:</strong> <em>"Every month your bookkeeper asks for
+      numbers you have to dig out of four different systems. This just has them. Updated every
+      morning, in a spreadsheet, on your computer."</em></p>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Research current as of September 2026. Product names, pricing and feature claims should be
+    re-verified against first-party sources before use in legal, investment or public marketing
+    contexts. Companions: the Playbook, the Build Spec, the Build Plan, the Parts Catalog, An Honest
+    Read.</p>
+</footer>
+
+</div>
+
+</body>
+</html>

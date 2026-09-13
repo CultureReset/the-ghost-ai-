@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>A NEXT GENT Build Spec</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --surface-2:#E9EBE6;
+    --ink:#181B19; --ink-2:#474C48; --muted:#757B74;
+    --rule:#D7DAD3; --rule-strong:#B9BDB4;
+    --accent:#A4601A; --accent-soft:#F1E4D2;
+    --go:#2E6B4C; --warn:#93582A; --stop:#8C3B34;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+      --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+      --rule:#2E3438; --rule-strong:#414850;
+      --accent:#D79A4E; --accent-soft:#33291B;
+      --go:#66AC85; --warn:#C68A52; --stop:#C8756C;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+    --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+    --rule:#2E3438; --rule-strong:#414850;
+    --accent:#D79A4E; --accent-soft:#33291B;
+    --go:#66AC85; --warn:#C68A52; --stop:#C8756C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+  .col{max-width:720px}
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2rem,5.2vw,3.1rem);font-weight:700;letter-spacing:-.022em;line-height:1.05}
+  h2{font-size:clamp(1.4rem,3.1vw,1.85rem);font-weight:650;letter-spacing:-.016em;line-height:1.15}
+  h3{font-size:1.1rem;font-weight:650;letter-spacing:-.006em}
+  h4{font-size:.95rem;font-weight:600}
+  p{margin:0}
+  a{color:var(--accent)}
+  strong{font-weight:600}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .lede{font-size:1.15rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.93rem;color:var(--muted);line-height:1.55}
+
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:20px;padding-block:52px 36px}
+  .mast h1{max-width:16ch}
+  .mast .lede{max-width:60ch}
+
+  nav.toc{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:20px 22px;margin-block:32px;box-shadow:var(--shadow)}
+  nav.toc h4{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:500}
+  nav.toc ol{margin:0;padding:0;list-style:none;columns:2;column-gap:32px}
+  nav.toc li{break-inside:avoid;margin-bottom:6px;font-size:.93rem}
+  nav.toc a{text-decoration:none;border-bottom:1px solid transparent}
+  nav.toc a:hover{border-bottom-color:var(--accent)}
+  nav.toc .n{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--muted);margin-right:8px}
+  @media (max-width:640px){nav.toc ol{columns:1}}
+
+  section{padding-block:44px;border-bottom:1px solid var(--rule);scroll-margin-top:16px}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:9px;margin-bottom:22px;max-width:700px}
+  .stack{display:flex;flex-direction:column;gap:15px}
+
+  pre{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:15px 17px;overflow-x:auto;font-family:"JetBrains Mono",monospace;
+    font-size:.8rem;line-height:1.62;color:var(--ink-2);margin:0}
+  pre b{color:var(--accent);font-weight:500}
+  code{font-family:"JetBrains Mono",monospace;font-size:.86em}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;
+    background:var(--surface);box-shadow:var(--shadow);margin-block:6px}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:.89rem}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);
+    vertical-align:top;line-height:1.45}
+  thead th{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:500;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+    border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.k{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--ink);white-space:nowrap}
+  td em{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.86em;color:var(--accent)}
+
+  ul.tight,ol.tight{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:7px}
+  ul.tight li,ol.tight li{font-size:.96rem;line-height:1.5;color:var(--ink-2)}
+  ul.tight li::marker,ol.tight li::marker{color:var(--rule-strong)}
+  ul.tight li strong,ol.tight li strong{color:var(--ink)}
+
+  .callout{background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:18px 21px;display:flex;flex-direction:column;gap:9px}
+  .callout h3{color:var(--ink)}
+  .callout p{font-size:.98rem;line-height:1.55;color:var(--ink-2)}
+
+  .flag{display:flex;gap:11px;align-items:baseline;padding:12px 15px;background:var(--surface);
+    border:1px solid var(--rule);border-left:2px solid var(--accent);border-radius:0 3px 3px 0}
+  .flag.go{border-left-color:var(--go)}
+  .flag.stop{border-left-color:var(--stop)}
+  .flag .lbl{font-family:"JetBrains Mono",monospace;font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent);white-space:nowrap;font-weight:500}
+  .flag.go .lbl{color:var(--go)} .flag.stop .lbl{color:var(--stop)}
+  .flag span:last-child{font-size:.93rem;line-height:1.5;color:var(--ink-2)}
+
+  footer{padding-block:32px 56px;color:var(--muted);font-size:.88rem;line-height:1.6}
+  @media (max-width:620px){body{font-size:16px}section{padding-block:34px}pre{font-size:.73rem}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <span class="eyebrow">Platform Architecture</span>
+    <h1>A NEXT GENT Build Spec</h1>
+    <p class="lede">How to build the foundation once so every app after it takes a week. Data
+      placement, the record, ingestion, capabilities, the app contract, surfaces, the App Store
+      pipeline, isolation, repo layout, and the order to build it in.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><span class="n">01</span><a href="#rule">The one rule</a></li>
+    <li><span class="n">02</span><a href="#where">Where data lives</a></li>
+    <li><span class="n">03</span><a href="#node">The node runs anywhere</a></li>
+    <li><span class="n">04</span><a href="#record">The business record</a></li>
+    <li><span class="n">05</span><a href="#ingest">Ingestion pipeline</a></li>
+    <li><span class="n">06</span><a href="#cap">The capability layer</a></li>
+    <li><span class="n">07</span><a href="#app">The app contract</a></li>
+    <li><span class="n">08</span><a href="#surfaces">Surfaces</a></li>
+    <li><span class="n">09</span><a href="#events">Events</a></li>
+    <li><span class="n">10</span><a href="#store">The App Store pipeline</a></li>
+    <li><span class="n">11</span><a href="#isolation">Isolation and tenancy</a></li>
+    <li><span class="n">12</span><a href="#repo">Repo layout</a></li>
+    <li><span class="n">13</span><a href="#tech">Technology per component</a></li>
+    <li><span class="n">14</span><a href="#order">Build order</a></li>
+    <li><span class="n">15</span><a href="#apps">The first four apps</a></li>
+    <li><span class="n">16</span><a href="#skip">What breaks if you skip</a></li>
+  </ol>
+</nav>
+
+<section id="rule">
+  <div class="sec-head"><span class="eyebrow">01</span><h2>The one rule</h2></div>
+  <div class="col stack">
+    <div class="callout">
+      <h3>Apps never own data. Apps are views and behaviors over one shared business record.</h3>
+      <p>Get this wrong and you have four SaaS products that need reconciling forever. Get it right
+        and app number seven takes a week.</p>
+    </div>
+    <p>Everything in this spec exists to enforce that rule mechanically, so it can't be violated by
+      accident at 2am when a feature is due.</p>
+  </div>
+</section>
+
+<section id="where">
+  <div class="sec-head">
+    <span class="eyebrow">02</span>
+    <h2>Where data lives</h2>
+    <p class="note">The question that determines everything else. A tourist scanning a QR code at
+      9pm on a Saturday cannot depend on a mini PC in a restaurant's back office being reachable —
+      but they also don't need any private data.</p>
+  </div>
+  <div class="col stack">
+    <div class="callout">
+      <h3>Private truth lives on the node. Public projections live on the edge. The node is the only writer.</h3>
+    </div>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <pre><b>NODE</b>  (box on the counter, or a cloud container)
+  canonical private state — customers, transactions, credentials,
+  visits, bookings, observations, the ledger
+  the ONLY thing that writes
+        │
+        │  builds a <b>projection</b> — publishable fields only,
+        │  signed, versioned, ~kilobytes
+        ↓
+<b>EDGE</b>  (cloud, read-only, CDN-fronted)
+  serves: public page · widget · QR target · JSON-LD · MCP endpoint
+  holds nothing private, can never write back
+        │
+        ↓
+  tourists · AI agents · partner directories · chambers</pre>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Why this shape and not the alternatives</h3>
+    <ul class="tight">
+      <li><strong>Everything in the cloud</strong> contradicts the entire product thesis and puts you in the breach-liability business.</li>
+      <li><strong>Everything on the box</strong> means a QR menu goes dark when their internet drops, which is a support call per outage and a bad experience for a customer who isn't yours.</li>
+      <li><strong>The split</strong> gives you CDN-speed public surfaces, zero private data in the cloud, and graceful degradation — if the node dies, the edge keeps serving the last projection. Stale, but alive.</li>
+    </ul>
+    <div class="flag go"><span class="lbl">Property</span><span>The edge is <strong>write-incapable
+      by construction</strong>, not by permission. There is no code path from the edge back into the
+      node. That's what makes "we can't see your data" a structural claim rather than a
+      promise.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>What's in a projection</h3>
+    <pre>projection/v1/{business_id}/{version}.json   (signed)
+
+  business    name, hours, location, contact, policies
+  items       name, category, price, modifiers, dietary,
+              rating_avg, rating_count        ← aggregates only
+  resources   kind, name, available_count      ← counts, never who
+  reviews     rating, body, item_ref, date     ← no customer identity
+  availability slots with remaining counts
+  updated_at, expires_at, signature</pre>
+    <p class="note">The exposure rules decide what enters a projection. Nothing else can. A field
+      that isn't in the projection schema physically cannot reach the internet.</p>
+  </div>
+</section>
+
+<section id="node">
+  <div class="sec-head">
+    <span class="eyebrow">03</span>
+    <h2>The node runs anywhere</h2>
+  </div>
+  <div class="col stack">
+    <p>This is the design decision that makes your free tier possible without a second codebase.</p>
+    <div class="callout">
+      <h3>A node is a node whether it sits on their counter or in your cluster.</h3>
+      <p>Same containers, same schema, same capabilities, same everything. Only the location differs.</p>
+    </div>
+  </div>
+  <div class="tablewrap" style="margin-top:18px">
+    <table>
+      <thead><tr><th>Tier</th><th>Node location</th><th>Ingestion</th><th>Execution</th></tr></thead>
+      <tbody>
+        <tr><td class="k">free</td><td>your cloud, one container per business</td><td>email forward only</td><td>none — read and project only</td></tr>
+        <tr><td class="k">software</td><td>their hardware</td><td>email + QR + POS</td><td>their phone, their browser</td></tr>
+        <tr><td class="k">ghost</td><td>the box you sold them</td><td>all sources</td><td>all executors, local models, voice</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:18px">
+    <p><strong>The upgrade is a migration, not a rewrite.</strong> A free-tier business that buys a
+      box gets their node shipped to the hardware — same data, same schema, same apps, new location.
+      That path has to exist from day one or the free tier becomes a dead end you'll have to rebuild.</p>
+    <div class="flag"><span class="lbl">Requirement</span><span>Nothing in the node may assume it
+      is on owned hardware. No hardcoded paths, no assumption of a local phone, no assumption of a
+      GPU. Every capability declares what it needs and degrades cleanly when it isn't
+      there.</span></div>
+  </div>
+</section>
+
+<section id="record">
+  <div class="sec-head">
+    <span class="eyebrow">04</span>
+    <h2>The business record</h2>
+    <p class="note">One schema, shared by every app. Notice which tables multiple apps touch — that
+      overlap is the entire reason the record exists.</p>
+  </div>
+  <div class="col stack">
+    <pre><b>-- identity and scope</b>
+business(id, name, legal_name, vertical, created_at)
+location(id, business_id, address, geo, timezone)
+member(id, business_id, person_id, role)
+node(id, business_id, kind[box|cloud], pubkey, enrolled_at, last_seen)
+
+<b>-- the operating record</b>
+resource(id, business_id, kind, name, capacity, attrs)
+item(id, business_id, name, category, price_cents, attrs, active)
+item_modifier(id, item_id, name, price_delta_cents)
+booking(id, business_id, resource_id, channel, external_ref,
+        starts_at, ends_at, party_size, status, amount_cents, customer_id)
+visit(id, business_id, started_at, ended_at, table_ref, ticket_ref, total_cents)
+visit_item(visit_id, item_id, qty, price_cents)
+review(id, business_id, visit_id, item_id, rating, body, verified, published_at)
+
+<b>-- private tier, never projected</b>
+customer(id, business_id, phone_hash, email_hash, consent, first_seen)
+credential_ref(id, business_id, service, vault_ref)   -- never the secret
+
+<b>-- provenance: the table you cannot add later</b>
+observation(id, business_id, entity_type, entity_id, field, value,
+            source, source_ref, observed_at, confidence)
+canonical(business_id, entity_type, entity_id, field, value,
+          resolved_at, confidence, from_observation_id)
+
+<b>-- action and proof</b>
+action(id, business_id, capability, args_hash, requested_by,
+       constitution_version, policy_decision, executor,
+       started_at, finished_at, status)
+evidence(action_id, kind, hash, path, expected, observed)
+
+<b>-- flows</b>
+appmap(id, target_app, target_version, capability, version, digest, status)
+appmap_run(id, appmap_id, node_id, action_id, result, drift_signature)
+
+<b>-- apps</b>
+app(id, package, version, manifest, signature, certified_at)
+install(id, business_id, app_id, installed_at, settings)
+grant(id, install_id, capability, scope, purpose, expires_at, revoked_at)</pre>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>How canonical works</h3>
+    <p><code>canonical</code> is a <strong>materialized view</strong>, not a hand-maintained table.
+      A new observation lands, the resolver recomputes that one field, writes the result. Never
+      <code>UPDATE item SET price</code> — always insert an observation and let resolution decide.</p>
+    <pre>resolution policy, per field class:
+  1  source rank      menu price:  POS &gt; website &gt; Google &gt; Facebook
+                      hours:       owner declaration beats everything
+  2  staleness decay  40 minutes old outranks 6 days old;
+                      both decay toward unknown
+  3  escalation       two high-trust sources disagreeing past a
+                      threshold is an owner question, not an
+                      automatic resolution</pre>
+    <div class="flag stop"><span class="lbl">Cannot retrofit</span><span>Provenance is the one thing
+      you cannot add afterward. If you write values directly for six months and then decide you want
+      source tracking, you have six months of data with no origin and no way to reconstruct it. Build
+      the observation table before the first ingestion runs.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>One writer per field</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Field</th><th>Sole writer</th></tr></thead>
+        <tbody>
+          <tr><td class="k">booking.status</td><td>availability app</td></tr>
+          <tr><td class="k">item.price_cents</td><td>menu app (via POS observation)</td></tr>
+          <tr><td class="k">review.rating</td><td>reviews app</td></tr>
+          <tr><td class="k">visit.*</td><td>ingestion, never an app</td></tr>
+          <tr><td class="k">canonical.*</td><td>the resolver, never an app</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px">Two writers on one field is a conflict you will never
+      fully solve. Enforce it in the capability registry, not in a code review.</p>
+  </div>
+</section>
+
+<section id="ingest">
+  <div class="sec-head">
+    <span class="eyebrow">05</span>
+    <h2>Ingestion pipeline</h2>
+  </div>
+  <div class="col stack">
+    <pre>SOURCE            →  NORMALIZE  →  OBSERVATION  →  RESOLVE  →  CANONICAL  →  PROJECT
+
+email forward        parser per       insert            source rank    materialized   signed
+  biz-a7f3@in...     vendor+format    (never update)    + decay        view           bundle
+QR scan              scan event
+POS read             ticket parse
+remote-control read  screen read
+owner text-back      declaration
+partner feed         iCal / API</pre>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Email ingestion, concretely</h3>
+    <ul class="tight">
+      <li><strong>Unique inbound address per business</strong> — <code>biz-a7f3@in.yourdomain.com</code>. Never one shared inbox you parse for hints. Routing must be unambiguous from the envelope, and it means you can revoke one business's ingestion without touching anyone else.</li>
+      <li><strong>Parsers are versioned and fingerprinted.</strong> Each parser declares the vendor, the format signature it expects, and what it extracts. A format mismatch means <strong>quarantine and alert</strong>, never a best-effort parse. A wrong booking is worse than a missing one.</li>
+      <li><strong>Raw mail is retained</strong> (encrypted, on the node) until the parse is confirmed, so a fixed parser can reprocess history.</li>
+      <li><strong>Idempotency</strong> on <code>(vendor, external_ref)</code> — the same confirmation forwarded twice must not decrement inventory twice.</li>
+    </ul>
+    <div class="flag"><span class="lbl">Onboarding</span><span>Rank the setup paths by friction:
+      <strong>1</strong> add your address as a second notification email inside the vendor's settings
+      — Toast, Square and FareHarbor all allow it, zero Gmail involvement. <strong>2</strong> a Gmail
+      filter plus a verified forwarding address, two minutes in the UI. <strong>3</strong> an Apps
+      Script, last resort — "run this script" kills conversion at the exact moment you need it to
+      feel like nothing.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Inventory derivation</h3>
+    <pre>declared capacity (owner)           6 jet skis
+  − confirmed bookings (all channels, from email)
+  + cancellations
+  − manual decrements (walk-ins, phone)
+  − safety hold (configurable, covers email lag)
+  = published availability
+
+reconcile:  read real platform state through the remote control
+            on a schedule; compare; flag drift</pre>
+    <p class="note">Email lag is 30 seconds to two minutes. Hold a safety slot — show 4 when you have
+      5 — configurable per business and tightened as you accumulate real lag data.</p>
+  </div>
+</section>
+
+<section id="cap">
+  <div class="sec-head">
+    <span class="eyebrow">06</span>
+    <h2>The capability layer</h2>
+    <p class="note">The seam. Apps, agents, the phone assistant, developers and your own code all go
+      through exactly this and nothing else.</p>
+  </div>
+  <div class="col stack">
+    <h3>A capability is a postcondition plus executors</h3>
+    <pre>capability: menu.update_price
+  args:          { item_id, price_cents }
+  postcondition:
+    subject:     item{item_id}
+    predicate:   price == price_cents
+    surfaces:    [website, google, facebook, qr_menu]
+    observable_by: [api.read, browser.read, android.read]
+  risk:          high
+  writes:        [item.price_cents]
+  idempotency:   (item_id, price_cents)
+  compensation:  roll_back_applied_surfaces
+  settle_window: 120s</pre>
+    <p>Defining capabilities by <strong>what must become true</strong> rather than by a sequence of
+      steps is what makes executors interchangeable by construction, and it lets verification be
+      derived from the contract instead of written per-executor.</p>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Every call follows the same path</h3>
+    <pre>caller (app | agent | voice | SMS | developer | MCP)
+   ↓  <b>ActionSpec</b>   capability, args, requested_by, purpose
+   ↓  <b>constitution</b>  bind the version in force right now
+   ↓  <b>policy</b>        ALLOW · ALLOW_WITH_CONSTRAINTS · REQUIRE_APPROVAL · DENY
+   ↓  <b>credential</b>    scoped token, never the raw secret
+   ↓  <b>router</b>        score executors: login state, health,
+                    determinism, reliability, cost, latency, risk
+   ↓  <b>execute</b>       api | browser | android | linux | workflow | human
+   ↓  <b>verify</b>        read back on a DIFFERENT path than wrote
+   ↓  <b>evidence</b>      screenshot, hash, observed vs expected
+   ↓  <b>ledger</b>        append-only, immutable</pre>
+    <p>Four possible results, not two: <code>VERIFIED</code>, <code>UNVERIFIABLE_YET</code> (a
+      schedulable state, not an error — propagation delay is normal),
+      <code>PARTIAL</code>, <code>CONTRADICTED</code>.</p>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>The starting capability set</h3>
+    <pre><b>read</b>    business.get            item.list             review.aggregate_by_item
+        resource.availability   booking.list          visit.list
+        customer.cohort_count   ← count only, never rows
+
+<b>write</b>   business.update_hours   item.update_price     item.mark_unavailable
+        booking.create          booking.cancel        review.publish
+        offer.send_to_cohort    ← returns a count, never a list
+
+<b>surface</b> page.publish            widget.render         qr.generate
+        notify.send             projection.build
+
+<b>system</b> appmap.run              appmap.report_drift   ledger.append</pre>
+    <div class="flag stop"><span class="lbl">Rule</span><span><code>customers.list</code> does not
+      exist and never will. If a capability's return type is rows of personal data, the whole consent
+      architecture is already lost. Counts, aggregates and actions — never records.</span></div>
+  </div>
+</section>
+
+<section id="app">
+  <div class="sec-head">
+    <span class="eyebrow">07</span>
+    <h2>The app contract</h2>
+    <p class="note">Yours and a third-party developer's declare exactly the same thing. That symmetry
+      is what makes it an ecosystem instead of a codebase with plugins.</p>
+  </div>
+  <div class="col stack">
+    <pre>app: restaurant.menu
+version: 1.2.0
+vertical: restaurant
+display: { name: "QR Menu", icon: menu, category: storefront }
+
+reads:
+  - item.list
+  - review.aggregate_by_item
+  - business.get
+
+writes:
+  - visit.record_scan
+
+surfaces:
+  public_page: { template: menu, blocks: [header, sections, ratings] }
+  qr:          { target: public_page, per: table }
+  widget:      { sizes: [full, compact] }
+  agent_api:   { schema: [Menu, MenuItem, Offer, AggregateRating] }
+  voice:       { intents: [whats_on_menu, item_price, is_available] }
+
+settings:
+  show_ratings:      { type: bool, default: true }
+  currency:          { type: enum, values: [USD], default: USD }
+  sections:          { type: list, of: string }
+  hide_unavailable:  { type: bool, default: true }
+
+requires:
+  ingest: [pos]          # optional — degrades without it
+  apps:   []
+
+events:
+  emits:   [menu.scanned, menu.item_viewed]
+  listens: [item.price_changed, item.marked_unavailable]
+
+data:
+  owns:   []             # apps own nothing
+  scopes: [business, item, review, visit]</pre>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Six rules the manifest enforces</h3>
+    <ol class="tight">
+      <li><strong>Apps never touch the database.</strong> They call capabilities. That seam is what lets you swap storage, add caching, enforce policy and write the ledger without touching app code.</li>
+      <li><strong>Apps own no tables.</strong> <code>data.owns</code> is always empty. If an app needs to persist something private to itself, it gets a namespaced key-value scope — never a table in the record.</li>
+      <li><strong>Surfaces are declared, not built.</strong> The app says which surfaces it uses and what blocks to render; the platform renders them. Otherwise you've built seven websites.</li>
+      <li><strong>Settings are declared, not coded.</strong> The platform renders the owner UI from the schema. Otherwise your owner UI becomes seven config screens.</li>
+      <li><strong>Dependencies are explicit and degrade.</strong> <code>requires.ingest: [pos]</code> means the app works better with POS and still works without it. Hard dependencies block install; soft ones show a banner.</li>
+      <li><strong>Events are declared both ways.</strong> What it emits and what it listens for, so the platform can wire it without the app knowing who else exists.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="surfaces">
+  <div class="sec-head">
+    <span class="eyebrow">08</span>
+    <h2>Surfaces</h2>
+    <p class="note">Build six once. Every app gets all six free, forever.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Surface</th><th>Runs on</th><th>What the app declares</th></tr></thead>
+      <tbody>
+        <tr><td class="k">public_page</td><td>edge</td><td>template + ordered blocks</td></tr>
+        <tr><td class="k">widget</td><td>edge (iframe / script)</td><td>sizes and which blocks</td></tr>
+        <tr><td class="k">qr</td><td>edge target, node-generated</td><td>target surface, granularity (per table, per boat, per room)</td></tr>
+        <tr><td class="k">sms</td><td>node, via the SIM</td><td>intents it answers, messages it sends</td></tr>
+        <tr><td class="k">voice</td><td>node</td><td>intent names and slots</td></tr>
+        <tr><td class="k">agent_api</td><td>edge</td><td>JSON-LD types + MCP tool schema</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Block rendering</h3>
+    <p>An app declares blocks. The platform owns the templates, the theme, responsiveness, dark mode,
+      SEO and accessibility. An app cannot ship its own CSS or its own page.</p>
+    <pre>blocks: [header, hours, sections, ratings, cta_book, reviews, map]
+      ↓
+platform renders into:  public page · widget · JSON-LD · voice response</pre>
+    <p class="note">This is why app #7 costs a week. It writes a manifest and some capability calls;
+      it never writes a page, a stylesheet, a settings screen, a QR generator or an SEO tag.</p>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>The agent surface is not optional</h3>
+    <p>Every public page emits Schema.org JSON-LD, an MCP endpoint, <code>llms.txt</code>, and
+      <code>/.well-known/agent-card.json</code> — from day one, before anyone asks for it. A
+      restaurant menu as a PDF is invisible to AI. Being the source AI assistants query is an
+      infrastructure position you only get by being there first.</p>
+    <pre>public  JSON-LD + llms.txt        free, anonymous, scrapeable
+        ↓
+identified  MCP / A2A            live availability, item ratings,
+                                 booking — requires an identified client
+
+→ you get presence from the first, telemetry and the relationship from the second</pre>
+  </div>
+</section>
+
+<section id="events">
+  <div class="sec-head"><span class="eyebrow">09</span><h2>Events</h2></div>
+  <div class="col stack">
+    <pre>ingestion  →  emits  booking.created, item.price_changed, visit.completed
+resolver   →  emits  canonical.changed
+apps       →  emit   menu.scanned, review.published, offer.sent
+executors  →  emit   action.verified, appmap.drifted
+schedule   →  emits  cron.daily, cron.hourly
+
+           ↓ NATS on the node ↓
+
+apps listen      projection rebuild      rulebooks (Event-Driven Ansible)
+                                          → re-map drifted flow
+                                          → alert the owner
+                                          → route to fallback executor</pre>
+    <div class="flag"><span class="lbl">Discipline</span><span>Events carry <strong>identifiers, not
+      payloads.</strong> <code>booking.created{booking_id}</code>, never the booking object. The
+      listener calls a capability to read what it's allowed to read. Payload-carrying events leak
+      data past the policy layer and you'll never find all the places it happened.</span></div>
+  </div>
+</section>
+
+<section id="store">
+  <div class="sec-head">
+    <span class="eyebrow">10</span>
+    <h2>The App Store pipeline</h2>
+  </div>
+  <div class="col stack">
+    <pre><b>DEVELOP</b>    SDK scaffolds a manifest + a sandbox node with seeded data
+              anextgent dev init · anextgent dev run · anextgent dev test
+    ↓
+<b>SUBMIT</b>     push to your registry as an OCI artifact
+    ↓
+<b>CERTIFY</b>    syft      → SBOM
+              grype     → CVEs
+              trivy     → config and secrets
+              scancode  → license compatibility
+              manifest  → schema valid? capabilities exist? scopes minimal?
+              Playwright→ surfaces render on all six
+              Conforma  → policy gate: all of the above pass
+    ↓
+<b>SIGN</b>       cosign → rekor (public transparency log)
+    ↓
+<b>PUBLISH</b>    catalog entry, tier: community | compatible | verified | certified
+    ↓
+<b>INSTALL</b>    owner sees a grant screen:
+              "QR Menu wants to read your menu items, ratings and
+               hours, and record scans. It cannot see customers."
+              → grants recorded per capability, per purpose, revocable
+    ↓
+<b>RUN</b>        WASM module on the business's own node,
+              no network egress, only approved host calls
+    ↓
+<b>BILL</b>       platform handles subscription or one-time;
+              developer gets paid; dependency authors get their share</pre>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Certification tiers</h3>
+    <div class="tablewrap">
+      <table>
+        <tbody>
+          <tr><td class="k">community</td><td>Manifest valid, scans pass. No guarantee.</td></tr>
+          <tr><td class="k">compatible</td><td>Automated tests pass on current platform version.</td></tr>
+          <tr><td class="k">verified</td><td>Reviewed and tested by you.</td></tr>
+          <tr><td class="k">certified</td><td>Specific versions, specific hardware, support commitment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px">That ladder is a Red Hat innovation and it's how you
+      monetize trust around open source later. Build the field now even if only two tiers are live.</p>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>What makes apps compound instead of accumulate</h3>
+    <p>An app that only <em>consumes</em> capabilities adds one app. An app that <em>publishes</em>
+      one makes every future app easier. The registry knows exactly which app called which — so pay
+      dependency authors from the apps built on them, publish the formula, and publish the payouts.
+      Nobody else can measure this, because nobody else has a registry in the middle.</p>
+  </div>
+</section>
+
+<section id="isolation">
+  <div class="sec-head"><span class="eyebrow">11</span><h2>Isolation and tenancy</h2></div>
+  <div class="col stack">
+    <pre>one business  =  one node  =  one database  =  one key
+
+  no tenant_id column anywhere in the record
+  no cross-business query is possible, because there is no
+  cross-business connection to make</pre>
+    <p>Tenant-column multi-tenancy is cheaper to build and leaks eventually — one missing
+      <code>WHERE business_id =</code> and you've had a breach. Node-per-business makes the leak
+      impossible rather than unlikely, and it's what your whole posture depends on.</p>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Inside a node</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Runs as</th><th>Isolation</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="k">platform services</td><td>Podman + Quadlet</td><td>trusted, your code</td></tr>
+          <tr><td class="k">first-party apps</td><td>WASM (Extism / wasmtime)</td><td>same rules as everyone else — no privileged path</td></tr>
+          <tr><td class="k">third-party apps</td><td>WASM, no network egress</td><td>physically cannot phone home; only approved host functions</td></tr>
+          <tr><td class="k">untrusted / heavy</td><td>gVisor or Firecracker</td><td>kernel-level boundary when needed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flag go" style="margin-top:14px"><span class="lbl">Critical</span><span><strong>Your
+      own apps run under the same restrictions as third-party ones.</strong> The moment first-party
+      code gets a privileged path to the database, the platform stops being a platform and developers
+      will find out. It also means you discover the SDK's gaps by using it.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <h3>Return shaping — the leak nobody plans for</h3>
+    <p>A developer with enough narrow questions reconstructs the dataset. "How many ordered scampi,"
+      filtered a thousand ways, rebuilds the customer list one count at a time, and every individual
+      query looks harmless.</p>
+    <ul class="tight">
+      <li><strong>Minimum cohort size</strong> — results under N (10–25) return nothing</li>
+      <li><strong>Query budget per grant</strong> — not just rate, total questions against a dataset per period</li>
+      <li><strong>Aggregates only for analytics scopes</strong> — action scopes act, they don't report</li>
+      <li><strong>Enumeration detection</strong> in the ledger, flagged to the business</li>
+    </ul>
+  </div>
+</section>
+
+<section id="repo">
+  <div class="sec-head"><span class="eyebrow">12</span><h2>Repo layout</h2></div>
+  <div class="col stack">
+    <pre>anextgent/
+  <b>contracts/</b>          ← the owned layer. changes here are versioned events.
+    capability/         capability definitions, postconditions, risk
+    record/             schema + migrations
+    manifest/           app manifest JSON Schema
+    actionspec/         the request object
+    projection/         what may be published
+    constitution/       authority schema
+
+  <b>node/</b>               runs on a box OR in your cloud — identical
+    ingest/             email · qr · pos · remote-read · owner-text
+      parsers/          per vendor, versioned, fingerprinted
+    resolve/            observation → canonical
+    registry/           capability registry + router
+    policy/             constitution + policy engine + credential broker
+    execute/            android · browser · linux · api · workflow · human
+    verify/             per-capability postcondition checks
+    ledger/             append-only
+    project/            builds signed public projections
+    host/               WASM app host + host functions
+    surface/            sms · voice
+
+  <b>edge/</b>               cloud, read-only, no private data
+    page/ widget/ jsonld/ mcp/ qr/
+
+  <b>control/</b>            cloud
+    identity/ entitlement/ fleet/ appstore/ billing/ metering/
+
+  <b>apps/</b>               first-party — no privileged access
+    menu/ availability/ reviews/ booking/ songrequest/
+
+  <b>sdk/</b>                what a developer installs
+  <b>factory/</b>            flow mapping, cert pipeline, parser authoring
+  <b>os/</b>                 bootc image, quadlets, provisioning</pre>
+  </div>
+  <div class="col stack" style="margin-top:18px">
+    <div class="flag"><span class="lbl">Discipline</span><span><code>contracts/</code> is the only
+      directory that is truly yours forever. Everything else is an implementation of something in it.
+      A change there is a versioned event with a migration path — never an edit.</span></div>
+  </div>
+</section>
+
+<section id="tech">
+  <div class="sec-head"><span class="eyebrow">13</span><h2>Technology per component</h2></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Component</th><th>Use</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="k">node runtime</td><td>Podman + Quadlet</td><td>systemd units, no daemon, no Kubernetes, identical on box and cloud</td></tr>
+        <tr><td class="k">node OS</td><td>bootc + ostree + greenboot</td><td>one signed image, atomic swap, automatic rollback</td></tr>
+        <tr><td class="k">node database</td><td>Postgres</td><td>one per node. Same engine cloud and box — don't run SQLite in one and Postgres in the other</td></tr>
+        <tr><td class="k">embeddings</td><td>pgvector</td><td>already there</td></tr>
+        <tr><td class="k">events</td><td>NATS</td><td>lightweight, runs on a node, no ZooKeeper</td></tr>
+        <tr><td class="k">app sandbox</td><td>Extism + wasmtime</td><td>host functions are the only surface; no egress</td></tr>
+        <tr><td class="k">durable jobs</td><td>Temporal</td><td>survives crash, reboot, a sleeping phone; resumes exactly</td></tr>
+        <tr><td class="k">rulebooks</td><td>Event-Driven Ansible</td><td>sources → rules → actions, already written</td></tr>
+        <tr><td class="k">android</td><td>ADB + uiautomator2 + scrcpy</td><td>uiautomator2 is the only runtime executor; Maestro stays in the factory</td></tr>
+        <tr><td class="k">browser</td><td>Playwright</td><td>also your verifier for web postconditions</td></tr>
+        <tr><td class="k">parsing</td><td>Tika + Docling + langextract</td><td>don't write a parser per file type</td></tr>
+        <tr><td class="k">inference</td><td>llama.cpp + llama-swap, litellm in front</td><td>hot-swap, process isolation, one endpoint</td></tr>
+        <tr><td class="k">guardrail</td><td>Granite-Guardian on vLLM</td><td>called by the policy engine, no Kubernetes</td></tr>
+        <tr><td class="k">voice</td><td>Wyoming + openWakeWord + silero-vad + faster-whisper + Kokoro</td><td>each stage swappable; Piper is archived</td></tr>
+        <tr><td class="k">intents</td><td>hassil</td><td>deterministic routing before spending a model call</td></tr>
+        <tr><td class="k">identity</td><td>Zitadel</td><td>OIDC, passkeys — don't build auth</td></tr>
+        <tr><td class="k">authorization</td><td>SpiceDB</td><td>owner→business, agent→VAPP, device→workspace</td></tr>
+        <tr><td class="k">secrets</td><td>OpenBao</td><td>behind the credential broker; apps get refs, never secrets</td></tr>
+        <tr><td class="k">registry</td><td>Quay (cloud) + zot (node)</td><td>OS images, apps, flow packs — one warehouse</td></tr>
+        <tr><td class="k">signing</td><td>cosign + rekor</td><td>and put constitution versions and appmap promotions in the log, not just images</td></tr>
+        <tr><td class="k">entitlement</td><td>Candlepin</td><td>what did they buy, what may this node install</td></tr>
+        <tr><td class="k">fleet</td><td>Foreman / flightctl</td><td>evaluate flightctl before writing fleet code</td></tr>
+        <tr><td class="k">edge</td><td>Next.js on a CDN</td><td>static projections, near-zero cost</td></tr>
+        <tr><td class="k">owner UI + phone</td><td>Flutter</td><td>BSD-3, one codebase for wall screen and mobile, no Qt licensing</td></tr>
+        <tr><td class="k">wall screen</td><td>cage (Wayland kiosk)</td><td>one app fullscreen, no desktop to fall out of</td></tr>
+        <tr><td class="k">page builder</td><td>Puck</td><td>owner-editable public pages over the same blocks</td></tr>
+        <tr><td class="k">TV nav</td><td>Norigin Spatial Navigation</td><td>D-pad and remote</td></tr>
+        <tr><td class="k">payments</td><td>Stripe Connect</td><td>destination charges; decide dispute liability deliberately</td></tr>
+        <tr><td class="k">billing / metering</td><td>Lago</td><td>entitlement is "may they," metering is "how much"</td></tr>
+        <tr><td class="k">networking</td><td>headscale / WireGuard</td><td>phone app → node, point to point, nothing readable in the middle</td></tr>
+        <tr><td class="k">backup</td><td>restic + Litestream</td><td>to a destination they choose; you never hold a key</td></tr>
+        <tr><td class="k">export</td><td>xlsx writer from Postgres</td><td>the artifact that makes "you own it" legible</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="order">
+  <div class="sec-head">
+    <span class="eyebrow">14</span>
+    <h2>Build order</h2>
+    <p class="note">Every milestone produces something demonstrable. Build out of sequence and you
+      rework each step.</p>
+  </div>
+  <div class="col stack">
+    <h3>Phase A — the record and the seam · weeks 1–5</h3>
+    <ol class="tight">
+      <li><code>contracts/record</code> — schema for <strong>one vertical</strong>, plus <code>observation</code> and <code>canonical</code></li>
+      <li><code>node/resolve</code> — source rank, staleness decay, escalation</li>
+      <li><code>contracts/capability</code> + <code>node/registry</code> — the first 15 capabilities</li>
+      <li><code>node/ledger</code> — append-only from the very first write</li>
+      <li><code>node/policy</code> — constitution, the four-state ladder, credential broker</li>
+    </ol>
+    <div class="flag go" style="margin-top:10px"><span class="lbl">Demo</span><span>A capability
+      call that resolves policy, executes nothing, and writes a ledger entry. Boring, and everything
+      depends on it.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:24px">
+    <h3>Phase B — ingestion and projection · weeks 6–10</h3>
+    <ol class="tight" start="6">
+      <li><code>node/ingest/email</code> — unique inbound address, parser framework, quarantine, idempotency</li>
+      <li>Three real parsers — one POS, one booking platform, one review notification</li>
+      <li><code>node/project</code> — signed projection bundles</li>
+      <li><code>edge/</code> — page renderer, widget, QR target, JSON-LD, MCP, <code>llms.txt</code>, agent card</li>
+    </ol>
+    <div class="flag go" style="margin-top:10px"><span class="lbl">Demo</span><span>A business
+      forwards booking emails and a live public page appears with real availability. <strong>That
+      alone is the free tier</strong> — no box, no phone, no install.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:24px">
+    <h3>Phase C — the app host · weeks 11–14</h3>
+    <ol class="tight" start="10">
+      <li><code>contracts/manifest</code> + <code>node/host</code> — WASM host, host functions, capability-scoped</li>
+      <li>Block rendering — the app declares, the platform renders</li>
+      <li>Settings schema → owner UI generation</li>
+      <li>Install, grant, revoke</li>
+      <li><code>sdk/</code> — init, run, test against a seeded sandbox node</li>
+    </ol>
+    <div class="flag go" style="margin-top:10px"><span class="lbl">Demo</span><span>A hello-world
+      app with fifteen lines of manifest gets a public page, a widget, a QR code, an agent endpoint
+      and a settings screen — none of which it wrote.</span></div>
+  </div>
+  <div class="col stack" style="margin-top:24px">
+    <h3>Phase D — the first apps · weeks 15–22</h3>
+    <p class="note">In dependency order. Each needs the one before it.</p>
+    <ol class="tight" start="15">
+      <li><strong>QR Menu</strong> — no ingestion required, immediate value, seeds <code>item</code></li>
+      <li><strong>Reviews</strong> — needs visits, which need scans plus POS</li>
+      <li><strong>Availability</strong> — needs email ingestion. Most valuable, most complex</li>
+      <li><strong>Booking</strong> — needs availability</li>
+    </ol>
+  </div>
+  <div class="col stack" style="margin-top:24px">
+    <h3>Phase E — execution · weeks 23–30</h3>
+    <ol class="tight" start="19">
+      <li><code>node/execute/android</code> — adb, uiautomator2, scrcpy</li>
+      <li>AppMap format, fingerprint gate, refuse-to-act</li>
+      <li><code>node/verify</code> — read back on a different path</li>
+      <li>Fleet drift aggregation → rulebook → re-map → sandbox → canary → promote</li>
+      <li>SMS and voice surfaces</li>
+    </ol>
+  </div>
+  <div class="col stack" style="margin-top:24px">
+    <h3>Phase F — the store and the box · weeks 31+</h3>
+    <ol class="tight" start="24">
+      <li>Certification pipeline, signing, transparency log</li>
+      <li>Catalog, tiers, install flow, billing, dependency revenue share</li>
+      <li>bootc image, quadlets, factory provisioning, cert rack</li>
+      <li>Node migration — cloud tier to owned hardware</li>
+    </ol>
+  </div>
+</section>
+
+<section id="apps">
+  <div class="sec-head"><span class="eyebrow">15</span><h2>The first four apps</h2></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>App</th><th>Reads</th><th>Writes</th><th>Surfaces</th><th>Needs</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="k">menu</td>
+          <td>item.list · review.aggregate_by_item · business.get</td>
+          <td>visit.record_scan</td>
+          <td>page · qr · widget · agent · voice</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td class="k">reviews</td>
+          <td>visit.list · item.list</td>
+          <td>review.publish</td>
+          <td>sms · page · agent</td>
+          <td>menu, POS or QR</td>
+        </tr>
+        <tr>
+          <td class="k">availability</td>
+          <td>resource.availability · booking.list</td>
+          <td>booking.create · booking.cancel</td>
+          <td>widget · page · agent · voice</td>
+          <td>email ingest</td>
+        </tr>
+        <tr>
+          <td class="k">booking</td>
+          <td>resource.availability · business.get</td>
+          <td>booking.create · notify.send</td>
+          <td>page · widget · sms · voice · agent</td>
+          <td>availability, payments</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <p><strong>Look at the overlaps.</strong> Menu and reviews both touch <code>item</code>.
+      Availability and booking both touch <code>booking</code>. Reviews needs visits that the menu
+      app creates. If each owned its own copy you'd have four sources of truth for the same fields
+      and permanent reconciliation work — which is exactly what four separate SaaS products are.</p>
+    <div class="callout" style="margin-top:10px">
+      <h3>Song requests is the proof the platform is real</h3>
+      <p>QR on a stage → page → request → payment confirmation parsed → identity matched → artist
+        notified. <strong>Zero new architecture.</strong> Five capabilities you already built. If it
+        takes a week, the foundation works. If it takes a month, something in Phases A–C is wrong and
+        you should fix that before app number six.</p>
+    </div>
+  </div>
+</section>
+
+<section id="skip">
+  <div class="sec-head"><span class="eyebrow">16</span><h2>What breaks if you skip</h2></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Skip this</th><th>What happens</th><th>Recoverable?</th></tr></thead>
+      <tbody>
+        <tr><td class="k">observation table</td><td>Six months of data with no origin, no confidence, no way to reconstruct. Conflict resolution becomes guesswork forever.</td><td><strong>No</strong></td></tr>
+        <tr><td class="k">one writer per field</td><td>Two apps race on <code>booking.status</code>. Intermittent, unreproducible, and it corrupts customer-facing availability.</td><td>Painful</td></tr>
+        <tr><td class="k">capability seam</td><td>Apps reach into the database. Policy, ledger and swappable storage all become impossible without rewriting every app.</td><td><strong>No</strong></td></tr>
+        <tr><td class="k">node-per-business</td><td>One missing <code>WHERE business_id =</code> is a cross-tenant breach, and your entire posture is gone in one incident.</td><td><strong>No</strong></td></tr>
+        <tr><td class="k">platform-owned surfaces</td><td>Seven apps, seven websites, seven settings screens. App #7 costs a month instead of a week.</td><td>Expensive</td></tr>
+        <tr><td class="k">projection boundary</td><td>Private fields leak to the edge. The one mistake that ends the company.</td><td><strong>No</strong></td></tr>
+        <tr><td class="k">ledger from write #1</td><td>No audit history for the period you most need it, and Proof Ledger becomes a claim you can't back.</td><td><strong>No</strong></td></tr>
+        <tr><td class="k">first-party apps sandboxed</td><td>Privileged shortcuts accumulate, the SDK's gaps stay invisible, and developers find out.</td><td>Painful</td></tr>
+        <tr><td class="k">node location-agnostic</td><td>Free tier becomes a dead end with no upgrade path, and you rebuild it as a separate product.</td><td>Expensive</td></tr>
+        <tr><td class="k">idempotency on ingest</td><td>A forwarded confirmation decrements inventory twice. You oversell. The customer loses trust in the number.</td><td>Painful</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <p>Seven of those ten are <strong>not recoverable</strong> — they'd require rebuilding the
+      foundation with live customers on it. They're all in Phase A and B, they're all cheap to do
+      first, and every one of them is boring.</p>
+    <div class="flag stop" style="margin-top:6px"><span class="lbl">Still true</span><span>None of
+      Phase E matters if an accessibility service can't run on the apps a Destin charter operator
+      actually uses. One phone, one afternoon, before week 23.</span></div>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Build spec, revision one. Phase durations assume a small team and will move; the dependency
+    order between phases should not. Companion documents: the Playbook (strategy and economics), the
+    Build Plan (phases and go-to-market), the Parts Catalog (component list with verdicts).</p>
+</footer>
+
+</div>
+
+</body>
+</html>

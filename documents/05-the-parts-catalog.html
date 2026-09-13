@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>Remote Control Parts Catalog</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --surface-2:#E9EBE6;
+    --ink:#181B19; --ink-2:#474C48; --muted:#757B74;
+    --rule:#D7DAD3; --rule-strong:#B9BDB4;
+    --accent:#A4601A; --accent-soft:#F1E4D2;
+    --use:#2E6B4C; --use-bg:#E2EDE7;
+    --study:#2B5B77; --study-bg:#E0EAF0;
+    --care:#93582A; --care-bg:#F5E7D8;
+    --skip:#8C3B34; --skip-bg:#F2E0DE;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+      --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+      --rule:#2E3438; --rule-strong:#414850;
+      --accent:#D79A4E; --accent-soft:#33291B;
+      --use:#66AC85; --use-bg:#1D2E26;
+      --study:#6BA3C4; --study-bg:#1B2830;
+      --care:#C68A52; --care-bg:#2F2519;
+      --skip:#C8756C; --skip-bg:#30211F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+    --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+    --rule:#2E3438; --rule-strong:#414850;
+    --accent:#D79A4E; --accent-soft:#33291B;
+    --use:#66AC85; --use-bg:#1D2E26;
+    --study:#6BA3C4; --study-bg:#1B2830;
+    --care:#C68A52; --care-bg:#2F2519;
+    --skip:#C8756C; --skip-bg:#30211F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+  .col{max-width:700px}
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2rem,5.2vw,3.1rem);font-weight:700;letter-spacing:-.022em;line-height:1.05}
+  h2{font-size:clamp(1.35rem,3vw,1.75rem);font-weight:650;letter-spacing:-.015em;line-height:1.16}
+  h3{font-size:1.08rem;font-weight:650;letter-spacing:-.006em}
+  p{margin:0}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  strong{font-weight:600}
+  .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .lede{font-size:1.14rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.93rem;color:var(--muted);line-height:1.55}
+
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:20px;padding-block:52px 36px}
+  .mast h1{max-width:15ch}
+  .mast .lede{max-width:58ch}
+
+  .key{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .keyitem{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--ink-2)}
+
+  .pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.61rem;
+    font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;
+    border-radius:2px;white-space:nowrap;line-height:1.3}
+  .p-use{background:var(--use-bg);color:var(--use)}
+  .p-study{background:var(--study-bg);color:var(--study)}
+  .p-care{background:var(--care-bg);color:var(--care)}
+  .p-skip{background:var(--skip-bg);color:var(--skip)}
+
+  section{padding-block:44px;border-bottom:1px solid var(--rule)}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:9px;margin-bottom:22px;max-width:660px}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.45}
+  thead th{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:500;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+    border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.repo{white-space:nowrap}
+  td.repo a,td.repo span.nolink{font-family:"JetBrains Mono",monospace;font-size:.83rem;font-weight:500}
+  td.repo span.nolink{color:var(--ink)}
+  td.lic{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--muted);white-space:nowrap}
+  td.v{white-space:nowrap}
+  td.d{color:var(--ink-2);min-width:260px}
+  td.d b{color:var(--ink);font-weight:600}
+
+  .spine{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:6px}
+  .spine-card{background:var(--surface);border:1px solid var(--rule);border-left:2px solid var(--accent);
+    border-radius:0 3px 3px 0;padding:15px 16px;display:flex;flex-direction:column;gap:6px}
+  .spine-card .r{font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:700;color:var(--accent)}
+  .spine-card p{font-size:.87rem;line-height:1.45;color:var(--ink-2)}
+
+  .flag{background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:18px 20px;display:flex;flex-direction:column;gap:9px;margin-top:20px}
+  .flag h3{color:var(--ink)}
+  .flag p{font-size:.96rem;line-height:1.55;color:var(--ink-2)}
+
+  ol.order{margin:0;padding:0;list-style:none;counter-reset:o;border-top:1px solid var(--rule)}
+  ol.order li{counter-increment:o;display:grid;grid-template-columns:36px 1fr;gap:14px;
+    padding-block:14px;border-bottom:1px solid var(--rule);align-items:baseline}
+  ol.order li::before{content:counter(o,decimal-leading-zero);
+    font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:700;color:var(--accent)}
+  ol.order li span{font-size:.96rem;line-height:1.5;color:var(--ink-2)}
+  ol.order li span b{color:var(--ink);font-weight:600}
+
+  footer{padding-block:32px 54px;color:var(--muted);font-size:.87rem;line-height:1.6}
+
+  @media (max-width:620px){
+    body{font-size:16px}
+    .mast-inner{padding-block:38px 30px}
+    section{padding-block:34px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <span class="eyebrow">Companion to the Build Plan</span>
+    <h1>Remote Control Parts Catalog</h1>
+    <p class="lede">Every open-source component the appliance needs, grouped by layer, with a verdict
+      on each. Opinions included &mdash; a list of sixty repositories without them is just more work
+      for you.</p>
+    <div class="key">
+      <span class="keyitem"><span class="pill p-use">Use</span> Build on this</span>
+      <span class="keyitem"><span class="pill p-study">Study</span> Read it, don't depend on it</span>
+      <span class="keyitem"><span class="pill p-care">Careful</span> Real catch attached</span>
+      <span class="keyitem"><span class="pill p-skip">Skip</span> Wrong tool here</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">The spine</span>
+    <h2>Nine repos carry the whole product</h2>
+    <p class="note">Everything else in this catalog is supporting cast. If you only cloned these nine,
+      you would still have the shape of the machine.</p>
+  </div>
+  <div class="spine">
+    <div class="spine-card"><span class="r">Genymobile/scrcpy</span><p>Mirror and control the Android handset. Solved problem &mdash; do not rebuild it.</p></div>
+    <div class="spine-card"><span class="r">mobile-dev-inc/maestro</span><p>Declarative YAML mobile flows. The shape your flow library should take.</p></div>
+    <div class="spine-card"><span class="r">ggml-org/llama.cpp</span><p>Local inference, GGUF weights, LoRA adapter loading.</p></div>
+    <div class="spine-card"><span class="r">mostlygeek/llama-swap</span><p>Hot-swaps models behind one OpenAI-compatible endpoint. Your model manager, already written.</p></div>
+    <div class="spine-card"><span class="r">rhasspy/wyoming</span><p>The protocol that wires wake word &rarr; speech &rarr; intent &rarr; voice into one pipeline.</p></div>
+    <div class="spine-card"><span class="r">containers/bootc</span><p>The OS as a signed container image. Atomic swap, automatic rollback.</p></div>
+    <div class="spine-card"><span class="r">sigstore/cosign</span><p>Sign every image and flow pack; publish to a public transparency log.</p></div>
+    <div class="spine-card"><span class="r">modelcontextprotocol</span><p>How agents call tools. Adopt the standard instead of inventing a plugin format.</p></div>
+    <div class="spine-card"><span class="r">home-assistant/operating-system</span><p>Your closest living analogue. Read this one before you write anything.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 00</span>
+    <h2>Reference builds &mdash; read these first</h2>
+    <p class="note">Four projects have already solved large parts of what you are attempting. Time spent
+      reading them is the cheapest engineering you will ever do.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>What it gives you</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="repo"><a href="https://github.com/home-assistant/operating-system">home-assistant/operating-system</a></td>
+          <td class="lic">Apache-2.0</td>
+          <td class="d"><b>The single most important repo in this catalog.</b> An immutable appliance OS with A/B boot slots, RAUC over-the-air updates, and a non-technical owner on the other end. Same problem you have, already shipped to millions of devices.</td>
+          <td class="v"><span class="pill p-study">Study</span></td>
+        </tr>
+        <tr>
+          <td class="repo"><a href="https://github.com/home-assistant/core">home-assistant/core</a></td>
+          <td class="lic">Apache-2.0</td>
+          <td class="d">The automation engine, the device abstraction, and <b>the Assist voice pipeline</b>. Also the business template: Nabu Casa sells the hardware and a cloud subscription while the Open Home Foundation holds the project. That is your model with the serial numbers filed off.</td>
+          <td class="v"><span class="pill p-study">Study</span></td>
+        </tr>
+        <tr>
+          <td class="repo"><a href="https://github.com/ublue-os/bluefin">ublue-os/bluefin</a> &middot; <a href="https://github.com/ublue-os/main">ublue-os</a></td>
+          <td class="lic">Apache-2.0</td>
+          <td class="d">Universal Blue builds polished, opinionated desktops as bootc images in public CI. The best worked example of the exact build pipeline you need for the OS layer.</td>
+          <td class="v"><span class="pill p-use">Use</span></td>
+        </tr>
+        <tr>
+          <td class="repo"><a href="https://github.com/omacom/omarchy">omacom/omarchy</a></td>
+          <td class="lic">MIT</td>
+          <td class="d">Read <span class="mono">manual/</span> for documentation standard, <span class="mono">themes/</span> for how theming becomes a product feature, and <span class="mono">install/hardware/</span> as a list of components to avoid. Do not adopt its mutable-Arch update model.</td>
+          <td class="v"><span class="pill p-study">Study</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 01</span>
+    <h2>Immutable OS and updates</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><a href="https://github.com/containers/bootc">containers/bootc</a></td><td class="lic">Apache-2.0</td><td class="d"><b>Your OS pipeline.</b> Boot a machine directly from an OCI container image. Build in CI, sign, push; devices pull and swap atomically.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/ostreedev/ostree">ostreedev/ostree</a></td><td class="lic">LGPL-2.1</td><td class="d">The content-addressed filesystem underneath bootc. Gives you file-level deduplicated deltas, so a full OS update downloads like a patch.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/fedora-iot/greenboot">fedora-iot/greenboot</a></td><td class="lic">LGPL-2.1</td><td class="d"><b>The auto-rollback.</b> Runs health checks after boot; a failed check reverts to the previous image before the owner ever sees a problem. This is what makes updates un-scary.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/rauc/rauc">rauc/rauc</a></td><td class="lic">LGPL-2.1</td><td class="d">Classic A/B slot updater &mdash; what Home Assistant OS runs. The right choice only if you go Buildroot/Yocto embedded instead of OCI images.</td><td class="v"><span class="pill p-care">Careful</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/osbuild/osbuild">osbuild/osbuild</a></td><td class="lic">Apache-2.0</td><td class="d">Turns your bootc image into installable media &mdash; ISO, raw disk, the factory flash artifact.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><span class="nolink">systemd-sysupdate</span></td><td class="lic">LGPL-2.1</td><td class="d">Minimal A/B image updater already in systemd. Worth knowing, but bootc gives you more for the same effort.</td><td class="v"><span class="pill p-study">Study</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/mendersoftware/mender">mendersoftware/mender</a></td><td class="lic">Apache-2.0</td><td class="d">Full fleet OTA with a management server. Capable, but the server-side fleet model conflicts with your pull-only, no-access posture.</td><td class="v"><span class="pill p-skip">Skip</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 02</span>
+    <h2>Boot integrity and signing</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><span class="nolink">systemd-boot + UKI</span></td><td class="lic">LGPL-2.1</td><td class="d">Unified kernel images signed as one object. Simpler than GRUB2 and avoids its licensing entanglement entirely.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/Foxboron/sbctl">Foxboron/sbctl</a></td><td class="lic">MIT</td><td class="d">Secure Boot key management that a human can actually operate. Pair with <span class="mono">mokutil</span> so owners can enroll their own keys and unlock the machine.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/sigstore/cosign">sigstore/cosign</a></td><td class="lic">Apache-2.0</td><td class="d"><b>Signs every OS image and flow pack.</b> Devices verify before staging. Keys live in an HSM.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/sigstore/rekor">sigstore/rekor</a></td><td class="lic">Apache-2.0</td><td class="d"><b>The transparency log.</b> Devices refuse anything not publicly logged, which makes a targeted backdoor impossible rather than merely promised. This is the repo that turns your privacy claim into a proof.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/project-zot/zot">project-zot/zot</a></td><td class="lic">Apache-2.0</td><td class="d">Lightweight OCI-native registry. Simpler to self-host than Harbor and enough for a fleet in the thousands.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/fwupd/fwupd">fwupd/fwupd</a></td><td class="lic">LGPL-2.1</td><td class="d">Firmware updates through LVFS. Cheap to add and it makes the appliance feel like a real product rather than a PC in a case.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/tpm2-software/tpm2-tss">tpm2-software/tpm2-tss</a></td><td class="lic">BSD-2</td><td class="d">Device identity sealed in the TPM. Backs entitlement without a user account, and disk encryption without a password prompt on a wall-mounted box.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 03</span>
+    <h2>Android remote control &mdash; your core IP</h2>
+    <p class="note">Everything else in this catalog is assembly. This layer is where your actual product
+      gets built, so use these to learn the technique rather than to inherit someone's architecture.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><a href="https://github.com/Genymobile/scrcpy">Genymobile/scrcpy</a></td><td class="lic">Apache-2.0</td><td class="d"><b>Mirroring and manual control.</b> Low-latency Android screen on the Linux box with input passthrough. Ships a server-side component you can drive programmatically. Non-negotiable.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><span class="nolink">AccessibilityService (Android SDK)</span></td><td class="lic">&mdash;</td><td class="d"><b>You write this yourself and it is the heart of the product.</b> It hands you the semantic UI tree &mdash; real buttons with real IDs and text &mdash; plus gesture dispatch. Structure beats pixels by a wide margin.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/mobile-dev-inc/maestro">mobile-dev-inc/maestro</a></td><td class="lic">Apache-2.0</td><td class="d"><b>Read this for the flow format.</b> Declarative YAML UI flows with built-in waiting and assertions &mdash; exactly the shape your flow library wants, and it already solved the tedious parts of element matching.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/openatx/uiautomator2">openatx/uiautomator2</a></td><td class="lic">MIT</td><td class="d">Python control of Android UI. The fastest path to a working prototype in week one, before you write your own service.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/droidrun/mobilerun">droidrun/mobilerun</a></td><td class="lic">open source</td><td class="d">LLM-agnostic agent that inspects UI state, taps, types, and plans multi-step flows via CLI or Python. Closest working reference to your agent loop.</td><td class="v"><span class="pill p-study">Study</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/sktyou/OpenGUI">sktyou/OpenGUI</a></td><td class="lic">open source</td><td class="d">Android GUI agent built on standard AccessibilityService APIs, with a local REST API for remote driving. Good architecture reference for the service you will write.</td><td class="v"><span class="pill p-study">Study</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/OpenBMB/AgentCPM-GUI">OpenBMB/AgentCPM-GUI</a></td><td class="lic">Apache-2.0</td><td class="d">An 8B on-device GUI agent model that takes phone screenshots and executes tasks. Your vision fallback when the accessibility tree goes blind on a WebView or canvas.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/google-research/android_world">google-research/android_world</a></td><td class="lic">Apache-2.0</td><td class="d"><b>Your test harness.</b> A benchmark of real Android tasks. Do not guess at your flow reliability &mdash; measure it against a standard suite and watch the number move.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/appium/appium">appium/appium</a></td><td class="lic">Apache-2.0</td><td class="d">The mature, heavyweight option. Built for CI test farms, not a live appliance &mdash; the ceremony costs more than it returns here.</td><td class="v"><span class="pill p-skip">Skip</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/waydroid/waydroid">waydroid/waydroid</a></td><td class="lic">GPL-3.0</td><td class="d">Android in a container on the Linux box. Tempting, but it forfeits the real SIM and gets flagged by exactly the POS and banking apps you need. <b>The physical handset is the whole point.</b></td><td class="v"><span class="pill p-skip">Skip</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flag">
+    <h3>Test detection before you build anything on this layer</h3>
+    <p>Some apps refuse to run with an active accessibility service. Install every app in your target
+      vertical on a real handset, turn your service on, and see what still works. One afternoon, one
+      phone, and it tells you what your addressable market actually is.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 04</span>
+    <h2>Local inference and the model catalog</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><a href="https://github.com/ggml-org/llama.cpp">ggml-org/llama.cpp</a></td><td class="lic">MIT</td><td class="d"><b>The engine.</b> GGUF weights, quantization tooling, LoRA adapter loading, an OpenAI-compatible server, and first-class AMD support through ROCm and Vulkan.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/mostlygeek/llama-swap">mostlygeek/llama-swap</a></td><td class="lic">MIT</td><td class="d"><b>Your model manager, already written.</b> A single Go binary that sits in front of llama.cpp or vLLM, inspects the requested model, starts the right process, proxies the call, and evicts idle instances. Process isolation means one model crashing cannot take the others down.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/vllm-project/vllm">vllm-project/vllm</a></td><td class="lic">Apache-2.0</td><td class="d">Higher throughput and multi-LoRA serving, at the cost of a much heavier runtime. Right for a business box serving several staff at once; overkill for a single owner.</td><td class="v"><span class="pill p-care">Careful</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/ollama/ollama">ollama/ollama</a></td><td class="lic">MIT</td><td class="d">Easiest developer experience and great for your first two weeks. Hands you less control over quantization and memory than you will eventually want.</td><td class="v"><span class="pill p-care">Careful</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/huggingface/huggingface_hub">huggingface/huggingface_hub</a></td><td class="lic">Apache-2.0</td><td class="d">The client behind your one-click catalog. You mirror, quantize, test on your own SKU, sign, and serve &mdash; the customer never sees a model card or a config file.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/ROCm/ROCm">ROCm/ROCm</a></td><td class="lic">MIT</td><td class="d">The AMD compute stack for Strix Halo. In-tree kernel driver is precisely what keeps your single-image OS architecture clean &mdash; the reason to pick AMD over NVIDIA here is architectural, not benchmark-driven.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/open-webui/open-webui">open-webui/open-webui</a></td><td class="lic">BSD-3</td><td class="d">A complete chat front end you can point at your stack today. Useful as internal tooling and as a design reference; not the ten-foot UI you will ship.</td><td class="v"><span class="pill p-study">Study</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 05</span>
+    <h2>Voice &mdash; speak to it and it works</h2>
+    <p class="note">Do not assemble this from scratch. The Wyoming protocol already defines the whole
+      pipeline &mdash; wake word, speech-to-text, intent, speech-out &mdash; as swappable services, and
+      it has been running in millions of homes for years.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><a href="https://github.com/rhasspy/wyoming">rhasspy/wyoming</a></td><td class="lic">MIT</td><td class="d"><b>The glue.</b> A simple protocol connecting each voice stage as an independent service. Adopt it and every component below becomes swappable without rewriting your pipeline.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/dscripka/openWakeWord">dscripka/openWakeWord</a></td><td class="lic">Apache-2.0</td><td class="d">Wake word detection. Train your own brand word &mdash; the phrase people say to your box is part of the product, not a config value.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/snakers4/silero-vad">snakers4/silero-vad</a></td><td class="lic">MIT</td><td class="d">Voice activity detection &mdash; knowing when the speaker stopped. Small, fast, and the difference between a natural exchange and an awkward one.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/SYSTRAN/faster-whisper">SYSTRAN/faster-whisper</a></td><td class="lic">MIT</td><td class="d">Speech to text. Sub-second on real hardware. Pair with <a href="https://github.com/ggml-org/whisper.cpp">whisper.cpp</a> if you want one inference runtime across the whole box.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/hexgrad/kokoro">hexgrad/kokoro</a></td><td class="lic">Apache-2.0</td><td class="d"><b>Text to speech, 82M parameters.</b> Natural output at a size that runs alongside everything else. This is your voice.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/rhasspy/piper">rhasspy/piper</a></td><td class="lic">MIT</td><td class="d"><b>Archived October 2025 and read-only.</b> Still works, still recommended in old tutorials &mdash; do not start a new product on it. Go to Kokoro.</td><td class="v"><span class="pill p-skip">Skip</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/pipecat-ai/pipecat">pipecat-ai/pipecat</a></td><td class="lic">BSD-2</td><td class="d">Real-time conversational voice with interruption handling and barge-in. Reach for it when the wall box needs to hold a phone conversation rather than answer a command.</td><td class="v"><span class="pill p-study">Study</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/speaches-ai/speaches">speaches-ai/speaches</a></td><td class="lic">MIT</td><td class="d">Wraps local speech-to-text and text-to-speech behind an OpenAI-compatible API. Convenient seam if you ever want to swap a cloud voice in for a customer who asks.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 06</span>
+    <h2>Orchestration, tools and automations</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><a href="https://github.com/modelcontextprotocol/servers">modelcontextprotocol</a></td><td class="lic">MIT</td><td class="d"><b>How agents call tools.</b> Spec plus SDKs plus a library of existing servers. Every capability on your box becomes an MCP server, and you inherit an ecosystem instead of inventing a plugin format.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/node-red/node-red">node-red/node-red</a></td><td class="lic">Apache-2.0</td><td class="d">Visual flow automation with a huge node library, genuinely open licensed, and light enough to run on the appliance. The right engine under your trigger-and-action layer.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/n8n-io/n8n">n8n-io/n8n</a></td><td class="lic">Sustainable Use</td><td class="d">Excellent product, but <b>not open source</b> &mdash; its license restricts commercial hosting and redistribution. Shipping it inside a product you sell needs a commercial agreement. Know this before you build on it.</td><td class="v"><span class="pill p-care">Careful</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/temporalio/temporal">temporalio/temporal</a></td><td class="lic">MIT</td><td class="d">Durable execution &mdash; a flow survives a crash, a reboot, or a phone that fell asleep mid-task, and resumes exactly where it stopped. Heavy, but retries and resumability are not optional when real invoices are involved.</td><td class="v"><span class="pill p-care">Careful</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/langchain-ai/langgraph">langchain-ai/langgraph</a></td><td class="lic">MIT</td><td class="d">Stateful agent graphs with checkpointing and human-in-the-loop interrupts &mdash; which maps almost directly onto your approval board.</td><td class="v"><span class="pill p-study">Study</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Layer 07</span>
+    <h2>Interface, apps and data</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Project</th><th>License</th><th>Role</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="repo"><a href="https://github.com/flutter/flutter">flutter/flutter</a></td><td class="lic">BSD-3</td><td class="d"><b>One codebase for the wall screen and the phone app.</b> Permissive license with no commercial-embedded complications, unlike the Qt/QML route Omarchy took &mdash; which matters the moment you sell hardware.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/cage-kiosk/cage">cage-kiosk/cage</a></td><td class="lic">MIT</td><td class="d">A Wayland compositor that runs exactly one application fullscreen. Your ten-foot UI in kiosk mode, with no desktop for anyone to fall out of.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/flatpak/flatpak">flatpak/flatpak</a></td><td class="lic">LGPL-2.1</td><td class="d">Sandboxed apps versioned separately from the OS. Pair with <a href="https://github.com/flatpak/xdg-desktop-portal">xdg-desktop-portal</a> so file, camera and mic access is granted per app by a person, not assumed.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/89luca89/distrobox">89luca89/distrobox</a></td><td class="lic">GPL-3.0</td><td class="d"><b>The escape hatch.</b> Full mutable Linux with root in a container, quarantined from the host. This is how you offer total freedom without any risk to the appliance.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/asg017/sqlite-vec">asg017/sqlite-vec</a></td><td class="lic">Apache-2.0 / MIT</td><td class="d">Vector search inside SQLite. One file holds the business's whole memory &mdash; easy to encrypt, easy to back up, easy to hand back when they leave.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/restic/restic">restic/restic</a></td><td class="lic">BSD-2</td><td class="d">Encrypted backup to a destination the customer chooses &mdash; their NAS, their bucket. They are protected from a dead drive; you never hold a key.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+        <tr><td class="repo"><a href="https://github.com/juanfont/headscale">juanfont/headscale</a></td><td class="lic">BSD-3</td><td class="d">Self-hosted control plane for a WireGuard mesh, so the phone app reaches the box directly. Keeps your "no pipe into the customer's machine" posture intact.</td><td class="v"><span class="pill p-use">Use</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Assembly</span>
+    <h2>What to clone this week</h2>
+    <p class="note">In order. Each step produces something you can see working before the next one starts.</p>
+  </div>
+  <div class="col">
+    <ol class="order">
+      <li><span><b>scrcpy</b> &mdash; get a real phone mirrored on a Linux box with working input. One afternoon.</span></li>
+      <li><span><b>uiautomator2</b> &mdash; dump the UI tree of the Google Business Profile app and tap a button from Python. Prototype before you write a service.</span></li>
+      <li><span><b>maestro</b> &mdash; read the YAML flow format and steal its element-matching and waiting logic. Don't solve that twice.</span></li>
+      <li><span><b>llama.cpp + llama-swap</b> &mdash; one endpoint, two models, hot swap on demand. Your orchestrator's engine room, running in an hour.</span></li>
+      <li><span><b>wyoming + openWakeWord + faster-whisper + kokoro</b> &mdash; wire the four together and say a sentence to your box. This is the demo people remember.</span></li>
+      <li><span><b>home-assistant/operating-system</b> &mdash; read the update system docs end to end before you commit to your own OS architecture.</span></li>
+      <li><span><b>bootc + greenboot</b> &mdash; build one image, boot it, break it on purpose, watch it roll itself back.</span></li>
+    </ol>
+    <div class="flag">
+      <h3>The order matters more than the list</h3>
+      <p>Steps one through three are the product. Steps four and five are the demo. Steps six and seven
+        are the company. Anyone can clone all sixty repos in this catalog in a weekend; the useful
+        question is which three you have working by Friday.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Licenses noted where they affect shipping hardware commercially &mdash; verify each against its
+    repository before you depend on it, since projects relicense. Two flagged above are live traps:
+    Piper is archived, and n8n is not open source.</p>
+</footer>
+
+</div>
+
+</body>
+</html>

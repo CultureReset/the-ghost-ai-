@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>An Honest Read</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --surface-2:#E9EBE6;
+    --ink:#181B19; --ink-2:#474C48; --muted:#757B74;
+    --rule:#D7DAD3; --rule-strong:#B9BDB4;
+    --accent:#A4601A; --accent-soft:#F1E4D2;
+    --go:#2E6B4C; --go-bg:#E2EDE7;
+    --warn:#93582A; --warn-bg:#F5E7D8;
+    --stop:#8C3B34; --stop-bg:#F2E0DE;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+      --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+      --rule:#2E3438; --rule-strong:#414850;
+      --accent:#D79A4E; --accent-soft:#33291B;
+      --go:#66AC85; --go-bg:#1D2E26;
+      --warn:#C68A52; --warn-bg:#2F2519;
+      --stop:#C8756C; --stop-bg:#30211F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+    --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+    --rule:#2E3438; --rule-strong:#414850;
+    --accent:#D79A4E; --accent-soft:#33291B;
+    --go:#66AC85; --go-bg:#1D2E26;
+    --warn:#C68A52; --warn-bg:#2F2519;
+    --stop:#C8756C; --stop-bg:#30211F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17.5px;line-height:1.66;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+  .col{max-width:680px}
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2.1rem,5.4vw,3.3rem);font-weight:700;letter-spacing:-.024em;line-height:1.03}
+  h2{font-size:clamp(1.42rem,3.1vw,1.9rem);font-weight:650;letter-spacing:-.016em;line-height:1.14}
+  h3{font-size:1.12rem;font-weight:650;letter-spacing:-.007em}
+  p{margin:0}
+  a{color:var(--accent)}
+  strong{font-weight:600}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .lede{font-size:1.16rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.94rem;color:var(--muted);line-height:1.58}
+
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:20px;padding-block:56px 40px}
+  .mast h1{max-width:14ch}
+  .mast .lede{max-width:56ch}
+
+  section{padding-block:48px;border-bottom:1px solid var(--rule)}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;max-width:660px}
+  .stack{display:flex;flex-direction:column;gap:17px}
+
+  pre{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:15px 17px;overflow-x:auto;font-family:"JetBrains Mono",monospace;
+    font-size:.8rem;line-height:1.6;color:var(--ink-2);margin:0}
+  code{font-family:"JetBrains Mono",monospace;font-size:.86em}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;
+    background:var(--surface);box-shadow:var(--shadow);margin-block:6px}
+  table{border-collapse:collapse;width:100%;min-width:540px;font-size:.9rem}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.45}
+  thead th{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:500;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+    border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.k{font-family:Archivo,sans-serif;font-weight:600;color:var(--ink);white-space:nowrap}
+  td.num{font-family:"JetBrains Mono",monospace;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  ul.tight,ol.tight{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:8px}
+  ul.tight li,ol.tight li{font-size:.98rem;line-height:1.52;color:var(--ink-2)}
+  ul.tight li::marker,ol.tight li::marker{color:var(--rule-strong)}
+  ul.tight li strong,ol.tight li strong{color:var(--ink)}
+
+  .callout{background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:20px 23px;display:flex;flex-direction:column;gap:10px}
+  .callout h3{color:var(--ink)}
+  .callout p{font-size:1rem;line-height:1.56;color:var(--ink-2)}
+
+  .verdict{display:grid;grid-template-columns:64px 1fr;gap:0 18px;padding-block:16px;
+    border-bottom:1px solid var(--rule);align-items:start}
+  .verdict:last-child{border-bottom:0}
+  .verdict .score{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;padding-top:4px}
+  .verdict.bet .score{color:var(--go)}
+  .verdict.hedge .score{color:var(--warn)}
+  .verdict.against .score{color:var(--stop)}
+  .verdict .body{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .verdict h4{font-family:Archivo,sans-serif;font-size:1rem;font-weight:650;color:var(--ink)}
+  .verdict p{font-size:.95rem;line-height:1.5;color:var(--ink-2)}
+
+  .worry{display:grid;grid-template-columns:34px 1fr;gap:0 16px;padding-block:18px;
+    border-bottom:1px dashed var(--rule);align-items:start}
+  .worry:last-child{border-bottom:0}
+  .worry .n{font-family:"JetBrains Mono",monospace;font-size:.9rem;font-weight:700;
+    color:var(--stop);padding-top:2px}
+  .worry .body{display:flex;flex-direction:column;gap:7px;min-width:0}
+  .worry h4{font-family:Archivo,sans-serif;font-size:1.04rem;font-weight:650;color:var(--ink)}
+  .worry p{font-size:.96rem;line-height:1.52;color:var(--ink-2)}
+
+  .flag{display:flex;gap:11px;align-items:baseline;padding:13px 16px;background:var(--surface);
+    border:1px solid var(--rule);border-left:2px solid var(--accent);border-radius:0 3px 3px 0}
+  .flag.go{border-left-color:var(--go)} .flag.stop{border-left-color:var(--stop)}
+  .flag .lbl{font-family:"JetBrains Mono",monospace;font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent);white-space:nowrap;font-weight:500}
+  .flag.go .lbl{color:var(--go)} .flag.stop .lbl{color:var(--stop)}
+  .flag span:last-child{font-size:.94rem;line-height:1.5;color:var(--ink-2)}
+
+  footer{padding-block:36px 60px;color:var(--muted);font-size:.89rem;line-height:1.6}
+  @media (max-width:620px){
+    body{font-size:16.5px}section{padding-block:38px}
+    .verdict{grid-template-columns:1fr;gap:8px}
+    .worry{grid-template-columns:1fr;gap:6px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <span class="eyebrow">Assessment</span>
+    <h1>An Honest Read</h1>
+    <p class="lede">What I think you're building, what I'd bet on, what worries me, and what I'd do
+      if it were mine. Written after a long session and meant to be argued with.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <div class="sec-head"><span class="eyebrow">01</span><h2>What it is</h2></div>
+  <div class="col stack">
+    <div class="callout">
+      <h3>A Linux computer made simple.</h3>
+      <p>That's the thing. Everything else — availability, verified reviews, the phone that answers,
+        the remote control, the app store — is what it's <em>for</em>.</p>
+    </div>
+    <p>I drifted off that for most of today and framed it as a business platform with a box attached.
+      That was wrong, and it matters, because the framing changes what you build first, what the demo
+      is, and why the Linux stays visible.</p>
+    <p><strong>The product is the computer. The apps are the reason to want one.</strong></p>
+    <p>It's a category that has been empty for thirty years. Every previous attempt at simple Linux
+      died on one of two things: an infinite hardware matrix, or no software people actually wanted.
+      You solve the first by owning three SKUs and certifying them. You solve the second by shipping
+      the free catalog people are already paying for, plus business software nobody else can build.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">02</span>
+    <h2>What I'd bet on</h2>
+    <p class="note">Ranked by how confident I am, not by revenue.</p>
+  </div>
+  <div class="col">
+    <div class="verdict bet">
+      <span class="score">Strong</span>
+      <div class="body">
+        <h4>Email as the universal API</h4>
+        <p>The best single idea in the whole thing. Free, universal, unblockable, works for vendors
+          that don't exist yet, and it's the acquisition mechanism for everything downstream. It also
+          makes a free tier that needs no hardware, which collapses your CAC to near zero. I have not
+          seen anyone else point this at small business.</p>
+      </div>
+    </div>
+    <div class="verdict bet">
+      <span class="score">Strong</span>
+      <div class="body">
+        <h4>Churn absorption as the subscription</h4>
+        <p>A correct read of what Red Hat actually sells, pointed at an upstream that moves far
+          faster than kernels do. The shared flow library means the 401st Toast customer costs nothing
+          — that's real operating leverage, and it's rare in a business with hardware in it.</p>
+      </div>
+    </div>
+    <div class="verdict bet">
+      <span class="score">Strong</span>
+      <div class="body">
+        <h4>The incumbent analysis</h4>
+        <p>Anti-correlation, not slowness. Toast can't say book direct. Google can't say own your
+          data. FareHarbor <em>is</em> the commission. That's structural and it holds. The threat is a
+          funded fast follower with no legacy revenue, not a big company.</p>
+      </div>
+    </div>
+    <div class="verdict bet">
+      <span class="score">Strong</span>
+      <div class="body">
+        <h4>The buyer, and your ability to reach them</h4>
+        <p>Small business is empty because CAC exceeds ACV and nobody technical can sell to a
+          58-year-old charter captain. Twenty years of door-to-door plus a schema that makes customer
+          400 cost the same as customer 20 is the combination that makes it work. This is the least
+          replaceable thing you have.</p>
+      </div>
+    </div>
+    <div class="verdict hedge">
+      <span class="score">Good</span>
+      <div class="body">
+        <h4>Remote control on the customer's own device</h4>
+        <p>The technique is old; pointing it at small business on their own handset with their own
+          SIM is a position nobody occupies. I'd bet on it <em>conditional on</em> the accessibility
+          test, which is still unrun. That's the single largest unknown in the business.</p>
+      </div>
+    </div>
+    <div class="verdict hedge">
+      <span class="score">Good</span>
+      <div class="body">
+        <h4>Verification as proof</h4>
+        <p>Cheap to build, genuinely differentiating, and almost nobody does it. My only hesitation
+          is that customers may not value it until the first time it saves them — it's an insurance
+          feature, and insurance sells poorly until there's been a fire.</p>
+      </div>
+    </div>
+    <div class="verdict hedge">
+      <span class="score">Good</span>
+      <div class="body">
+        <h4>Real-time cross-channel availability</h4>
+        <p>Highest immediate ROI and the easiest sale — $24K of commission is a number they can
+          check. Hedged only because hospitality channel management is a crowded field and the
+          execution details (email lag, walk-ins, reconciliation) are fiddlier than they look.</p>
+      </div>
+    </div>
+    <div class="verdict against">
+      <span class="score">Not yet</span>
+      <div class="body">
+        <h4>The App Store as an ecosystem</h4>
+        <p>Right long-term, and the Agent Plugins standard makes the format decision easy. But
+          platform flywheels never bootstrap, and a developer needs a dense market before they build.
+          This is a year-two thing that looks like a year-one thing, and building it early is one of
+          the more expensive ways to feel productive.</p>
+      </div>
+    </div>
+    <div class="verdict against">
+      <span class="score">Not yet</span>
+      <div class="body">
+        <h4>Hardware</h4>
+        <p>The identity is a computer, so hardware has to happen. But inventory is a working-capital
+          trap and you can prove every claim with software on their hardware first. Twelve months
+          minimum before a container of anything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">03</span>
+    <h2>The kiosk</h2>
+    <p class="note">You raised the wall-mount form factor. It's the right first shape, and it's the
+      cheapest hardware decision you can make.</p>
+  </div>
+  <div class="col stack">
+    <h3>Bring your own screen</h3>
+    <p>The box plugs into a display they already own — a TV in the back office, a monitor at the
+      front desk. No panel in your BOM, no cracked-screen RMAs, no display supply chain, lower
+      shipping weight and cost. Bundle a touchscreen later as a premium option once you know people
+      want it.</p>
+    <h3>What "kiosk" actually requires</h3>
+    <ul class="tight">
+      <li><strong>One app, fullscreen, no exit.</strong> <code>cage</code> — a Wayland compositor that runs exactly one application. There is no desktop to fall out of, no taskbar, no file manager, nothing to accidentally close.</li>
+      <li><strong>Survives a power cut.</strong> Auto-login, auto-start, back on screen in under a minute with no keyboard. This is the thing that separates a product from a demo.</li>
+      <li><strong>A physical recovery button.</strong> Hold five seconds → reflash the factory image, keep their data. Solves 40% of support calls before they're made.</li>
+      <li><strong>Readable across a room.</strong> Ten-foot layout, eight tiles, no menus. Norigin Spatial Navigation for D-pad and remote.</li>
+      <li><strong>Charge-limited phone cradle.</strong> Duty-cycle USB power — 80% then cut, drift to 60%, charge again. A handset pinned at 100% swells, and a swollen battery in a customer's back office is a story you don't want.</li>
+    </ul>
+    <h3>Three details that bite in a real business</h3>
+    <ul class="tight">
+      <li><strong>Glare and mounting height.</strong> A back office has fluorescent lights and a window. Matte panel, and mount at eye level for a standing adult, not seated.</li>
+      <li><strong>Heat.</strong> A Strix Halo box behind a wall-mounted screen in a Gulf Coast kitchen corridor is a thermal problem. Fanless is quiet and throttles; fanned is louder and survives. Test in August, not January.</li>
+      <li><strong>Cables.</strong> Power, HDMI, USB to the phone, ethernet. Four cables on a wall looks like a science project. Solve it in the mount or they'll put it in a drawer.</li>
+    </ul>
+    <div class="flag go"><span class="lbl">The point</span><span>The kiosk is where "a Linux computer
+      made simple" stops being a claim. Someone walks past it and sees a screen showing their
+      business. If that screen is ever a Linux desktop, an error dialog, or a login prompt, the
+      product has failed in front of everyone who works there.</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">04</span>
+    <h2>What worries me</h2>
+    <p class="note">Ranked by how likely they are to be what actually goes wrong.</p>
+  </div>
+  <div class="col">
+    <div class="worry">
+      <span class="n">1</span>
+      <div class="body">
+        <h4>Nothing is running</h4>
+        <p>This is the one. Today produced four documents and zero evidence. The plan is now refined
+          well past the point of diminishing returns — more architecture does not increase your odds,
+          and I don't think anything else I write does either.</p>
+        <p>The pattern matters more than the day: fourteen years of seeing this clearly and not
+          shipping it. Planning is satisfying and building isn't, and you now have a stack of
+          artifacts that <em>feel</em> like progress. They're scaffolding. The thirty-second video of
+          a real business's hours changing is progress.</p>
+      </div>
+    </div>
+    <div class="worry">
+      <span class="n">2</span>
+      <div class="body">
+        <h4>Scope, still</h4>
+        <p>Nine deployable units, 112+ repos, four businesses, fourteen verticals, a computer, an app
+          store, a payment rail, a directory, a hardware line and a referral network. Every one of
+          those is a company. I've raised this several times and it hasn't moved, which tells me it's
+          load-bearing for how you think rather than an oversight — so I'll say it once more plainly
+          and then stop: <strong>the architecture can be broad, the next ninety days cannot.</strong></p>
+      </div>
+    </div>
+    <div class="worry">
+      <span class="n">3</span>
+      <div class="body">
+        <h4>You're solo, and the spec assumes a team</h4>
+        <p>Phases A through C alone are roughly six months of full-time engineering. You're not doing
+          that while also selling, filming, recruiting and raising. Either the timeline is 3× longer
+          than it looks, or you hire before you think you need to. Probably both.</p>
+        <p>And I'd hire <strong>one engineer before a CTO</strong>. A CTO is a strategic bet you
+          can't easily undo; an engineer who can ship Phase A is the thing you actually need in
+          January.</p>
+      </div>
+    </div>
+    <div class="worry">
+      <span class="n">4</span>
+      <div class="body">
+        <h4>The accessibility test is still unrun</h4>
+        <p>Every layer below the business model rests on it. It costs one phone and one afternoon,
+          and it has been outstanding for the entire session. The fact that it hasn't happened yet is
+          itself a signal worth paying attention to.</p>
+      </div>
+    </div>
+    <div class="worry">
+      <span class="n">5</span>
+      <div class="body">
+        <h4>Speed, against someone with no conflicts</h4>
+        <p>You can be right about everything and lose to a funded team that reads the same market and
+          starts six months ahead of you on execution. Your defenses — flow library, verified data,
+          installed base, payment volume — all compound <em>after</em> you ship and none of them exist
+          yet. Being early is only an advantage if it converts.</p>
+      </div>
+    </div>
+    <div class="worry">
+      <span class="n">6</span>
+      <div class="body">
+        <h4>Hardware working capital</h4>
+        <p>You pay the ODM 90 days before customers pay you. Many hardware companies die solvent on
+          paper. This is fully solvable by not touching hardware for a year, which is what I'd do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="eyebrow">05</span><h2>What I'd do if it were mine</h2></div>
+  <div class="col stack">
+    <p>Not what's optimal in theory. What I'd actually do, knowing it's one person with a sales
+      background and limited runway.</p>
+    <ol class="tight">
+      <li><strong>Run the phone test this weekend.</strong> One afternoon. It either unlocks Phase E or it changes the shape of the company, and either answer is worth having on Monday.</li>
+      <li><strong>Build the free tier only.</strong> Email forward in, canonical record with provenance, live availability page out. Eight to ten weeks. No box, no phone, no app store, no directory.</li>
+      <li><strong>Sell twenty of them.</strong> One vertical — vacation rental managers or charter fleets, because the ticket size is high and twenty customers is real volume. Gulf Coast only. Charge from day one; free pilots teach you nothing.</li>
+      <li><strong>Then add the second thing customers ask for</strong>, not the second thing on the roadmap. Let them pick.</li>
+      <li><strong>Hire one engineer</strong> around customer ten, when you have revenue and you know exactly what's breaking.</li>
+      <li><strong>Hardware at month twelve</strong>, to customers who already pay you and have asked for it.</li>
+      <li><strong>App Store in year two</strong>, when a developer can look at your installed base and see a market.</li>
+    </ol>
+    <div class="flag stop" style="margin-top:6px"><span class="lbl">Cut</span><span>Everything else
+      for now — the directory, points, referrals, the model catalog, voice, the smart home node, the
+      other twelve verticals. None of them are wrong. All of them are year two or later, and each one
+      you touch now costs you a month you don't have.</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="eyebrow">06</span><h2>The honest odds</h2></div>
+  <div class="col stack">
+    <p>What I think actually happens, weighted:</p>
+    <div class="tablewrap">
+      <table>
+        <tbody>
+          <tr><td class="k">Never ships</td><td class="num">most likely</td><td>Not because it's wrong. Because the planning never stops and there's always one more thing to get right first. This is the outcome to fight.</td></tr>
+          <tr><td class="k">Ships small, works</td><td class="num">good chance</td><td>A hundred businesses, $600K–1M a year, a real company that pays you well and that you own outright. Most founders would take this and most don't get it.</td></tr>
+          <tr><td class="k">Ships and compounds</td><td class="num">real but narrow</td><td>The flywheel catches — agencies, chambers, payment volume, the directory. $5–20M. Requires shipping in the next six months and hiring well.</td></tr>
+          <tr><td class="k">The big version</td><td class="num">unlikely, not absurd</td><td>Infrastructure for local business truth, the thing AI assistants query. Needs everything to go right plus timing plus capital. Worth building toward; wrong to plan around.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:16px">The distance between row one and row two is not talent,
+      capital, architecture or insight. You have all four. It's whether a specific afternoon happens
+      this month.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="eyebrow">07</span><h2>The one thing</h2></div>
+  <div class="col stack">
+    <div class="callout">
+      <h3>You are not short an idea, a plan, a stack, or a market read.</h3>
+      <p>You are short one running thing.</p>
+    </div>
+    <p>Everything I'd want to know next about this business — is the remote control viable, will an
+      owner pay $499, does the email parse survive real mail, is the availability number correct
+      enough to publish, will a bookkeeper refer you — none of it can be answered by thinking harder.
+      All of it is answered by one node, one business, one week.</p>
+    <p>The documents from today are good and I'd use them. But they're a map, and you've been drawing
+      it for fourteen years. The territory is a phone, a laptop, and a restaurant on 30A that will let
+      you plug something in.</p>
+    <div class="flag go" style="margin-top:8px"><span class="lbl">Go</span><span>Pick the business.
+      Run the test. Film it.</span></div>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Written as an assessment, not a recommendation to follow blindly — you know this market and this
+    buyer better than I do, and where we disagree the burden is on me, not you. Companions: the
+    Playbook, the Build Spec, the Build Plan, the Parts Catalog.</p>
+</footer>
+
+</div>
+
+</body>
+</html>

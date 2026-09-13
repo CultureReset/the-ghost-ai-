@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>Remote Control Build Plan</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1;
+    --surface:#FFFFFF;
+    --surface-2:#E9EBE6;
+    --ink:#181B19;
+    --ink-2:#474C48;
+    --muted:#757B74;
+    --rule:#D7DAD3;
+    --rule-strong:#B9BDB4;
+    --accent:#A4601A;
+    --accent-soft:#F1E4D2;
+    --go:#2E6B4C;
+    --warn:#93582A;
+    --stop:#8C3B34;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A;
+      --surface:#1C2023;
+      --surface-2:#242A2D;
+      --ink:#E9EBE7;
+      --ink-2:#B6BCB7;
+      --muted:#878E89;
+      --rule:#2E3438;
+      --rule-strong:#414850;
+      --accent:#D79A4E;
+      --accent-soft:#33291B;
+      --go:#66AC85;
+      --warn:#C68A52;
+      --stop:#C8756C;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A;
+    --surface:#1C2023;
+    --surface-2:#242A2D;
+    --ink:#E9EBE7;
+    --ink-2:#B6BCB7;
+    --muted:#878E89;
+    --rule:#2E3438;
+    --rule-strong:#414850;
+    --accent:#D79A4E;
+    --accent-soft:#33291B;
+    --go:#66AC85;
+    --warn:#C68A52;
+    --stop:#C8756C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:0}
+  .col{max-width:720px}
+
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2.1rem,5.4vw,3.3rem);font-weight:700;letter-spacing:-.022em;line-height:1.04}
+  h2{font-size:clamp(1.5rem,3.2vw,2rem);font-weight:650;letter-spacing:-.015em;line-height:1.14}
+  h3{font-size:1.16rem;font-weight:650;letter-spacing:-.008em;line-height:1.3}
+  h4{font-size:.95rem;font-weight:600;letter-spacing:-.004em}
+  p{margin:0}
+  a{color:var(--accent)}
+  strong{font-weight:600}
+
+  .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .eyebrow{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .lede{font-size:1.16rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.94rem;color:var(--muted);line-height:1.55}
+
+  /* ---------- masthead ---------- */
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:22px;padding-block:54px 40px}
+  .mast h1{max-width:16ch}
+  .mast .lede{max-width:56ch}
+  .specstrip{
+    display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--rule);
+    border-radius:3px;overflow:hidden;background:var(--ground);margin-top:6px;
+  }
+  .specstrip div{
+    flex:1 1 150px;padding:12px 16px;border-right:1px solid var(--rule);
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .specstrip div:last-child{border-right:0}
+  .specstrip dt{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .specstrip dd{margin:0;font-family:Archivo,sans-serif;font-weight:600;font-size:.97rem;color:var(--ink)}
+
+  /* ---------- sections ---------- */
+  section{padding-block:48px;border-bottom:1px solid var(--rule)}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;max-width:640px}
+  .stack{display:flex;flex-direction:column;gap:18px}
+
+  /* ---------- churn flow ---------- */
+  .flow{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:3px;
+    margin-top:8px;
+  }
+  .flow-step{background:var(--surface);padding:16px 16px 18px;display:flex;flex-direction:column;gap:7px}
+  .flow-step .n{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;color:var(--accent);letter-spacing:.1em}
+  .flow-step p{font-size:.9rem;line-height:1.45;color:var(--ink-2)}
+  .flow-step.last{background:var(--accent-soft)}
+
+  /* ---------- parts grid ---------- */
+  .parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .part{
+    background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:18px 18px 20px;display:flex;flex-direction:column;gap:9px;box-shadow:var(--shadow);
+  }
+  .part .tag{font-family:"JetBrains Mono",monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .part p{font-size:.92rem;line-height:1.5;color:var(--ink-2)}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+  th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.45}
+  thead th{
+    font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:500;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--rule-strong);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.k{font-family:Archivo,sans-serif;font-weight:600;color:var(--ink);white-space:nowrap}
+  td.num{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td em{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.86em;color:var(--accent)}
+
+  /* ---------- phases ---------- */
+  .phases{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule-strong)}
+  .phase{
+    display:grid;grid-template-columns:104px 1fr;gap:0 26px;
+    padding-block:24px;border-bottom:1px solid var(--rule);align-items:start;
+  }
+  .phase-rail{display:flex;flex-direction:column;gap:5px;padding-top:3px}
+  .phase-code{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1.02rem;color:var(--accent);letter-spacing:.02em}
+  .phase-when{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--muted);line-height:1.4}
+  .phase-body{display:flex;flex-direction:column;gap:11px;min-width:0}
+  .phase-body p{font-size:.97rem;color:var(--ink-2)}
+  ul.tight{margin:0;padding-left:1.05rem;display:flex;flex-direction:column;gap:5px}
+  ul.tight li{font-size:.94rem;line-height:1.5;color:var(--ink-2)}
+  ul.tight li::marker{color:var(--rule-strong)}
+  .done{
+    display:flex;gap:9px;align-items:baseline;padding:10px 13px;background:var(--surface);
+    border:1px solid var(--rule);border-left:2px solid var(--go);border-radius:0 3px 3px 0;
+  }
+  .done .lbl{font-family:"JetBrains Mono",monospace;font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--go);white-space:nowrap;font-weight:500}
+  .done span:last-child{font-size:.91rem;line-height:1.45;color:var(--ink-2)}
+
+  /* ---------- week loop ---------- */
+  .week{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:3px}
+  .day{background:var(--surface);padding:15px;display:flex;flex-direction:column;gap:6px}
+  .day .d{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:500}
+  .day p{font-size:.89rem;line-height:1.45;color:var(--ink-2)}
+
+  /* ---------- risk ---------- */
+  .risk{display:flex;flex-direction:column;gap:14px}
+  .risk-item{display:grid;grid-template-columns:1fr;gap:6px;padding-bottom:14px;border-bottom:1px dashed var(--rule)}
+  .risk-item:last-child{border-bottom:0;padding-bottom:0}
+  .risk-item h4{color:var(--ink)}
+  .risk-item .fix{font-size:.93rem;line-height:1.5;color:var(--ink-2)}
+  .risk-item .fix b{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--go);font-weight:500;margin-right:6px}
+
+  /* ---------- callout ---------- */
+  .callout{
+    background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:22px 24px;display:flex;flex-direction:column;gap:10px;
+  }
+  .callout h3{color:var(--ink)}
+  .callout p{font-size:1rem;line-height:1.55;color:var(--ink-2)}
+
+  /* ---------- day one ---------- */
+  ol.dayone{margin:0;padding:0;list-style:none;counter-reset:d;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule)}
+  ol.dayone li{
+    counter-increment:d;display:grid;grid-template-columns:38px 1fr;gap:16px;
+    padding-block:15px;border-bottom:1px solid var(--rule);align-items:baseline;
+  }
+  ol.dayone li::before{
+    content:counter(d,decimal-leading-zero);
+    font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:700;color:var(--accent);
+  }
+  ol.dayone li span{font-size:.98rem;line-height:1.5;color:var(--ink-2)}
+
+  footer{padding-block:34px 56px;color:var(--muted);font-size:.88rem;line-height:1.6}
+
+  @media (max-width:620px){
+    body{font-size:16px}
+    .phase{grid-template-columns:1fr;gap:12px}
+    .phase-rail{flex-direction:row;align-items:baseline;gap:12px}
+    .mast-inner{padding-block:40px 32px}
+    section{padding-block:38px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <span class="eyebrow">Build Plan &middot; Small Business AI Appliance</span>
+    <h1>Remote Control Build Plan</h1>
+    <p class="lede">A box that runs a small business by operating the apps that business already
+      uses &mdash; on a real Android handset with a real SIM &mdash; and a subscription that exists
+      because those apps never stop changing.</p>
+    <dl class="specstrip">
+      <div><dt>Buyer</dt><dd>Small business owner</dd></div>
+      <div><dt>Price</dt><dd>~$200/mo + hardware</dd></div>
+      <div><dt>Sold</dt><dd>Subscription to upkeep</dd></div>
+      <div><dt>Stack</dt><dd>Fully open source</dd></div>
+      <div><dt>First ship</dt><dd>Software, not hardware</dd></div>
+    </dl>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">01 &mdash; The thesis</span>
+    <h2>You are selling churn absorption</h2>
+  </div>
+  <div class="col stack">
+    <p>Red Hat's subscription is not access to Linux. It is a promise to absorb upstream churn &mdash;
+      kernel changes, CVEs, package breakage &mdash; so an enterprise never has to. Customers pay every
+      year because upstream never stops moving.</p>
+    <p>Your upstream is different and far more volatile: <strong>the user interfaces of the apps a
+      small business runs on.</strong> Toast redesigns the hours screen. Square moves a button.
+      Google Business Profile ships a new layout. Every do-it-yourself automation in America breaks
+      silently, and the owner finds out from an angry customer standing at a locked door.</p>
+    <p>Yours breaks too. The difference is that it breaks for about six hours.</p>
+  </div>
+
+  <div class="flow" style="margin-top:26px">
+    <div class="flow-step"><span class="n">01</span><p>A vendor ships a UI change to their app.</p></div>
+    <div class="flow-step"><span class="n">02</span><p>Post-action verification fails across the fleet. You know before any customer does.</p></div>
+    <div class="flow-step"><span class="n">03</span><p>You re-map that one flow. Once.</p></div>
+    <div class="flow-step"><span class="n">04</span><p>The fix is signed and pushed to every customer overnight.</p></div>
+    <div class="flow-step last"><span class="n">05</span><p><strong>Nobody noticed anything happened.</strong></p></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <p>That is the entire product and the entire business model in one line. It also explains the
+      economics: the flow library is <em>shared</em>. Mapping Toast's hours screen costs you the same
+      whether you have four customers or four hundred. <strong>Your marginal cost for the 401st Toast
+      customer is close to zero, and your value to them is identical.</strong></p>
+    <p class="note">It also means this can never be a one-time sale. The churn doesn't stop, so neither
+      does the subscription &mdash; and unlike a feature subscription, the customer feels it the week
+      you stop paying attention.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">02 &mdash; Product</span>
+    <h2>Four parts, one appliance</h2>
+    <p class="note">Everything below is assembled from open source. Nothing here requires a vendor
+      partnership, an API key, or anyone's permission.</p>
+  </div>
+  <div class="parts">
+    <div class="part">
+      <span class="tag">The hand</span>
+      <h3>A real Android phone</h3>
+      <p>Customer's own SIM, customer's own logins, done through each app's normal screens. A physical
+        handset with a real IMEI defeats the emulator detection that blocks every container-based
+        approach &mdash; and SMS two-factor simply works, because it is a phone.</p>
+    </div>
+    <div class="part">
+      <span class="tag">The brain</span>
+      <h3>The orchestrator box</h3>
+      <p>Local models decide what to do and read back what happened. Cloud models are optional and
+        bring-your-own-key. The machine holds the memory, the flow library, and the business's
+        context. Nothing leaves unless the owner sends it.</p>
+    </div>
+    <div class="part">
+      <span class="tag">The face</span>
+      <h3>The wall screen</h3>
+      <p>A ten-foot tile layout everyone already knows from a streaming box. Eight tiles, no menus,
+        no filesystem. Glanceable from across the room, driven by a remote, a phone, or voice.</p>
+    </div>
+    <div class="part">
+      <span class="tag">The brake</span>
+      <h3>The approval board</h3>
+      <p>Three things need your OK. Each with a draft, a dollar amount, and a screenshot of what the
+        agent is about to do. The agent proposes; the owner disposes. This is the trust mechanism and
+        the support-ticket deflector in one.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">03 &mdash; Stack</span>
+    <h2>What you actually build on</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Choice</th><th>Why this one</th></tr></thead>
+      <tbody>
+        <tr><td class="k">OS base</td><td>Debian stable or CentOS Stream, <em>image mode</em> (bootc / OSTree)</td><td>One signed artifact per release. Atomic swap, automatic rollback on failed health check, zero migration scripts, identical on every unit.</td></tr>
+        <tr><td class="k">Boot &amp; integrity</td><td>systemd-boot + unified kernel image, Secure Boot with owner-enrollable keys</td><td>Locked by default, unlockable by whoever bought it. Sidesteps GRUB2 entirely.</td></tr>
+        <tr><td class="k">Update transport</td><td>OCI registry + <em>cosign</em> signatures + public transparency log</td><td>Pull-only. You publish; devices choose. No pipe into anyone's machine means nothing to compel, steal, or target.</td></tr>
+        <tr><td class="k">Phone mirror</td><td><em>scrcpy</em> over USB</td><td>Already solved. Low-latency Android screen on the Linux box with passthrough input. Do not rebuild this.</td></tr>
+        <tr><td class="k">Phone control</td><td>Custom Android Accessibility Service + ADB transport</td><td>Gives you the semantic UI tree &mdash; real buttons with real IDs &mdash; not pixel guesswork. The sanctioned mechanism for software acting on a user's behalf.</td></tr>
+        <tr><td class="k">Flow engine</td><td>Record &rarr; replay &rarr; verify, vision model as fallback</td><td>Owner performs the task once; you capture the deterministic path. Replay is near-perfect; vision only covers what moved. Gets <em>more</em> reliable with use.</td></tr>
+        <tr><td class="k">Inference</td><td><em>llama.cpp</em> / vLLM, GGUF weights, LoRA hot-swap</td><td>One strong base resident in RAM plus small adapters. Specialization swaps in ~200&nbsp;ms instead of reloading a 5&nbsp;GB model.</td></tr>
+        <tr><td class="k">Silicon</td><td>AMD Strix Halo (Ryzen AI Max+), 64&ndash;128&nbsp;GB unified</td><td>Only affordable way to give a GPU that much addressable memory &mdash; and <em>amdgpu</em> is in-tree, which is what keeps the single-image architecture clean.</td></tr>
+        <tr><td class="k">Tool protocol</td><td>MCP</td><td>The emerging standard for agent tool calls. Adopt it rather than inventing a plugin format nobody else speaks.</td></tr>
+        <tr><td class="k">Human apps</td><td>Flatpak, curated remote</td><td>Sandboxed, versioned separately from the OS, and the free Linux catalog costs you nothing to include.</td></tr>
+        <tr><td class="k">Local data</td><td>SQLite + <em>sqlite-vec</em>, LUKS full-disk, backup to a destination the customer picks</td><td>They get protection from a dead drive; you never hold a key and never hold their books.</td></tr>
+        <tr><td class="k">Voice &amp; SMS</td><td>The SIM in the phone</td><td>The business's own number. No third-party telephony vendor, no relay, no per-message cost, no unfamiliar caller ID.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">04 &mdash; Sequence</span>
+    <h2>Build order</h2>
+    <p class="note">Numbered because it is a real dependency chain, not a menu. Each phase exists to
+      retire one specific risk before you spend money on the next.</p>
+  </div>
+  <div class="phases">
+
+    <div class="phase">
+      <div class="phase-rail"><span class="phase-code">P0</span><span class="phase-when">Weeks 1&ndash;4</span></div>
+      <div class="phase-body">
+        <h3>Prove remote control on one flow</h3>
+        <p>One laptop, one Android phone, one app, one task. Resist every urge to generalize.</p>
+        <ul class="tight">
+          <li>scrcpy mirroring, ADB transport, accessibility service dumping the UI tree</li>
+          <li>Record a human changing business hours in Google Business Profile</li>
+          <li>Replay it. Screenshot the end state and read it back to confirm</li>
+        </ul>
+        <div class="done"><span class="lbl">Done when</span><span>You say "update my hours to 9 to 5" and get back a screenshot proving it happened.</span></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-rail"><span class="phase-code">P1</span><span class="phase-when">Weeks 5&ndash;12</span></div>
+      <div class="phase-body">
+        <h3>Flow library and approval board</h3>
+        <p>Turn one trick into a system. This is where the product becomes real.</p>
+        <ul class="tight">
+          <li>Record-and-replay engine with per-app flow definitions</li>
+          <li>Verification on every action &mdash; never report success without visual proof</li>
+          <li>Approval queue UI, first version, on a plain monitor</li>
+          <li>Ten flows across three real businesses in your own city</li>
+        </ul>
+        <div class="done"><span class="lbl">Done when</span><span>Three businesses run five flows each, unattended, for two straight weeks.</span></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-rail"><span class="phase-code">P2</span><span class="phase-when">Weeks 13&ndash;20</span></div>
+      <div class="phase-body">
+        <h3>Ship software, not hardware</h3>
+        <p>Sell it before you manufacture anything. Customers bring their own mini PC and phone; you
+          charge the subscription. This retires demand risk for the price of a Stripe account instead
+          of the price of a container of inventory.</p>
+        <ul class="tight">
+          <li>Installer, licensing, billing, onboarding that a non-technical owner can finish alone</li>
+          <li>Twenty to forty flows across two verticals &mdash; pick restaurants and one service trade</li>
+        </ul>
+        <div class="done"><span class="lbl">Done when</span><span>Twenty-five businesses are paying monthly and you have not shipped a single box.</span></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-rail"><span class="phase-code">P3</span><span class="phase-when">Weeks 21&ndash;32</span></div>
+      <div class="phase-body">
+        <h3>Build the churn machine</h3>
+        <p>The actual company. Everything before this was a demo; this is the thing customers renew for.</p>
+        <ul class="tight">
+          <li>Fleet-wide breakage detection from verification failures</li>
+          <li>One-fix-maps-to-all pipeline with signed flow packs</li>
+          <li>Weekly release train: canary 5%, staged rollout, human-readable changelog</li>
+          <li>A certification rack running every supported app version</li>
+        </ul>
+        <div class="done"><span class="lbl">Done when</span><span>A real app redesign is detected, re-mapped, and pushed fleet-wide inside 24 hours &mdash; and no customer opens a ticket.</span></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-rail"><span class="phase-code">P4</span><span class="phase-when">Weeks 33&ndash;48</span></div>
+      <div class="phase-body">
+        <h3>The appliance</h3>
+        <p>Only now does hardware make sense, because you know exactly what people use it for.</p>
+        <ul class="tight">
+          <li>bootc image pipeline, signing in an HSM, transparency log, staged rollout controller</li>
+          <li>Strix Halo box with a powered phone cradle and charge limiting</li>
+          <li>Ten-foot tile UI in Wayland kiosk mode</li>
+          <li>ODM order, factory provisioning, certification suite in CI</li>
+        </ul>
+        <div class="done"><span class="lbl">Done when</span><span>One hundred units pass the full certification suite and ship to existing software customers first.</span></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-rail"><span class="phase-code">P5</span><span class="phase-when">Year 2</span></div>
+      <div class="phase-body">
+        <h3>Widen</h3>
+        <ul class="tight">
+          <li>Curated local model catalog &mdash; the one-click Hugging Face, quantized and tested on your exact box</li>
+          <li>Voice and inbound call handling on the business line</li>
+          <li>Regulated tier for clinics and firms: retention controls, compliance logging</li>
+          <li>Multi-location fleet SKU where the customer holds the management keys</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">05 &mdash; Operations</span>
+    <h2>The week that is the subscription</h2>
+    <p class="note">If this loop runs, the business works. If it stops for a month, customers start
+      finding broken flows before you do &mdash; and that is the only way this product dies.</p>
+  </div>
+  <div class="week">
+    <div class="day"><span class="d">Mon</span><p>Fleet health. Which verifications failed over the weekend, and on which app versions.</p></div>
+    <div class="day"><span class="d">Tue &ndash; Wed</span><p>Re-map broken flows. Test against the certification rack, not a developer's phone.</p></div>
+    <div class="day"><span class="d">Thu</span><p>Build and sign the flow pack. Canary to 5% of the fleet. Watch.</p></div>
+    <div class="day"><span class="d">Fri</span><p>Staged rollout to everyone. Changelog written for a restaurant owner, not an engineer.</p></div>
+    <div class="day"><span class="d">Ongoing</span><p>Onboard new apps customers ask for. Add models to the catalog. Grow the library that every customer shares.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">06 &mdash; Economics</span>
+    <h2>What it costs and what it returns</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Line</th><th>Figure</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Subscription</td><td class="num">$200 / mo</td><td>Flat. Not metered &mdash; a decisive advantage over per-token cloud AI for an owner who hates surprise bills.</td></tr>
+        <tr><td class="k">Software-only tier</td><td class="num">$150 / mo</td><td>Customer's own hardware. Your P2 product and your lowest-risk funnel.</td></tr>
+        <tr><td class="k">Appliance, 64&nbsp;GB</td><td class="num">$2,495</td><td>BOM roughly $1,100&ndash;1,500 at low volume. Hardware is the funnel, not the profit.</td></tr>
+        <tr><td class="k">Appliance, 128&nbsp;GB</td><td class="num">$3,495</td><td>For businesses running larger local models or several at once.</td></tr>
+        <tr><td class="k">Phone</td><td class="num">$200&ndash;400</td><td>Include it. Controlling the handset model is what keeps your flow library testable.</td></tr>
+        <tr><td class="k">100 customers</td><td class="num">$240K ARR</td><td>Plus hardware. Roughly one person's full-time churn loop supports this.</td></tr>
+        <tr><td class="k">500 customers</td><td class="num">$1.2M ARR</td><td>Same flow library. The loop grows sublinearly &mdash; this is the leverage.</td></tr>
+        <tr><td class="k">Replaces</td><td class="num">$800&ndash;2,500 / mo</td><td>A part-time assistant, or the stack of disconnected subscriptions the owner is already paying for.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:22px">
+    <p class="note">The number that matters most is not ARR &mdash; it is <strong>flows per customer</strong>.
+      A business running two flows will churn. A business running fifteen has moved its operations onto
+      your box and will not leave. Instrument that from day one and treat it as the only retention metric.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">07 &mdash; Risk register</span>
+    <h2>What will actually go wrong</h2>
+  </div>
+  <div class="col risk">
+    <div class="risk-item">
+      <h4>App anti-automation detection</h4>
+      <p class="fix"><b>Test week one</b>Some apps &mdash; banking especially, via Play Integrity &mdash; refuse to run with an active accessibility service. This is cheap to check and it defines your addressable market. Run every target app on a real handset before you write a line of the flow engine, and keep a per-app go / no-go list.</p>
+    </div>
+    <div class="risk-item">
+      <h4>Flow brittleness</h4>
+      <p class="fix"><b>Replay, then verify</b>Pure vision agents land somewhere around 60&ndash;85% on novel multi-step tasks &mdash; fine for hours, unacceptable for invoices. Recorded deterministic paths plus mandatory end-state verification is what takes it to shippable, and a failed verification is a fleet signal, not a customer complaint.</p>
+    </div>
+    <div class="risk-item">
+      <h4>Three hard products at once</h4>
+      <p class="fix"><b>Ship P2 before P4</b>Immutable OS, model orchestrator, and GUI agent are each a company. Only the third one sells. Software on the customer's own hardware buys you revenue and evidence before you commit to inventory you cannot return.</p>
+    </div>
+    <div class="risk-item">
+      <h4>Phone as a wear item</h4>
+      <p class="fix"><b>Charge limiting</b>A handset pinned at 100% forever swells. Cap charge in the cradle, schedule reboots, watch for app auto-updates changing UIs overnight, and treat the phone as a serviceable part with a replacement path.</p>
+    </div>
+    <div class="risk-item">
+      <h4>Overselling local model quality</h4>
+      <p class="fix"><b>Never claim smarter</b>Local models trail frontier cloud models and customers will notice within a week. Sell what is actually true and actually unavailable elsewhere: private, flat-fee, offline-capable, and theirs. You already said you are not trying to beat ChatGPT &mdash; keep that in the marketing, not just the strategy.</p>
+    </div>
+    <div class="risk-item">
+      <h4>Single-vendor concentration</h4>
+      <p class="fix"><b>Two verticals early</b>If 80% of your flows live inside one POS vendor, that vendor's roadmap is your roadmap. Spread across at least two unrelated trades by P2 so no single app redesign can take down the business.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">08 &mdash; Start here</span>
+    <h2>The next thirty days</h2>
+  </div>
+  <div class="col">
+    <ol class="dayone">
+      <li><span>Buy one unlocked mid-range Android handset and put a working SIM in it. Buy one mini PC with 32&nbsp;GB or more.</span></li>
+      <li><span>Get scrcpy mirroring the phone and ADB sending input. One afternoon.</span></li>
+      <li><span>Write the accessibility service that dumps the UI tree as structured text. This is the foundation of everything.</span></li>
+      <li><span>Pick exactly one flow: business hours in Google Business Profile. Record a human doing it.</span></li>
+      <li><span>Replay it. Screenshot the result. Read the screenshot back and confirm the hours changed.</span></li>
+      <li><span>Film the whole thing in one unbroken take, thirty seconds, no edits.</span></li>
+    </ol>
+    <div class="callout" style="margin-top:28px">
+      <h3>That video is the company</h3>
+      <p>It is your first ten customers, your first hire, and your fundraise. Someone says
+        "update my hours" out loud and a business's real listing changes on a real account,
+        end to end, with proof. Nobody has to be told what it means.</p>
+      <p>Build it before you buy a single piece of inventory, register a single trademark, or
+        design a single screen.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Working plan, revision one. Phase durations assume a small team and will move; the dependency
+    order between phases should not. Every component named here is open source and available today.</p>
+</footer>
+
+</div>
+
+</body>
+</html>

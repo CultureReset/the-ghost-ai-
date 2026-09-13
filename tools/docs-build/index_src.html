@@ -1,0 +1,85 @@
+<title>A NEXT GENT — Documents</title>
+<style>
+  :root{--ground:#F3F4F1;--surface:#FFF;--ink:#181B19;--ink-2:#474C48;--muted:#757B74;
+        --rule:#D7DAD3;--rule-strong:#B9BDB4;--accent:#A4601A;
+        --shadow:0 1px 2px rgba(24,27,25,.06),0 8px 24px -16px rgba(24,27,25,.4)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+        --ground:#15171A;--surface:#1D2024;--ink:#EDEEEA;--ink-2:#B6BAB4;--muted:#8A8F89;
+        --rule:#2E3238;--rule-strong:#434850;--accent:#D2924A}}
+  :root[data-theme="dark"]{--ground:#15171A;--surface:#1D2024;--ink:#EDEEEA;--ink-2:#B6BAB4;
+        --muted:#8A8F89;--rule:#2E3238;--rule-strong:#434850;--accent:#D2924A}
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);margin:0;padding-block:48px;
+       font-family:'Source Serif 4',Charter,Georgia,serif;font-size:16px;line-height:1.55}
+  .page{max-width:860px;margin:0 auto;padding:0 20px}
+  .eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-family:'Archivo',system-ui,sans-serif;font-size:clamp(38px,8vw,62px);line-height:1;
+     letter-spacing:-.025em;margin:12px 0 14px;font-weight:700}
+  .sub{font-size:19px;color:var(--ink-2);max-width:38ch;margin:0 0 34px}
+  h2{font-family:'Archivo',system-ui,sans-serif;font-size:15px;letter-spacing:.02em;
+     text-transform:uppercase;color:var(--muted);margin:38px 0 14px;font-weight:700}
+  .whole{background:var(--surface);border:1px solid var(--rule-strong);border-radius:10px;
+         padding:22px;box-shadow:var(--shadow);margin-bottom:10px}
+  .whole .t{font-family:'Archivo',system-ui,sans-serif;font-size:22px;font-weight:700;margin-bottom:4px}
+  .whole .m{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;color:var(--muted);
+            margin-bottom:14px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  a.btn{display:inline-block;font-family:'Archivo',system-ui,sans-serif;font-size:13px;font-weight:600;
+        text-decoration:none;color:var(--ink);background:var(--ground);border:1px solid var(--rule-strong);
+        border-radius:6px;padding:7px 13px}
+  a.btn:hover{border-color:var(--accent);color:var(--accent)}
+  a.btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  a.btn.p:hover{color:#fff;opacity:.9}
+  ol{list-style:none;counter-reset:p;margin:0;padding:0}
+  ol li{counter-increment:p;display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--rule)}
+  ol li::before{content:counter(p,decimal-leading-zero);font-family:'JetBrains Mono',ui-monospace,monospace;
+        font-size:12px;font-weight:700;color:var(--accent);padding-top:4px;min-width:26px}
+  .body{flex:1;min-width:0}
+  .t2{font-family:'Archivo',system-ui,sans-serif;font-size:17px;font-weight:700;margin-bottom:3px}
+  .b{font-size:14.5px;color:var(--ink-2);margin-bottom:10px}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--muted)}
+  code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px}
+</style>
+<div class="page">
+  <span class="eyebrow">Working Record · Revision 3</span>
+  <h1>A NEXT GENT</h1>
+  <p class="sub">A Linux computer made simple — and the business around it.</p>
+
+  <h2>The whole thing</h2>
+  <div class="whole">
+    <div class="t">Complete Working Record</div>
+    <div class="m">134 pages · six parts · 27,100 words</div>
+    <div class="row">
+      <a class="btn p" href="A-NEXT-GENT-Complete-Record.pdf">PDF</a>
+      <a class="btn" href="A-NEXT-GENT-Complete-Record.docx">Word</a>
+      <a class="btn" href="A-NEXT-GENT-Complete-Record.md">Markdown</a>
+    </div>
+  </div>
+
+  <h2>By part</h2>
+  <ol>
+    <li><div class="body"><div class="t2">An Honest Read</div>
+      <div class="b">What it is, what to bet on, the kiosk, what worries me, what I'd do, and the odds on each outcome.</div>
+      <div class="row"><a class="btn" href="01-an-honest-read.pdf">PDF</a><a class="btn" href="01-an-honest-read.docx">Word</a><a class="btn" href="01-an-honest-read.html">Web</a></div></div></li>
+    <li><div class="body"><div class="t2">The Playbook</div>
+      <div class="b">Thesis, products, architecture, the data plane, economics, go-to-market, brand, IP posture, founder assets, risks.</div>
+      <div class="row"><a class="btn" href="02-the-playbook.pdf">PDF</a><a class="btn" href="02-the-playbook.docx">Word</a><a class="btn" href="02-the-playbook.html">Web</a></div></div></li>
+    <li><div class="body"><div class="t2">The Build Spec</div>
+      <div class="b">Data placement, the business record, ingestion, capabilities, the app contract, surfaces, isolation, repo layout, build order.</div>
+      <div class="row"><a class="btn" href="03-the-build-spec.pdf">PDF</a><a class="btn" href="03-the-build-spec.docx">Word</a><a class="btn" href="03-the-build-spec.html">Web</a></div></div></li>
+    <li><div class="body"><div class="t2">The Build Plan</div>
+      <div class="b">Phases P0 through P5 with done-when gates, the weekly ops loop, unit economics, the risk register, the first thirty days.</div>
+      <div class="row"><a class="btn" href="04-the-build-plan.pdf">PDF</a><a class="btn" href="04-the-build-plan.docx">Word</a><a class="btn" href="04-the-build-plan.html">Web</a></div></div></li>
+    <li><div class="body"><div class="t2">The Parts Catalog</div>
+      <div class="b">Every open-source component by layer, each with a use / study / careful / skip verdict and the catch attached.</div>
+      <div class="row"><a class="btn" href="05-the-parts-catalog.pdf">PDF</a><a class="btn" href="05-the-parts-catalog.docx">Word</a><a class="btn" href="05-the-parts-catalog.html">Web</a></div></div></li>
+    <li><div class="body"><div class="t2">The App Store Layer</div>
+      <div class="b">Agent Plugins and Agent Skills, index-not-store distribution, the trust ladder, the installer, three targets per app, nine deployable units, Grok Bot, Apple.</div>
+      <div class="row"><a class="btn" href="06-the-app-store-layer.pdf">PDF</a><a class="btn" href="06-the-app-store-layer.docx">Word</a><a class="btn" href="06-the-app-store-layer.html">Web</a></div></div></li>
+  </ol>
+
+  <footer>Every file works offline. The Word documents are editable — headings, tables and code
+    blocks come through as real Word styles. Fonts live in <code>assets/fonts.css</code>; the PDFs
+    embed their own.</footer>
+</div>

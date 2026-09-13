@@ -1,0 +1,1927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts.css"><title>A NEXT GENT Playbook</title>
+
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --surface-2:#E9EBE6;
+    --ink:#181B19; --ink-2:#474C48; --muted:#757B74;
+    --rule:#D7DAD3; --rule-strong:#B9BDB4;
+    --accent:#A4601A; --accent-soft:#F1E4D2;
+    --go:#2E6B4C; --go-bg:#E2EDE7;
+    --warn:#93582A; --warn-bg:#F5E7D8;
+    --stop:#8C3B34; --stop-bg:#F2E0DE;
+    --shadow:0 1px 2px rgba(24,27,25,.06), 0 8px 24px -16px rgba(24,27,25,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+      --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+      --rule:#2E3438; --rule-strong:#414850;
+      --accent:#D79A4E; --accent-soft:#33291B;
+      --go:#66AC85; --go-bg:#1D2E26;
+      --warn:#C68A52; --warn-bg:#2F2519;
+      --stop:#C8756C; --stop-bg:#30211F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#15181A; --surface:#1C2023; --surface-2:#242A2D;
+    --ink:#E9EBE7; --ink-2:#B6BCB7; --muted:#878E89;
+    --rule:#2E3438; --rule-strong:#414850;
+    --accent:#D79A4E; --accent-soft:#33291B;
+    --go:#66AC85; --go-bg:#1D2E26;
+    --warn:#C68A52; --warn-bg:#2F2519;
+    --stop:#C8756C; --stop-bg:#30211F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+  .col{max-width:700px}
+  h1,h2,h3,h4{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+  h1{font-size:clamp(2rem,5.2vw,3.2rem);font-weight:700;letter-spacing:-.022em;line-height:1.04}
+  h2{font-size:clamp(1.4rem,3.1vw,1.85rem);font-weight:650;letter-spacing:-.016em;line-height:1.15}
+  h3{font-size:1.1rem;font-weight:650;letter-spacing:-.006em;margin-top:4px}
+  h4{font-size:.95rem;font-weight:600}
+  p{margin:0}
+  a{color:var(--accent)}
+  strong{font-weight:600}
+  .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .lede{font-size:1.15rem;line-height:1.55;color:var(--ink-2)}
+  .note{font-size:.93rem;color:var(--muted);line-height:1.55}
+
+  header.mast{border-bottom:1px solid var(--rule-strong);background:var(--surface)}
+  .mast-inner{display:flex;flex-direction:column;gap:20px;padding-block:54px 38px}
+  .mast h1{max-width:15ch}
+  .mast .lede{max-width:60ch}
+
+  /* contents */
+  nav.toc{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:20px 22px;margin-block:34px;box-shadow:var(--shadow)}
+  nav.toc h4{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:500}
+  nav.toc ol{margin:0;padding:0;list-style:none;columns:2;column-gap:32px}
+  nav.toc li{break-inside:avoid;margin-bottom:6px;font-size:.93rem}
+  nav.toc a{text-decoration:none;border-bottom:1px solid transparent}
+  nav.toc a:hover{border-bottom-color:var(--accent)}
+  nav.toc .n{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--muted);margin-right:8px}
+  @media (max-width:640px){nav.toc ol{columns:1}}
+
+  section{padding-block:46px;border-bottom:1px solid var(--rule);scroll-margin-top:16px}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;max-width:680px}
+  .stack{display:flex;flex-direction:column;gap:16px}
+  .stack.wide{max-width:100%}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;
+    background:var(--surface);box-shadow:var(--shadow);margin-block:6px}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:.9rem}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);
+    vertical-align:top;line-height:1.45}
+  thead th{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:500;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+    border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.k{font-family:Archivo,sans-serif;font-weight:600;color:var(--ink);white-space:nowrap}
+  td.num{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td em{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.86em;color:var(--accent)}
+
+  pre{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:15px 17px;overflow-x:auto;font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;line-height:1.6;color:var(--ink-2);margin:0}
+  code{font-family:"JetBrains Mono",monospace;font-size:.86em}
+
+  ul.tight,ol.tight{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:7px}
+  ul.tight li,ol.tight li{font-size:.97rem;line-height:1.5;color:var(--ink-2)}
+  ul.tight li::marker,ol.tight li::marker{color:var(--rule-strong)}
+  ul.tight li strong,ol.tight li strong{color:var(--ink)}
+
+  .callout{background:var(--accent-soft);border:1px solid var(--rule);border-radius:3px;
+    padding:19px 22px;display:flex;flex-direction:column;gap:9px}
+  .callout h3{color:var(--ink)}
+  .callout p{font-size:.98rem;line-height:1.55;color:var(--ink-2)}
+
+  .flag{display:flex;gap:11px;align-items:baseline;padding:12px 15px;background:var(--surface);
+    border:1px solid var(--rule);border-left:2px solid var(--accent);border-radius:0 3px 3px 0}
+  .flag.go{border-left-color:var(--go)}
+  .flag.stop{border-left-color:var(--stop)}
+  .flag .lbl{font-family:"JetBrains Mono",monospace;font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent);white-space:nowrap;font-weight:500}
+  .flag.go .lbl{color:var(--go)}
+  .flag.stop .lbl{color:var(--stop)}
+  .flag span:last-child{font-size:.93rem;line-height:1.5;color:var(--ink-2)}
+
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+  .card{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:17px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+  .card .tag{font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted)}
+  .card p{font-size:.92rem;line-height:1.5;color:var(--ink-2)}
+
+  .qa{display:flex;flex-direction:column;gap:14px}
+  .qa-item{padding-bottom:14px;border-bottom:1px dashed var(--rule);display:flex;flex-direction:column;gap:6px}
+  .qa-item:last-child{border-bottom:0;padding-bottom:0}
+  .qa-item p{font-size:.95rem;line-height:1.5;color:var(--ink-2)}
+  .qa-item p b{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--go);font-weight:500;margin-right:7px}
+
+  footer{padding-block:34px 58px;color:var(--muted);font-size:.88rem;line-height:1.6}
+  @media (max-width:620px){body{font-size:16px}section{padding-block:36px}.mast-inner{padding-block:40px 30px}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+
+<style>
+@page { size: Letter; margin: 16mm 14mm 18mm 14mm; }
+html, body { background:#fff !important; }
+body { margin:0 !important; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+nav.toc, .toc { display:none !important; }
+h1,h2,h3,h4 { break-after: avoid; page-break-after: avoid; }
+table, pre, .flag, .callout, .card, figure { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; }
+h2 { break-before: page; page-break-before: page; }
+h2:first-of-type { break-before: auto; page-break-before: auto; }
+pre { white-space: pre-wrap; word-wrap: break-word; font-size: 9pt !important; }
+table { font-size: 9.5pt !important; width:100% !important; table-layout: fixed; }
+td, th { word-wrap: break-word; overflow-wrap: anywhere; }
+body, p, li { font-size: 10.5pt; }
+a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <span class="eyebrow">Complete Working Record</span>
+    <h1>A NEXT GENT Playbook</h1>
+    <p class="lede">Everything from one long working session: the thesis, the machine, the
+      architecture and why, the products, the economics, the go-to-market, the brand, the open
+      decisions, and what to do first.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><span class="n">01</span><a href="#thesis">The thesis</a></li>
+    <li><span class="n">02</span><a href="#selling">What you're selling</a></li>
+    <li><span class="n">03</span><a href="#machine">The machine, end to end</a></li>
+    <li><span class="n">04</span><a href="#arch">Architecture decisions</a></li>
+    <li><span class="n">05</span><a href="#unsolved">The six unsolved problems</a></li>
+    <li><span class="n">06</span><a href="#data">The data plane</a></li>
+    <li><span class="n">07</span><a href="#products">Products and verticals</a></li>
+    <li><span class="n">08</span><a href="#money">Economics and pricing</a></li>
+    <li><span class="n">09</span><a href="#gtm">Go to market</a></li>
+    <li><span class="n">10</span><a href="#brand">Brand and narrative</a></li>
+    <li><span class="n">11</span><a href="#position">Competitive position</a></li>
+    <li><span class="n">12</span><a href="#stack">The stack</a></li>
+    <li><span class="n">13</span><a href="#ibm">IBM / Red Hat findings</a></li>
+    <li><span class="n">14</span><a href="#modular">Modularity rules</a></li>
+    <li><span class="n">15</span><a href="#open">Open decisions</a></li>
+    <li><span class="n">16</span><a href="#ip">IP, credit and priority</a></li>
+    <li><span class="n">17</span><a href="#founder">Founder assets</a></li>
+    <li><span class="n">18</span><a href="#risks">Risks</a></li>
+    <li><span class="n">19</span><a href="#next">What to do next</a></li>
+    <li><span class="n">20</span><a href="#refs">Code and companions</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1 ============ -->
+<section id="thesis">
+  <div class="sec-head">
+    <span class="eyebrow">01</span>
+    <h2>The thesis</h2>
+  </div>
+  <div class="col stack">
+    <p><strong>You are selling churn absorption.</strong> Red Hat's subscription is not access to
+      Linux — it's a promise to absorb upstream churn so an enterprise never has to. Customers renew
+      because upstream never stops moving.</p>
+    <p>Your upstream is the user interfaces of the apps a small business runs on. Toast redesigns the
+      hours screen. Square moves a button. Google Business ships a new layout. Every DIY automation
+      in America breaks silently and the owner finds out from an angry customer at a locked door.</p>
+    <p>Yours breaks too — for about six hours.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <pre>1  a vendor ships a UI change
+2  post-action verification fails across the fleet — you know first
+3  you re-map that one flow, once
+4  signed, pushed to every customer overnight
+5  nobody noticed anything happened</pre>
+    <p>The flow library is <strong>shared</strong>. Mapping Toast's hours screen costs the same
+      whether you have four customers or four hundred. Marginal cost of the 401st Toast customer is
+      near zero; value to them is identical.</p>
+    <p class="note">App UIs change far more often than kernels do. That makes this a stronger
+      recurring business than the one it's modeled on.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>The fourteen-year insight</h3>
+    <p>The hard part of a directory or a search engine was never the index. It was the data. What
+      changed isn't storage — it's that every business now <em>receives</em> its own structured
+      operational data by email, and runs apps that can be operated. <strong>The acquisition
+      mechanism is what was missing.</strong></p>
+    <p>The 2013 framing still holds, unchanged, and it's the pitch:</p>
+    <div class="callout">
+      <p>"Nobody cares about 1.8 trillion search results. They have a faucet leak. They need a
+        plumber <strong>now.</strong>"</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="selling">
+  <div class="sec-head">
+    <span class="eyebrow">02</span>
+    <h2>What you're selling</h2>
+    <p class="note">One foundation, many sellable surfaces. A customer can start with a QR menu and
+      end up on the full operating environment without you rebuilding anything.</p>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag">Platform</span>
+      <h3>A NEXT GENT</h3>
+      <p>The operating environment: identity, workspaces, Constitution, permissions, agents,
+        capabilities, apps, data, automations, devices, proof history. The model underneath is
+        replaceable.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Hardware</span>
+      <h3>Ghost</h3>
+      <p>The physical node. Optional — a deployment of A NEXT GENT, not the platform itself.
+        Version one: <em>the Ghost of Lisa</em>.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Data</span>
+      <h3>CyberCheck</h3>
+      <p>Canonical structured business truth with provenance and controlled public/private exposure.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Data</span>
+      <h3>Quantum Warehouse</h3>
+      <p>Source crosswalks, normalization, history, reconciliation. How you know, where it came
+        from, which source is authoritative.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Ecosystem</span>
+      <h3>VAPPS + App Store</h3>
+      <p>Capability packages. Developers build once against stable capabilities; any business grants
+        access in one tap. 0% to developers.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Directory</span>
+      <h3>GCR</h3>
+      <p>Local discovery powered by verified, consented, item-level business truth. The consumer
+        side of the same data plane.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Four businesses on one foundation</h3>
+    <ul class="tight">
+      <li><strong>Software</strong> — apps, assistants, websites, booking, menus, reviews, loyalty</li>
+      <li><strong>Hardware / managed computing</strong> — Ghost, Android execution, voice stations, displays</li>
+      <li><strong>Platform / developer</strong> — VAPPS, App Store, SDK, marketplace, APIs, certification</li>
+      <li><strong>Data / network</strong> — CyberCheck, Quantum Warehouse, GCR, partner and chamber networks, agent-accessible business truth</li>
+    </ul>
+    <p class="note">Same identity, same workspace, same Constitution, same capability registry, same
+      execution layer, same verification, same ledger. Four revenue lines, one backend.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="machine">
+  <div class="sec-head">
+    <span class="eyebrow">03</span>
+    <h2>The machine, end to end</h2>
+  </div>
+
+  <div class="col stack">
+    <h3>Four machines</h3>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Where</th><th>What lives there</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Workstation</td><td>Flow mapping and factory. Maestro Studio, appium-inspector, trailblaze, browser-use, syft, grype, Tekton. <strong>Never ships.</strong></td></tr>
+        <tr><td class="k">Cloud</td><td>Quay, Pulp, Katello, Foreman, flightctl, Candlepin, rekor, Zitadel, Postgres, Lago.</td></tr>
+        <tr><td class="k">Box</td><td>bootc OS, Podman, zot mirror, llama.cpp, litellm, ContextForge, uiautomator2, Playwright, Wyoming, SpiceDB, node agent.</td></tr>
+        <tr><td class="k">Phone</td><td>$40 Android, their SIM, their logins, TextBee, accessibility service. <strong>You don't ship it.</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>One request, all the way through</h3>
+    <pre>owner texts "post tonight's special"
+  ↓  TextBee — phone, real SIM
+  ↓  litellm → local model  →  capability + arguments
+  ↓  Zitadel (who) → SpiceDB (may they)
+  ↓  risk tier → medium → run and notify
+  ↓  execution-router: Facebook has no usable API here → Android
+  ↓  uiautomator2 replays the AppMap — fingerprint checked first
+  ↓  Playwright reads the public page back — different path than wrote
+  ↓  expected == observed → screenshot + post ID → Proof Ledger
+  ↓  SMS back: "Posted ✓ verified — ACT-20260913-00814"</pre>
+    <p>Every layer is a separate container. Swap llama.cpp for vLLM, uiautomator2 for Artemis,
+      SpiceDB for OpenFGA — nothing above or below changes.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>The four ingestion surfaces</h3>
+    <ul class="tight">
+      <li><strong>Email</strong> — every vendor already sends the business daily summaries, receipts and review notifications. Universal, free, and they can't turn it off without breaking their own product.</li>
+      <li><strong>QR menu</strong> — your own sensor. Scan time, table, dwell, what they browsed. No POS generates this.</li>
+      <li><strong>Remote control</strong> — reading state off apps that have no feed.</li>
+      <li><strong>Owner text-back</strong> — the daily toggle. "Catch of the day?" "Still have grouper? Y/N."</li>
+    </ul>
+    <div class="flag" style="margin-top:6px"><span class="lbl">Note</span><span>That text thread is
+      the heartbeat. Freshness is what every downstream surface is worth. If they stop replying,
+      the menu, the website, the directory and the phone agent all decay — and stale data poisons
+      faster than no data.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Session reconstruction</h3>
+    <pre>19:04  scan        table 12
+19:04  browse      apps → entrées, 90s on seafood
+19:11  order       calamari, shrimp scampi, 2 bushwhackers
+20:02  checkout    $94.20
+20:15  text        "how was the scampi?"
+20:19  review      4.9 — verified, item-level</pre>
+    <p>Four sources joined into one <strong>visit</strong>. Toast doesn't know about the scan. Google
+      doesn't know what they ate. You know all of it and the business owns it.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="arch">
+  <div class="sec-head">
+    <span class="eyebrow">04</span>
+    <h2>Architecture decisions and why</h2>
+  </div>
+
+  <div class="col stack">
+    <h3>Image-based OS, not package-based</h3>
+    <p>Where the system's state lives — and who assembles it — decides your support cost and what you
+      can promise a buyer.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th></th><th>Regular Linux</th><th>Curated mutable</th><th>Image-based</th></tr></thead>
+      <tbody>
+        <tr><td class="k">State assembled</td><td>on the device</td><td>on the device</td><td><strong>in your CI</strong></td></tr>
+        <tr><td class="k">Machines identical</td><td>no</td><td>roughly</td><td><strong>byte-identical</strong></td></tr>
+        <tr><td class="k">Update unit</td><td>~2,000 packages</td><td>packages + migrations</td><td><strong>1 signed image</strong></td></tr>
+        <tr><td class="k">Can fail halfway</td><td>yes</td><td>yes</td><td><strong>no</strong></td></tr>
+        <tr><td class="k">Rollback</td><td>none</td><td>manual, partial</td><td><strong>automatic, invisible</strong></td></tr>
+        <tr><td class="k">Migration debt</td><td>n/a</td><td>grows forever</td><td><strong>zero</strong></td></tr>
+        <tr><td class="k">Scales with</td><td colspan="2">machines × configs × versions × hardware</td><td><strong>number of SKUs</strong></td></tr>
+        <tr><td class="k">Subscription gating</td><td>hard — whole repo</td><td>hard — whole repo</td><td><strong>trivial — one pull</strong></td></tr>
+        <tr><td class="k">10-year promise</td><td>sort of</td><td>no — rolling release</td><td><strong>yes</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:18px">
+    <p class="note">The row that matters most is the second-to-last. Support cost in the first two
+      columns grows combinatorially; in the third it grows linearly with SKU count. That's the
+      difference between hiring your way to 100,000 customers and drowning at 5,000.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>The two rules the runner never bends</h3>
+    <div class="flag go"><span class="lbl">Rule 1</span><span><strong>Fingerprint before acting.</strong>
+      One or two elements must be on screen before the first tap. If they're not, stop and report
+      DRIFTED. An app redesign fails loudly on the first machine instead of quietly changing the
+      wrong field on four hundred.</span></div>
+    <div class="flag go" style="margin-top:10px"><span class="lbl">Rule 2</span><span><strong>Read
+      the result back, on a different path than you wrote it.</strong> Wrote via Android, verify via
+      browser. If the verifier is the executor, you've built self-certification with extra steps.
+      No verify block, no OK.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Publish, don't push</h3>
+    <p>Never build a pipe into the customer's machine. You publish a signed image to a registry; the
+      device polls, checks the signature, and decides. <strong>You cannot be compelled to do
+      something you have no mechanism to do.</strong> No government, plaintiff, or attacker with your
+      credentials can target one customer, because targeting doesn't exist in the architecture.</p>
+    <p>Prove it with a <strong>public transparency log</strong> (rekor). Devices refuse anything not
+      publicly logged, so a targeted build would have to be published to the world first. That turns
+      "trust us" into "you don't have to."</p>
+    <div class="flag" style="margin-top:4px"><span class="lbl">Better use</span><span>Put the
+      transparency log on <strong>constitution versions and AppMap promotions</strong>, not just OS
+      images. Those are the claims that actually need third-party verification.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Take money without taking identity</h3>
+    <p>Billing knows who paid. The update service knows only that <em>a</em> valid subscriber asked.
+      Blind-signed tokens (Privacy Pass — deployed in production by Cloudflare and Apple) make the
+      link mathematically impossible, even for you.</p>
+    <p>"I don't hold your data" stops being a policy that changes when a board changes, and becomes
+      a property of the system. You couldn't produce a user list under subpoena because you don't
+      have one.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>The agent is deliberately dumb</h3>
+    <p>Intent → column → answer. No generative step means no hallucinated price. Same strict schema
+      for every business in a vertical means no per-customer prompts, no per-customer tuning, no
+      per-customer regressions — and no training.</p>
+    <p><strong>The schema is the product. The model is a lookup.</strong> Anyone can buy the voice
+      layer for five cents a minute. Nobody can buy columns that are correct right now.</p>
+    <ul class="tight" style="margin-top:6px">
+      <li><strong>Never guess.</strong> Off-schema means a clean handoff plus a text to the owner. Never a plausible-sounding answer.</li>
+      <li><strong>Log every unknown.</strong> After 500 calls across 20 businesses that log <em>is</em> the complete schema for that vertical, ranked by real demand. Free roadmap.</li>
+      <li><strong>Show freshness.</strong> Every fact carries an observation timestamp. Stale beyond threshold, it degrades to "let me check."</li>
+      <li><strong>Answer fast, execute slow.</strong> Voice needs sub-800ms. If booking needs remote control (10–20s), confirm immediately, hold the slot against your own inventory, complete in the background.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Local models: the right shape</h3>
+    <p>Disk isn't the constraint — RAM and load time are. An 8B model at 4-bit is ~5GB and 2–8
+      seconds to load. Eight seconds of "loading the cooking model" is a dead product.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Tier</th><th>What's there</th><th>Swap cost</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Always resident</td><td>1–3B router + embedding model</td><td class="num">never unloads</td></tr>
+        <tr><td class="k">Hot</td><td>one strong 8–30B base, permanently in RAM</td><td class="num">never unloads</td></tr>
+        <tr><td class="k">Instant</td><td>LoRA adapters — legal, medical, code, cooking, finance</td><td class="num">~200ms</td></tr>
+        <tr><td class="k">On demand</td><td>genuinely distinct models — vision, speech, big coding</td><td class="num">5–20s, honest UI</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:16px">
+    <p>50 specializations as adapters cost ~5GB instead of ~400GB, and swap in 200ms instead of 8
+      seconds. Ship 150–250GB of curated models and adapters, not 1TB.</p>
+    <p class="note">Hardware implication: unified memory is the only affordable way to give a GPU
+      64–128GB. AMD Strix Halo (Ryzen AI Max+) with in-tree amdgpu keeps the single-image OS clean —
+      that's an architecture decision, not a benchmark one. Ignore NPU TOPS claims; NPUs are
+      near-useless for LLM inference today.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="unsolved">
+  <div class="sec-head">
+    <span class="eyebrow">05</span>
+    <h2>The six unsolved problems</h2>
+    <p class="note">Specified across the documents but not solved, and no repo in the 643-item census
+      solves them for you. These are the ones that will break the build.</p>
+  </div>
+
+  <div class="col stack">
+    <h3>1. Capabilities defined by postcondition, not action</h3>
+    <p><code>menu.update_price</code> runs via API on the website, a browser map on Google, an Android
+      route on Toast. If the capability is a <em>sequence of steps</em>, you get three unrelated
+      implementations and no way to say whether they did the same thing.</p>
+    <p><strong>A capability is a state assertion plus a set of executors that attempt to bring it
+      about.</strong></p>
+    <pre>capability: menu.update_price
+postcondition:
+  subject:        menu_item{id}
+  predicate:      price == $18.99
+  surfaces:       [website, google, facebook, qr_menu]
+  observable_by:  [api.read, browser.read, android.read]</pre>
+    <p>Executors become interchangeable by construction and verification is derived from the contract
+      instead of written per-executor. This is the change that makes the execution-router coherent
+      rather than a switch statement.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>2. Verification has three states, and must run on a different executor</h3>
+    <ul class="tight">
+      <li><strong>Propagation delay.</strong> Google Business doesn't reflect a change instantly. Read back immediately and you record a false FAILED. Every capability needs a <strong>settle window</strong> and retry-until-stable before it asserts anything.</li>
+      <li><strong>Partial application.</strong> Price landed on 2 of 4 surfaces. Not VERIFIED, not FAILED.</li>
+      <li><strong>Unsafe re-read.</strong> Some actions can't be probed without cost or side effect.</li>
+    </ul>
+    <p>Result type is <code>VERIFIED | UNVERIFIABLE_YET | CONTRADICTED | PARTIAL</code>, and
+      <code>UNVERIFIABLE_YET</code> is a schedulable state, not an error.</p>
+    <div class="flag go" style="margin-top:6px"><span class="lbl">Structural</span><span>The verifier
+      must not be the executor. If the browser map both writes and reads the Facebook page, that's
+      self-certification with extra steps. Write via Android, verify via browser. The independence
+      <em>is</em> the proof.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>3. Failure is the unbuilt half</h3>
+    <p>Every document is about proving success. Operationally the money is in what happens on
+      CONTRADICTED. Three things missing from the capability spec:</p>
+    <ul class="tight">
+      <li><strong>Idempotency keys.</strong> A retry must not double-post, double-charge or double-book. Every ActionSpec carries one; every executor honors it. Without this, retry is a liability.</li>
+      <li><strong>Compensating actions.</strong> A price change applied to 2 of 4 destinations is <em>worse</em> than one that failed cleanly — the business is inconsistent and nobody knows. Each capability declares its compensation: roll the two back, or drive the other two forward. Pick one per capability, in the manifest.</li>
+      <li><strong>Escalation thresholds.</strong> Which failure, after how many executor attempts, becomes an SMS rather than another retry. A policy value, not a constant.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>4. AppMap versioning — the moat's hard problem</h3>
+    <p>scrcpy and Maestro are commodity. The accumulated map — routes, fingerprints, recovery states,
+      reliability stats per app per capability — can't be bought, and improves for every customer when
+      one breaks. The unsolved part is binding.</p>
+    <ul class="tight">
+      <li><strong>Pre-flight fingerprint.</strong> Before acting, hash the screen's structural signature and compare to what the map expects. Mismatch means stop and escalate to the AI executor — <em>not</em> proceed and hope. Acting on an unrecognized screen is how you change the wrong field.</li>
+      <li><strong><code>app_version × map_version</code> as the registry key</strong>, not <code>app → map</code>.</li>
+      <li><strong>A promotion pipeline with a gate.</strong> AI discovers the new route → replays in sandbox against a known state → canary on a small slice → promoted to deterministic. The gate criteria decide whether a bad map reaches 400 customers.</li>
+    </ul>
+    <pre>Facebook / publish_post / browser task pattern
+  success   9,821 / 9,847     verified 99.72%    4.1s    $0.002
+
+Facebook / publish_post / AI GUI agent
+  success     903 / 1,000     verified 90.3%    17.0s    $0.080</pre>
+    <p class="note">When deterministic reliability falls, route to the AI executor, learn the changed
+      workflow, test it, promote a repaired deterministic pattern. Those numbers seed the
+      execution-router's scoring — use <code>android_world</code> to generate them rather than guessing.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>5. CyberCheck needs a conflict resolution policy</h3>
+    <p>Keeping conflicting observations instead of overwriting is the best idea in the documents. But
+      <code>confidence = 0.95</code> has to come from somewhere.</p>
+    <pre>Observed
+  Google    Friday close = 9 PM    observed 5:34 PM
+  Facebook  Friday close = 10 PM   observed 5:36 PM
+  Website   Friday close = 10 PM   observed 5:37 PM
+
+Canonical
+  Friday close = 10 PM   confidence 0.95   last verified 5:40 PM</pre>
+    <ul class="tight">
+      <li><strong>Per-field source ordering.</strong> Menu prices: POS &gt; website &gt; Google &gt; Facebook. Hours: owner declaration beats everything. A table you write once per field class.</li>
+      <li><strong>Staleness decay.</strong> Forty minutes old outranks six days old; both decay toward unknown.</li>
+      <li><strong>Escalation rule.</strong> Two high-trust sources disagreeing past a threshold is an owner question, not an automatic resolution. Silently picking a winner is how you confidently publish the wrong price.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>6. Put the transparency log where it matters</h3>
+    <p>Signed OS images are table stakes. The externally-verifiable claims that actually matter are
+      <strong>which constitution version authorized an action</strong> — with proof that version
+      existed then and wasn't written retroactively — and <strong>which AppMap version was promoted,
+      when, on what evidence.</strong></p>
+    <p>That turns the Proof Ledger from something you assert into something a third party can check.
+      It also answers the constitution service's in-flight problem: an action binds to a constitution
+      version at ActionSpec creation and carries it to completion even if the owner amends mid-task,
+      and the amendment is logged with its own timestamp so the sequence is provable.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>The policy decision ladder</h3>
+    <pre>ALLOW                    standing rules clearly permit — continue
+ALLOW_WITH_CONSTRAINTS   only this resource, amount, recipient, window
+REQUIRE_APPROVAL         human, task-bound, expiring, single-use
+DENY                     never, regardless of who asks</pre>
+    <ul class="tight">
+      <li>No agent may expand its own authority. Possession of a tool, model, credential, device or network connection does not imply permission to use it.</li>
+      <li>A model recommendation is not an authorization decision.</li>
+      <li>Raw credentials are never implied by permission to perform a capability.</li>
+      <li>Agents request by scope and purpose, never reaching directly into stores.</li>
+      <li>Execution success is not proof of outcome — postcondition verification stays separate.</li>
+      <li>Human approval is narrow, task-bound, expiring and single-use unless the owner explicitly changes the standing rule.</li>
+      <li>Even a full-authority agent routes privileged requests through the gateway, so access, actions, data released and resulting proof are documented. Full authority means policy auto-allows within scope — not bypassing the audit path.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="data">
+  <div class="sec-head">
+    <span class="eyebrow">06</span>
+    <h2>The data plane</h2>
+  </div>
+  <div class="col stack">
+    <div class="callout">
+      <h3>The gate is closed at the vendor. It's wide open at the business.</h3>
+      <p>Toast won't give you an API. But Toast already sends that restaurant a daily summary, a
+        receipt for every order, and a notification for every review — into an inbox the business
+        owns. Nobody can block that without breaking their own product.</p>
+      <p>Collect at the business, not at the vendor. It works for every vendor at once, including the
+        ones that don't exist yet.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>A consented data plane, federated</h3>
+    <p>Not a data aggregator. The business is the holder; it grants scoped access and revokes it. You
+      never own a central pile — which is why businesses say yes, and why "decentralized" is
+      accurate rather than marketing.</p>
+    <pre>ingestion   Tika / Docling parse, langextract structures
+mapping     Quantum Warehouse — which field means what, where from
+truth       CyberCheck — canonical, with provenance
+grant       capability-registry + policy-engine — one-tap approve
+wire        MCP and A2A</pre>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Developers get answers, never rows</h3>
+    <pre>developer app  →  "offer 15% to anyone who ordered scampi in 90 days"
+                     ↓  A2A
+business agent →  runs locally against local data
+                     ↓
+returns        →  "sent to 312"</pre>
+    <p>They never learn who, never learn numbers, never learn what else was ordered. Five things
+      enforce it:</p>
+    <ol class="tight">
+      <li><strong>Capabilities defined without data in the signature.</strong> <code>offer.send_to_cohort</code> returns a count. <code>customers.list</code> doesn't exist.</li>
+      <li><strong>Developer logic runs in WASM with no network egress</strong> — Extism + wasmtime. Only approved host functions. The code physically cannot phone home.</li>
+      <li><strong>Scoped, revocable, time-bounded grants</strong> — per purpose, visible in the owner UI, one tap to kill.</li>
+      <li><strong>A2A as the hop</strong> — capability invocation, not data transfer.</li>
+      <li><strong>Every access in the Proof Ledger</strong> — which developer, which capability, what came back.</li>
+    </ol>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <div class="flag stop"><span class="lbl">The leak</span><span><strong>The return value is the
+      attack surface.</strong> Enough narrow questions reconstructs the dataset — "how many ordered
+      scampi," filtered a thousand ways, rebuilds the customer list one count at a time, and every
+      query looks harmless. Fix by shaping returns: minimum cohort size (10–25), rate and query
+      budget per grant, aggregates-only for analytics scopes, and enumeration-pattern detection in
+      the ledger. Solved in principle, almost never implemented — doing it properly is a real
+      differentiator.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Machine-readable or invisible</h3>
+    <p>A restaurant's menu as a PDF is invisible to AI. Emit four surfaces on every business page:</p>
+    <ul class="tight">
+      <li><strong>Schema.org JSON-LD</strong> — Restaurant, Menu, MenuItem, Offer, AggregateRating, OpeningHoursSpecification, Reservation</li>
+      <li><strong>/.well-known/agent-card.json</strong> — A2A discovery</li>
+      <li><strong>An MCP endpoint</strong> — for agents that ask rather than scrape</li>
+      <li><strong>llms.txt</strong> — costs nothing</li>
+    </ul>
+    <p>Per-dish AggregateRating backed by verified reviews is the part nobody can fake.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Agent analytics — a product nobody sells</h3>
+    <pre>This month, AI agents asked about your business 1,247 times
+
+  hours / open now              412
+  menu items                    338
+  availability tonight          201
+  gluten-free options            94   ← no data here
+  parking                        67   ← no data here
+  dog friendly                   41   ← no data here</pre>
+    <p>Google Analytics says someone visited. This says what they wanted to know. For the owner
+      that's the renewal. For you, aggregated across 200 businesses, it's a demand-ranked schema
+      roadmap.</p>
+    <p class="note">Public JSON-LD is free and anonymous. The richer MCP/A2A surface requires
+      identification — live availability, item ratings, the ability to book. Good trade for the
+      agent, and the agents that matter end up identified.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="products">
+  <div class="sec-head">
+    <span class="eyebrow">07</span>
+    <h2>Products and verticals</h2>
+  </div>
+
+  <div class="col stack">
+    <h3>Real-time availability — the biggest one</h3>
+    <p>A charter doing $400K/yr through FareHarbor at 20% pays <strong>$80,000 a year in
+      commission.</strong> They pay it because their own website can't show real availability. Shift
+      30% to direct and they save $24,000. Your $499/mo is $6,000.</p>
+    <div class="flag go"><span class="lbl">Sales call</span><span>4:1 return on one line item,
+      provable from their own statements. Not "saves you time" — "here's twenty-four thousand
+      dollars."</span></div>
+    <pre>declared capacity     6 jet skis
+FareHarbor email      2 booked 10:00–12:00     → 4 left
+Booking.com email     1 booked 10:30–12:30     → 3 left
+cancellation email    1 released               → 4 left</pre>
+    <p><strong>FareHarbor doesn't know about the Booking.com reservation.</strong> You're the only
+      thing that sees all channels at once.</p>
+    <ul class="tight" style="margin-top:6px">
+      <li><strong>Email lag</strong> — confirmations arrive 30s–2min late. Hold a safety slot; show 4 when you have 5.</li>
+      <li><strong>Walk-ins generate no email</strong> — one-tap decrement on the owner's phone or the wall screen. Design it before launch.</li>
+      <li><strong>Template churn</strong> — fingerprint the format, fail loudly, re-map once, push to everyone.</li>
+      <li><strong>Drift</strong> — reconcile by reading real platform state through the remote control on a schedule. Your verification layer applied to inventory.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Verified item-level reviews</h3>
+    <p>The box reads the POS. It knows who, when, and exactly what. The review is tied to a real
+      receipt with real line items — not "4 stars, good food."</p>
+    <pre>Chicken Alfredo      4.7   ·  312 verified orders
+Shrimp Scampi        4.9   ·  188 verified orders
+Calamari             4.2   ·  241 verified orders
+Bushwhacker          4.8   ·  906 verified orders</pre>
+    <p>That's a dataset, not a feature. It feeds the QR menu, the public page, the owner's margin
+      decisions, the directory, and recommendations. Accumulated across a region it's unrebuildable.</p>
+    <p>The ask writes itself: <em>"Hey Bob — how was the chicken alfredo?"</em> gets answered.
+      <em>"How was your visit?"</em> doesn't.</p>
+    <ul class="tight" style="margin-top:6px">
+      <li><strong>Host it first.</strong> Reviews live in CyberCheck and on your surfaces. Syndication out is downstream and optional. Build it the other way and you're a review-request tool that owns nothing.</li>
+      <li><strong>Never comp for a review.</strong> The instant there's an incentive the ratings are worth less, and being trustworthy is the entire value. A real 4.2 beats a fake 4.8.</li>
+      <li><strong>Publish only on completed visits</strong> — verified by POS ticket or QR scan.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>The phone assistant</h3>
+    <p>Every AI phone agent on the market fails on <strong>data, not voice.</strong> They're grounded
+      on a static menu PDF and a hardcoded hours string from setup day, so they quote March's price
+      and offer a booked slot. The business turns it off in three weeks.</p>
+    <p>Voice is $0.05/minute and commodity. You own the half nobody has: live availability, current
+      prices from the POS, today's hours, what's 86'd.</p>
+    <p class="note">A restaurant misses 20–40% of calls during rush. An answering service is
+      $200–500/mo and can only take a message. Yours books revenue.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Remote phone access</h3>
+    <p>Most small business owners carry an iPhone and physically cannot run Android-only business
+      apps. The handset lives in the cradle at the shop; they see and touch it from their iPhone
+      anywhere. <strong>That's a reason to buy the box before any AI does anything.</strong></p>
+    <pre>ws-scrcpy       browser front-end, screen + touch, works in iOS Safari
+scrcpy + adb    over the network instead of USB
+headscale       phone app → box → handset, point-to-point encrypted</pre>
+    <p>Same connection the agent uses, so human takeover is free — and what they do by hand becomes
+      a new AppMap.</p>
+    <p class="note">Multi-account ceiling: Android work profile or OEM app cloning handles two
+      instances comfortably. Five separate Airbnb logins needs more handsets — design the cradle for
+      two or three from the start.</p>
+    <ul class="tight" style="margin-top:6px">
+      <li>Device-bound auth, enrolled once, keyed to the box</li>
+      <li>Nothing on your servers — the relay is the mesh</li>
+      <li>Every session in the ledger, visible to the owner</li>
+      <li>A physical kill switch on the box</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>SMS from their own SIM</h3>
+    <p>Every SMS marketing platform's margin <em>is</em> the per-message markup. Yours is zero — it's
+      the customer's SIM on their plan. And the box already has the list, because it's reading
+      bookings, POS, reviews and calls.</p>
+    <p>"No per-message fees, ever" is a sentence no competitor can say.</p>
+    <div class="flag"><span class="lbl">Watch</span><span>Carriers throttle bulk sending from a
+      person-to-person line — low hundreds per day before deliverability degrades. Split it: own SIM
+      for conversational, 1:1, approvals and small batches; a registered A2P route behind the same
+      interface for real blasts. Test the actual daily ceiling before putting a number in
+      marketing.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Artist song requests</h3>
+    <p>QR on the stage → landing page → request + tip → confirmation email parsed → identity tied to
+      request. Zero new architecture.</p>
+    <p>Fifty artists playing 4–6 nights a week to 100–300 people is roughly <strong>30,000
+      impressions a week</strong>, in venues, with people holding their phones in spending mode. Give
+      the artist product away entirely — they're the channel, not the revenue.</p>
+    <div class="flag go"><span class="lbl">Flywheel</span><span>The QR stands in a bar every Friday.
+      The owner watches it work and asks the musician what it is. <strong>Sign artists to sell
+      bars.</strong></span></div>
+    <p class="note">Don't process the tips. Let them use their own Venmo or Cash App — free between
+      people, "you keep 100% of your tips," and the confirmation email still gives you the
+      tie-together. Same mechanism as everything else.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Three consumer queries nobody can answer</h3>
+    <ul class="tight">
+      <li><strong>"Who has crab legs nearby?"</strong> — menu data is in PDFs, behind logins, or stale on Google</li>
+      <li><strong>"Who's playing live tonight?"</strong> — Bandsintown and Facebook events are stale and incomplete</li>
+      <li><strong>"Two bed two bath at Silver Shells, these dates"</strong> — nobody lets you search by <em>complex</em>, which is how beach markets actually search</li>
+    </ul>
+    <p>Same machine answers all three. The third is the highest value — the transaction behind it is
+      $2,500, not $90.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Cross-business recommendations</h3>
+    <p>This person had the grouper at A, the scampi at B, rated both — recommend the snapper at C.
+      Yelp has reviews but not verified purchases. Google knows you visited but not what you ordered.</p>
+    <p class="note">Useless until a market is dense. Twenty restaurants in one town works; two
+      hundred across three states is noise.</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="money">
+  <div class="sec-head">
+    <span class="eyebrow">08</span>
+    <h2>Economics and pricing</h2>
+    <p class="note">Price against what you replace, not against a laptop. Your comps are
+      Yext ($199–999/yr), Birdeye / Podium / SOCi ($250–500/mo), a part-time VA ($1,500–3,000/mo),
+      an answering service ($200–500/mo). Those manage listings. You execute.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Line</th><th>Price</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Software</td><td class="num">$249 / mo</td><td>Their hardware, their phone. Core flows, approval queue, SMS interface.</td></tr>
+        <tr><td class="k">Ghost</td><td class="num">$499 / mo</td><td>Box + handset, $0 down, 24-month term. Unlimited flows, voice, phone line, priority support.</td></tr>
+        <tr><td class="k">Multi-location</td><td class="num">+$299 / mo</td><td>Each additional location.</td></tr>
+        <tr><td class="k">Regulated</td><td class="num">$799 / mo</td><td>Clinics, firms. Retention controls, compliance logging, SLA.</td></tr>
+        <tr><td class="k">Onboarding</td><td class="num">$1,500–3,000</td><td>One-time. Connect accounts, map flows, configure, public pages. Filters tire-kickers.</td></tr>
+        <tr><td class="k">Custom AppMap</td><td class="num">$500–2,000</td><td>Weird vertical app. You map it and maintain it.</td></tr>
+        <tr><td class="k">Developers</td><td class="num">0%</td><td>Say it loudly. Apple takes 30%. It's marketing.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <p><strong>Bundle the hardware.</strong> $2,495 up front gets "let me think about it." $499/mo
+      gets a yes. Toast, ADT and every successful small-business hardware play does it this way.</p>
+    <div class="flag"><span class="lbl">Pricing</span><span>Start at $499, not $249. Same sales
+      call, same support load. If nobody pushes back you priced too low, and you can always discount
+      the first ten for proof. You can't raise on people you signed cheap.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Transactions — 0% direct, a cut on what you bring</h3>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Booking came from</th><th>You take</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Their own website</td><td><strong>0%</strong> — they just pay Stripe 2.9% + $0.30</td></tr>
+        <tr><td class="k">Your directory</td><td>X% — you keep it</td></tr>
+        <tr><td class="k">Partner directory</td><td>X% — split with them</td></tr>
+        <tr><td class="k">Revenue you created</td><td><strong>10%</strong> — refills, last-minute, cancellations filled</td></tr>
+        <tr><td class="k">FareHarbor / Booking.com</td><td><strong>nothing.</strong> Don't chase it, don't invoice.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:18px">
+    <p><em>"I don't take a cut of your existing business. Only what I bring you."</em> Structurally
+      aligned instead of taxing them — and the partner split makes other directories <em>want</em> to
+      carry your data, which funds distribution.</p>
+    <div class="flag stop"><span class="lbl">Never</span><span>A cut you have to invoice for is the
+      worst of both worlds. If the booking happened on FareHarbor, the money lands in the business's
+      account and you're sending invoices to a charter captain in February. Own the rail for
+      bookings you create; take nothing on the rest.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Payment facilitation — the real long-term line</h3>
+    <p>Standard model. Toast, Square, Shopify Payments all negotiate wholesale and resell blended.
+      Stripe Connect supports it natively — <code>application_fee_amount</code> is your spread.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th></th><th>Your cost</th><th>You charge</th><th>Spread</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Card present</td><td class="num">~1.8–2.1%</td><td class="num">2.9%</td><td class="num"><strong>0.8–1.1%</strong></td></tr>
+        <tr><td class="k">Online booking</td><td class="num">~2.4–2.7%</td><td class="num">2.9% + $0.30</td><td class="num"><strong>0.2–0.5%</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:18px">
+    <p class="note"><strong>1.9% all-in isn't reachable for card-not-present.</strong> Interchange
+      alone is 1.8–2.3% + $0.10 and nobody negotiates below it. What you get at volume is
+      interchange-plus, roughly IC + 0.4–0.6% + $0.10–0.20.</p>
+    <ul class="tight">
+      <li><strong>~$1M/yr</strong> — a conversation, not a rate</li>
+      <li><strong>~$12M/yr</strong> ($1M/mo) — real interchange-plus on the table</li>
+      <li><strong>$50M+/yr</strong> — genuine leverage, custom terms</li>
+      <li><strong>$200M+/yr</strong> — direct processor or becoming a payfac is worth the compliance burden</li>
+    </ul>
+    <div class="flag stop" style="margin-top:6px"><span class="lbl">Hidden cost</span><span>Dispute
+      liability. With destination charges the <strong>platform</strong> is liable by default, plus
+      negative balances when a business closes holding deposits. Budget 0.1–0.3% of volume for
+      disputes and reserves, and set the liability structure deliberately. That's what turns a 1%
+      spread into 0.7%.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <div class="callout">
+      <h3>Why 0% is the highest-leverage price in the model</h3>
+      <p>Shopify charges 0% transaction fee <em>if</em> you use Shopify Payments. The free tier isn't
+        generosity — it's volume acquisition, and the processing spread is the business.</p>
+      <p><strong>Free on direct → they consolidate onto your rail → you get 100% of their volume →
+        volume buys the rate → the rate is the revenue.</strong> Every competitor charging a platform
+        fee on direct bookings leaves that consolidation on the table.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Target high-ticket for volume</h3>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Customer type</th><th>Avg ticket</th><th>Annual volume each</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Vacation rental manager (40 units)</td><td class="num">$2,500/wk</td><td class="num"><strong>$2–4M</strong></td></tr>
+        <tr><td class="k">Hotel / condo property</td><td class="num">$200–400/night</td><td class="num">$1–5M</td></tr>
+        <tr><td class="k">Charter fleet (6 boats)</td><td class="num">$800/trip</td><td class="num">$800K–1.5M</td></tr>
+        <tr><td class="k">Marina</td><td class="num">varies</td><td class="num">$1–3M</td></tr>
+        <tr><td class="k">Single charter</td><td class="num">$800</td><td class="num">$200–300K</td></tr>
+        <tr><td class="k">Restaurant</td><td class="num">$60–90</td><td class="num">$1–3M, tiny tickets</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:18px">
+    <p><strong>Twenty vacation rental managers is $60M/year in volume.</strong> Twenty sales calls to
+      serious negotiating leverage, versus 500 restaurants.</p>
+    <p class="note">Split the targeting: property managers and charter fleets for payment volume,
+      restaurants for data density and the directory. Different sales motions — don't run them as
+      one. Watch seasonality (Gulf Coast can be 5:1 summer to January — negotiate on trailing-twelve
+      after peak) and concentration (no vertical past ~35% of volume).</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Loyalty points</h3>
+    <p>A single-business loyalty card is worthless to someone who visits once. <strong>Regional
+      points</strong> — earn on a charter, spend at a restaurant — is something no individual
+      business and no OTA can offer, and it's the first thing that gives a tourist a reason to use
+      your directory instead of Booking.com.</p>
+    <ul class="tight">
+      <li><strong>Clearing</strong> — the business giving the discount isn't the one that earned it. You're already in the middle of the transactions. Decide up front: pool buy-in, or earning business funds the liability at issue.</li>
+      <li><strong>Terms and expiry from day one.</strong> Unredeemed points are a liability on paper and revenue in practice. Retrofitting terms is a fight you don't want.</li>
+      <li>Keep v1 a points ledger and a redemption code. Don't build a currency.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Referrals — the version nobody can fake</h3>
+    <p>Affiliate content is drowning in AI slop. A creator video tied to a verified booking <em>and a
+      verified completed visit</em> can't be manufactured. They can fake the face; they can't fake
+      the receipt.</p>
+    <pre>creator link → booking → visit completed → verified → payout</pre>
+    <div class="flag go"><span class="lbl">Key</span><span><strong>Pay on verified completion, not
+      on booking.</strong> Every affiliate network pays on a conversion they can't see. You're
+      standing at the end of the transaction. That kills fake bookings, cancel-after-payout, and
+      owner self-dealing in one move — and no competitor can claim it.</span></div>
+    <p class="note">Decide attribution before launch. Ambiguous case — found on your directory, booked
+      direct two days later — <strong>default to 0%.</strong> Costs a little revenue, buys the thing
+      the model runs on. Write the policy down and show it to them.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>White label — the GoHighLevel model</h3>
+    <p>Don't sell 100,000 businesses. Sell agencies with 20 clients each. They do sales, onboarding,
+      support and customization; you run the platform. <strong>And it closes the biggest hole in the
+      direct model — support cost at scale.</strong></p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <tbody>
+        <tr><td class="k">Agency pays you</td><td class="num">$199–249 / box / mo wholesale</td></tr>
+        <tr><td class="k">Agency sells at</td><td class="num">$499–699</td></tr>
+        <tr><td class="k">Agency keeps</td><td class="num">$250–450 / mo per client, plus install and mapping fees</td></tr>
+        <tr><td class="k">You get</td><td>predictable revenue, zero support load, zero CAC</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:16px">
+    <p class="note">An agency with 40 clients makes $12–18K/month off your platform. Your trained
+      rental-ops reps are exactly the people who become those agencies. And unlike a GHL agency they
+      get a service business too — installs, phone setup, flow mapping — which makes them stickier.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Revenue math</h3>
+    <ul class="tight">
+      <li>100 customers × $499 = <strong>$599K ARR</strong> plus ~$200K onboarding in year one</li>
+      <li>250 = <strong>$1.5M</strong></li>
+      <li>1,000 = <strong>$6M</strong></li>
+      <li>200 businesses × $16M/mo processed at 0.7% net = <strong>~$1.3M/yr</strong>, growing with their revenue rather than your headcount</li>
+    </ul>
+    <div class="flag" style="margin-top:6px"><span class="lbl">Metric</span><span><strong>Flows per
+      customer</strong> is your only real retention number. Two flows and they churn. Fifteen and
+      they've moved their operations onto your box and they're not leaving. Instrument it from
+      customer one.</span></div>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="gtm">
+  <div class="sec-head">
+    <span class="eyebrow">09</span>
+    <h2>Go to market</h2>
+  </div>
+
+  <div class="col stack">
+    <div class="callout">
+      <h3>The email forward is the entry point, not the box</h3>
+      <p><em>"Here's an email address. Forward your booking confirmations to it. That's it."</em></p>
+      <p>Five minutes, no hardware, no install, no phone, no card. With just that you deliver real-time
+        availability, verified bookings, a public page and widget that work, and the beginning of
+        their structured data.</p>
+      <p><strong>That's the free tier.</strong> The box is the upsell for <em>execution</em>. It
+        collapses CAC to nearly nothing, kills the developer chicken-and-egg, and means your
+        installed base can be ten times your paying base — every forwarding business in the
+        directory, feeding the data plane, already half sold.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Scale by vertical, not by geography</h3>
+    <p><strong>The schema is the unit of work, not the map.</strong> A rental manager in Destin, Gulf
+      Shores and Panama City are the same schema, same flows, same emails. Once the vertical is
+      built, customer 2 through 200 cost nothing new regardless of where they are.</p>
+    <p class="note">Density still matters for the consumer directory and the developer market — a
+      developer needs to see an addressable market — but it arrives as a side effect of going deep in
+      one vertical first.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Channels, ranked</h3>
+    <ol class="tight">
+      <li><strong>Multi-unit operators.</strong> A franchisor with 70 locations isn't a customer, it's a distribution event. One decision-maker, 70 boxes. Restaurant groups, rental management companies, marina operators. Highest leverage by far.</li>
+      <li><strong>Chambers of Commerce.</strong> 300–800 members, wants to offer value, has no technology. Give them a live directory powered by member data; every member becomes a warm introduction. One deal is a city.</li>
+      <li><strong>Artists.</strong> Free product, 30,000 QR impressions a week, and every code sits in a venue you want to sell.</li>
+      <li><strong>Agencies.</strong> White label. Your trained reps become the agencies.</li>
+      <li><strong>Direct.</strong> The first few hundred, by you, because platform flywheels never bootstrap.</li>
+    </ol>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Sales comp — where these programs die</h3>
+    <ul class="tight">
+      <li><strong>Split commission on retention.</strong> Half at install, half at 90 days retained. Pay full on signing and reps sell to anyone with a pulse.</li>
+      <li><strong>Residual while the account lives.</strong> Door-to-door people understand residuals. A rep with 60 accounts defends them and never leaves.</li>
+      <li><strong>Let them earn on payment volume.</strong> A rep who signed a rental manager in year one is still earning on $3M of processing in year four. No other sales job can offer that.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>The developer pitch</h3>
+    <div class="callout">
+      <h3>"You can vibe code this. You just need access."</h3>
+      <p>LLMs made code free. Nobody can generate a Toast confirmation email, a phone with the
+        owner's logins, real availability across four channels, or a business that said yes.
+        <strong>Code stopped being scarce. Access didn't.</strong></p>
+    </div>
+    <p style="margin-top:14px">Keep the primitive set small. Five calls build the song request app:</p>
+    <pre>page.publish        a public page with a QR
+payment.observe     watch for a confirmation
+identity.match      tie the payment to the request
+notify.send         tell the artist
+data.write          store it in their workspace</pre>
+    <p>Same five build a tip jar, feedback form, waitlist, deposit collector, raffle, review request,
+      table-side service call, lost-and-found, event RSVP. <strong>That's the recruiting demo</strong>
+      — one page, five calls, nine apps.</p>
+    <div class="flag"><span class="lbl">Altitude</span><span><strong>Verbs, not rows.</strong> Too
+      high-level (<code>song.request</code>) and you're building apps, not a platform. Too low-level
+      (raw email) and you've handed over the data. <code>payment.observe</code> returns "a payment
+      arrived matching these criteria," never the inbox.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Build the app that can't exist anywhere else</h3>
+    <p><em>"Plan my Saturday"</em> → checks a charter's real availability, checks a restaurant's
+      tables, books both, one confirmation. Two businesses, both consenting, neither sharing data
+      with the other. No POS, OTA or directory can do it — they'd each need a partnership. You need
+      two businesses that said yes.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Compounding, not accumulating</h3>
+    <p>An app that only consumes capabilities adds one app. An app that <em>publishes</em> one makes
+      every future app easier. Pay component authors from the apps built on them — your capability
+      registry knows exactly which VAPP called which, which nobody else can measure. Publish the
+      formula and the payouts; a verifiable split is a differentiator, a vague promise is a blog post.</p>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="brand">
+  <div class="sec-head">
+    <span class="eyebrow">10</span>
+    <h2>Brand and narrative</h2>
+  </div>
+
+  <div class="col stack">
+    <h3>The story</h3>
+    <div class="callout">
+      <p>"Jobs took Unix, hid where it came from, and closed the ecosystem. I'm taking Linux, showing
+        where it came from, and opening it."</p>
+    </div>
+    <p style="margin-top:12px">NeXTSTEP was Mach plus BSD. Apple bought NeXT in 1997, it became
+      Rhapsody, then Mac OS X. Every Mac and iPhone today runs on a foundation taken from Unix and
+      covered up.</p>
+    <p>Most companies invent a narrative after the fact. You have a real one with forty years of
+      lineage, and the logo carries it without explanation to anyone who knows.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>The Ghost of Lisa</h3>
+    <p>Lisa shipped January 1983 at $9,995 — about $32,000 today — with protected memory, cooperative
+      multitasking, a document-centric interface, drag and drop, system-wide undo, the trash can, the
+      menu bar, an integrated suite with a shared clipboard, and Gantt charts on a personal computer.</p>
+    <div class="flag go"><span class="lbl">For the ad</span><span><strong>The Macintosh didn't get
+      protected memory or real multitasking until Mac OS X in 2001.</strong> Apple shipped it in 1983
+      then went backwards for eighteen years to hit a price point. The industry chose cheap-and-worse
+      and took two decades to climb back.</span></div>
+    <p style="margin-top:12px">~2,700 unsold Lisas were crushed and buried in a Logan, Utah landfill
+      in 1989. In January 2023, on the fortieth anniversary, Apple released the Lisa source code
+      through the Computer History Museum. <strong>The machine they buried is now open source.</strong></p>
+    <pre>Lisa              right, unaffordable, buried
+Macintosh         affordable, closed
+Ghost of Lisa     right, affordable, open</pre>
+    <p class="note">Lisa failed on access, not technology. You're not early — every component you
+      need is mature and nearly free: a $40 Android, a $500 box with 128GB unified memory, models
+      that run locally, forty years of Linux, Stripe. None of that existed five years ago. And naming
+      v1 after the famous failure means nobody can accuse you of overpromising.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>"It's not AI"</h3>
+    <p>Everyone is slapping AI on everything at the exact moment small business owners stopped
+      trusting it. "AI-powered" reads as <em>risk</em> to a 55-year-old charter captain.</p>
+    <div class="callout">
+      <p>"It's not AI. It does exactly what you'd do, and shows you proof it did it."</p>
+    </div>
+    <p class="note" style="margin-top:12px">And it's literally true — the agent is deliberately dumb,
+      reads a column, replays a recorded path, screenshots the result. Keeping AI out of the patent
+      claims is right for a second reason: claims about a concrete remote-control method sit outside
+      the hurricane of AI prior art.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>The 1984 remake</h3>
+    <p>Make the antagonist the <strong>category</strong>, not Apple. Big Brother is the gatekeeper —
+      every AI company racing to own your computer and rent you access to your own business. Bigger
+      target, more sympathetic, less exposure.</p>
+    <p>The line that does the work: <strong>they want your business to live on their servers. Yours
+      lives on your counter.</strong></p>
+    <p class="note">Ending on the screen shutting off rather than the hammer is the better gesture —
+      power through withdrawal rather than violence, and it maps to the product: the box is on your
+      counter and the switch is yours.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Logo notes</h3>
+    <ul class="tight">
+      <li><strong>Keep the cube.</strong> Paul Rand's NeXT mark, and the cube is literally the product you ship. Most logos never get one idea that good.</li>
+      <li><strong>Keep Tux</strong> — it's the thesis, Jobs hid the Unix and you're showing the Linux — but <strong>redraw it flat</strong>. Glossy 3D cartoon against Rand-era geometry looks like two logos stapled together.</li>
+      <li><strong>Build a standalone mark.</strong> The cube alone, working at 32px, for favicon, app icon and the badge on the box lid. Rand's original reduces; yours needs the same discipline.</li>
+      <li><strong>Replace the typeface.</strong> The thin geometric sans is generic next to Rand's lettering. The box is industrial; the type should agree.</li>
+      <li><strong>Buy every spelling</strong> — anexgent, a-next-gent, anextagent, nextgent. Spoken it sounds exactly like "an agent," which is the joke and the discoverability problem. $200 now, expensive later.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Stealth, resolved</h3>
+    <p><strong>Quiet about the mechanism, loud about the outcome.</strong> Sell "your hours update
+      everywhere, your website shows real availability, your phone gets answered." No blog post about
+      accessibility-service-driven remote control, no architecture diagram in the deck.</p>
+    <p>That resolves cleanly against open-sourcing, which otherwise contradicts stealth:</p>
+    <ul class="tight">
+      <li><strong>Open</strong> — the platform, contracts, OS, SDK, capability spec. This recruits developers.</li>
+      <li><strong>Not open</strong> — the AppMap library, the fingerprint and repair engine, the per-vertical schemas. The accumulated operational knowledge the subscription buys.</li>
+    </ul>
+    <p class="note">Secrecy buys 6–18 months and costs every customer, developer and chamber deal in
+      that window. Your real defenses — AppMap library, verified data, installed base, payment volume
+      — all compound with speed, not silence. And your own content strategy guarantees the idea gets
+      out anyway.</p>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="position">
+  <div class="sec-head">
+    <span class="eyebrow">11</span>
+    <h2>Competitive position</h2>
+  </div>
+
+  <div class="col stack">
+    <h3>Why incumbents structurally cannot follow</h3>
+    <ul class="tight">
+      <li><strong>Google</strong> can't tell businesses to stop depending on Google Business Profile</li>
+      <li><strong>Toast / Square</strong> can't say "book direct, skip our fees"</li>
+      <li><strong>FareHarbor / Booking.com</strong> — commission <em>is</em> the company</li>
+      <li><strong>Yext</strong> can't stop charging for distribution; distribution is the product</li>
+      <li><strong>Every seat-based SaaS</strong> can't move to "it runs on your box" without torching ARR per customer</li>
+    </ul>
+    <p>Not slowness — anti-correlation. Following you costs them their P&amp;L.</p>
+    <div class="flag stop" style="margin-top:6px"><span class="lbl">Real threat</span><span>Not big
+      tech. A well-funded fast follower with <strong>no legacy revenue</strong> — a team with $5M and
+      no conflicts. The answer is speed and accumulated data, which argues for 200 customers fast
+      rather than staying quiet.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Omarchy — what it proves and what to avoid</h3>
+    <p>DHH built roughly this product and deliberately declined to build this business. Arch +
+      Hyprland + Quickshell, MIT, ~457 shell scripts, 249 theme files, a 51-chapter manual. Under the
+      Omacom Foundation with ~$18.5M in pledges. <strong>No subscription, no hardware</strong> — buyers
+      get sent to Dell and Framework.</p>
+    <ul class="tight">
+      <li><strong>Steal:</strong> the manual quality, theming as a product feature, the single-namespace CLI, and the agent-native positioning.</li>
+      <li><strong>Avoid:</strong> mutable Arch. 116 migration scripts are config-drift management — proof the state still lives on the customer's laptop. And <code>install/hardware/</code> is ~30 per-machine fix scripts, the infinite hardware matrix as a directory listing. Your certified SKUs delete that folder; read it as a components-to-avoid list.</li>
+      <li><strong>Fatal for your model:</strong> Arch is a rolling release. You cannot sell "supported until 2036" on top of it.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Home Assistant — the closest living template</h3>
+    <p>Immutable appliance OS with A/B boot slots and RAUC OTA, shipped to millions of non-technical
+      people. And the business is yours: <strong>Nabu Casa sells the hardware and a cloud
+      subscription while the Open Home Foundation holds the project</strong>, everything Apache-2.0.</p>
+    <p class="note">Somebody already ran your experiment and it worked. Read their update-system docs
+      before committing to your own OS architecture.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Solid — the one that didn't work, and why</h3>
+    <p>Berners-Lee's decentralized data project is your thesis exactly: personal data pods, apps
+      request scoped permission, data stays with the person. From the guy who invented the web.</p>
+    <ul class="tight">
+      <li><strong>No killer app</strong> — it asked people to move data for an abstract benefit. Nobody moves for principle.</li>
+      <li><strong>No business model</strong> — a standard looking for a company.</li>
+      <li><strong>Too abstract</strong> — "own your data pod" means nothing to a charter captain.</li>
+    </ul>
+    <p><strong>You have all three.</strong> Nobody has to understand decentralization to buy "my
+      website shows what's actually open." That's the gap between a white paper and a company.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Capital — the conflict problem</h3>
+    <p>A fund holding positions in POS, listings, booking, reputation or local search has a structural
+      reason to soften what you do — not by blocking, but by slowing, redirecting, or "introducing"
+      you to a partnership that neuters the direct-booking play.</p>
+    <ul class="tight">
+      <li><strong>Diligence the fund before the term sheet.</strong> Ask directly what they hold in those categories. A straight answer is diagnostic either way.</li>
+      <li><strong>Local money is strategically better, not just easier.</strong> No portfolio conflict, they know the market, they're customers and references too, and they'll never tell you to go partner with Toast.</li>
+      <li><strong>Don't sell control to solve a cash problem.</strong> Revenue-based financing, customer prepayment, hardware deposits. At $499/mo with real retention you can fund a lot off the business.</li>
+      <li><strong>Information rights over board seats</strong> for early money.</li>
+    </ul>
+    <p class="note">If the goal is genuinely that it outlives you and can't be captured, the
+      structures exist — Open Home Foundation, Omacom Foundation, Linux Foundation projects,
+      steward-ownership and purpose trusts. A verbal intention doesn't survive a term sheet; a trust
+      deed does. But you can't decentralize something that doesn't exist — build it, get to
+      self-funding, then put the governance around it from strength.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:28px">
+    <h3>Traction before the call</h3>
+    <ul class="tight">
+      <li>20–30 <strong>paying</strong> businesses, not pilots</li>
+      <li>Three months of retention — churn as a number, not a hope</li>
+      <li>One ROI case with their statements — the charter that saved $24K</li>
+      <li>One vertical schema done, so customer 200 costs what customer 20 did</li>
+    </ul>
+    <p>Six-month sprint, not a two-year build, and all of it in the first vertical. The thing that
+      makes you fundable is the thing that makes you not need it.</p>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="stack">
+  <div class="sec-head">
+    <span class="eyebrow">12</span>
+    <h2>The stack</h2>
+    <p class="note">Primary picks by layer. Everything here is open source and most of it was built
+      to compose — Foreman with Katello with Pulp with Candlepin, Backstage with Keycloak, Sigstore
+      with OCI registries. The full component list with alternates lives in the parts catalog.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Primary</th><th>Also on the list</th></tr></thead>
+      <tbody>
+        <tr><td class="k">OS image</td><td><em>bootc</em> + ostree + greenboot + bootc-image-builder</td><td>rauc, Mender, Ubuntu Core, Omarchy (donor)</td></tr>
+        <tr><td class="k">Node runtime</td><td>Podman + Quadlet, systemd</td><td>MicroShift for multi-service apps</td></tr>
+        <tr><td class="k">Registry</td><td>Quay (cloud), <em>zot</em> (box)</td><td>Harbor</td></tr>
+        <tr><td class="k">Content + channels</td><td>Pulp, Katello</td><td>Koji</td></tr>
+        <tr><td class="k">Fleet</td><td>Foreman, <em>flightctl</em> (Edge Manager)</td><td>FleetDM, Argo CD</td></tr>
+        <tr><td class="k">Entitlement</td><td><em>Candlepin</em></td><td>IBM License Service model for metering</td></tr>
+        <tr><td class="k">Signing + trust</td><td>cosign, <em>rekor</em>, TUF</td><td>Skopeo, go-containerregistry</td></tr>
+        <tr><td class="k">Supply chain</td><td>syft, grype, trivy, scancode, trufflehog, <em>Conforma</em></td><td>CycloneDX / SPDX</td></tr>
+        <tr><td class="k">Factory</td><td>Tekton, Buildah</td><td>Konflux</td></tr>
+        <tr><td class="k">Identity</td><td>Zitadel <em>or</em> Keycloak</td><td>Backstage ships Keycloak integration</td></tr>
+        <tr><td class="k">Authorization</td><td>SpiceDB <em>or</em> OpenFGA</td><td>OPA for contextual policy</td></tr>
+        <tr><td class="k">Secrets / certs</td><td>OpenBao, cert-manager</td><td></td></tr>
+        <tr><td class="k">Data</td><td>Postgres, pgvector, SQLite + sqlite-vec</td><td>Meilisearch, OpenSearch, qdrant, Supabase</td></tr>
+        <tr><td class="k">Events</td><td>NATS (box)</td><td>Kafka (cloud scale), Flink</td></tr>
+        <tr><td class="k">Agent runtime</td><td>Hermes <em>or</em> BeeAI, behind your contract</td><td>OpenJarvis, QwenPaw, OpenClaw, Goose</td></tr>
+        <tr><td class="k">Protocols</td><td>MCP + A2A</td><td>ACP is merged into A2A — don't invest</td></tr>
+        <tr><td class="k">Gateway</td><td><em>IBM ContextForge</em></td><td>MCP Registry</td></tr>
+        <tr><td class="k">Model routing</td><td>litellm, <em>llama-swap</em></td><td>Llama Stack (build to Responses API)</td></tr>
+        <tr><td class="k">Inference</td><td>llama.cpp (box), vLLM (bigger)</td><td>Ollama for dev, LocalAI, LLM Compressor</td></tr>
+        <tr><td class="k">Models</td><td>Granite, <em>Granite-Guardian</em></td><td>InstructLab, huggingface_hub, ROCm</td></tr>
+        <tr><td class="k">Android</td><td>ADB, <em>uiautomator2</em>, scrcpy, TextBee</td><td>Maestro + Studio (factory), trailblaze, appium-inspector, Artemis, mobile-mcp, AgentCPM-GUI, android_world</td></tr>
+        <tr><td class="k">Browser</td><td><em>Playwright</em>, playwright-mcp</td><td>browser-use, browser-harness, Stagehand, Steel, Browserbase</td></tr>
+        <tr><td class="k">Linux desktop</td><td>AT-SPI</td><td>computer-use-linux, cua, ydotool</td></tr>
+        <tr><td class="k">Workflow</td><td><em>Temporal</em>, Event-Driven Ansible</td><td>Restate, Ansible, AWX, Node-RED</td></tr>
+        <tr><td class="k">Integrations</td><td>Activepieces, Composio</td><td>n8n is <strong>not open source</strong> — Sustainable Use License</td></tr>
+        <tr><td class="k">Voice</td><td><em>Wyoming</em>, openWakeWord, silero-vad, faster-whisper, <em>Kokoro</em></td><td>pipecat, LiveKit, Fonoster, hassil, speaches. <strong>Piper archived Oct 2025.</strong></td></tr>
+        <tr><td class="k">Files / data</td><td>Tika, Docling, langextract, magika</td><td>aifs, mem0 / letta, schema-dts</td></tr>
+        <tr><td class="k">Sandboxing</td><td>Extism + wasmtime, gVisor</td><td>bubblewrap, Firecracker, microsandbox, OP-TEE</td></tr>
+        <tr><td class="k">Verification</td><td>Playwright assertions, pixelmatch/odiff, ffprobe, qpdf</td><td>JHOVE</td></tr>
+        <tr><td class="k">Packaging</td><td>Flatpak, PackageKit, AppStream</td><td>Skilla, xAI plugin-marketplace (donor), Backstage</td></tr>
+        <tr><td class="k">Interfaces</td><td>Next.js, <em>Flutter</em>, <em>cage</em> (kiosk), Norigin (TV)</td><td>shadcn, Puck, JSON Forms, distrobox as the escape hatch</td></tr>
+        <tr><td class="k">Networking</td><td><em>headscale</em> / WireGuard</td><td>Tailscale, NetBird, SAM, Sunshine + Moonlight</td></tr>
+        <tr><td class="k">Commerce</td><td>Stripe Connect, Lago</td><td>Kill Bill, dub</td></tr>
+        <tr><td class="k">Backup / firmware</td><td>restic, Litestream, fwupd + LVFS</td><td>borg, rclone, snapper</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>What you own — nobody upstream does these</h3>
+    <p class="note">control-plane · identity / organizations / workspaces · capability-registry ·
+      ActionSpec · Constitution · policy-engine · credential-broker · agent-gateway · agent-contract
+      and runtime adapter · model-router contract · execution-router · executor contracts (android,
+      browser, linux, api, workflow, human) · AppMap spec and learn-once compiler · appmap-runtime ·
+      verification contract · evidence · Proof Ledger · VAPP manifest · marketplace semantics ·
+      certification definition · CyberCheck · Quantum Warehouse · exposure rules · device-manager ·
+      node-agent · updater and release-channel semantics · trust-service · recovery · sync ·
+      migration · operations · event-service · handoff-service · commerce-service ·
+      data-governance · edge-service · owner-ui · platform-admin · sdk · cli</p>
+    <div class="flag" style="margin-top:10px"><span class="lbl">Rule</span><span>One job, one seam,
+      one live implementation. Wrapper depth of exactly one — your contract calls the implementation
+      directly. Anything marked ALTERNATIVE sits behind the same contract as the primary, never
+      alongside it. Factory tools never ship. MCP and A2A are <strong>projections</strong> of your
+      contracts, not layers under them.</span></div>
+  </div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="ibm">
+  <div class="sec-head">
+    <span class="eyebrow">13</span>
+    <h2>IBM / Red Hat findings</h2>
+    <p class="note">Take the protocols and the models. Treat the "platforms" as reference designs.
+      Refuse anything that hard-requires Kubernetes. The AI layer is overwhelmingly Apache-2.0 / MIT
+      with real patent grants — much safer ground to build a Red-Hat-style business on than RHEL
+      itself was.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Component</th><th>License</th><th>K8s?</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="k">BeeAI framework</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — core agent runtime. LF AI &amp; Data governed. RequirementAgent, tools, sandboxed code interpreter, memory, pause/resume, A2A adapters.</td></tr>
+        <tr><td class="k">MCP + A2A</td><td class="num">Apache-2.0 spec</td><td>no</td><td><strong>Take</strong> — MCP is agent→tool (vertical), A2A is agent→agent (horizontal). <em>ACP merged into A2A, Aug 2025 — legacy, don't invest.</em></td></tr>
+        <tr><td class="k">ContextForge</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — federates MCP + A2A + REST/gRPC. PyPI or plain Docker, air-gap capable, no telemetry.</td></tr>
+        <tr><td class="k">Granite (all)</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — published training-data disclosure and IP indemnification through Red Hat.</td></tr>
+        <tr><td class="k">Granite-Guardian</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — drop-in guardrail model, served on vLLM, called by your policy-engine.</td></tr>
+        <tr><td class="k">Docling</td><td class="num">MIT</td><td>no</td><td><strong>Take</strong> — best-in-class document parsing, has an MCP server.</td></tr>
+        <tr><td class="k">vLLM</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — UC Berkeley origin, community governed, all major hardware backends, standalone container with an OpenAI-compatible API. Red Hat is the leading commercial contributor — this is literally the business you're copying.</td></tr>
+        <tr><td class="k">LLM Compressor</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — quantization for models you ship.</td></tr>
+        <tr><td class="k">InstructLab</td><td class="num">Apache-2.0</td><td>no</td><td><strong>Take</strong> — laptop-capable fine-tuning and synthetic data. The customer-facing "improve it with your data" hook.</td></tr>
+        <tr><td class="k">Llama Stack</td><td class="num">MIT</td><td>no</td><td><strong>Take</strong> as the API-server option. Build to the <em>Responses</em> API — the agents API is being deprecated.</td></tr>
+        <tr><td class="k">KServe</td><td class="num">Apache-2.0</td><td><strong>yes</strong></td><td>Reject for the box. "No Knative" ≠ "no Kubernetes."</td></tr>
+        <tr><td class="k">llm-d</td><td class="num">Apache-2.0</td><td><strong>yes</strong></td><td>Reject for the box — explicitly Kubernetes-native.</td></tr>
+        <tr><td class="k">TrustyAI Guardrails Orchestrator</td><td class="num">Apache-2.0</td><td><strong>yes</strong></td><td>Every deployment path needs OpenShift cluster-admin. Run Granite-Guardian on vLLM instead — same detector models, none of the overhead.</td></tr>
+        <tr><td class="k">OpenShift AI / Open Data Hub</td><td class="num">mixed</td><td><strong>yes</strong></td><td>Reject. Mine the reference architecture (vLLM → Llama Stack → MCP → guardrails → RAG), reimplement with standalone containers.</td></tr>
+        <tr><td class="k">watsonx Orchestrate</td><td class="num">proprietary</td><td>—</td><td>Reject — the funnel. The ADK is a CLI into a paid platform; you need watsonx.ai or Orchestrate credentials to install Developer Edition. Copy the <em>Agent Catalog concept</em> for your App Store.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>Watson is not one thing</h3>
+    <p>Most of what IBM ships under that name is genuinely open and already in your list — Granite,
+      Granite-Guardian, ContextForge, BeeAI, Docling, InstructLab, FMS-Guardrails, the
+      watson-developer-cloud SDKs (Apache-2.0), watsonx-developer-hub, watsonx-data.</p>
+    <p>Commercial: <strong>watsonx Orchestrate the platform</strong>, watsonx.ai, watsonx Assistant.</p>
+    <p class="note">The distinction that matters for your model: the watson-developer-cloud SDKs are
+      Apache-2.0 <em>client libraries for paid cloud APIs</em> — open code, metered service behind it.
+      Different from Granite or BeeAI, which run on your own box with nothing behind them.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>Sandboxed execution — the one place the best tool isn't IBM/Red Hat</h3>
+    <p>BeeAI ships a code interpreter, but the strongest self-hostable options are
+      <strong>microsandbox</strong> (Apache-2.0, libkrun microVMs — libkrun is itself a Red Hat
+      library — fully local, sub-200ms starts) and <strong>E2B self-hosted</strong> (Apache-2.0,
+      Firecracker). MicroVM isolation is stronger than plain containers. Don't be steered to a weaker
+      tool for brand consistency.</p>
+    <div class="flag stop" style="margin-top:6px"><span class="lbl">Dead</span><span><strong>Daytona
+      went closed source June 2026</strong> — the former AGPL repo is archived. Don't build on it.
+      <strong>Piper archived October 2025</strong> — still in every tutorial, use Kokoro.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>Seams and duplication to know about</h3>
+    <ul class="tight">
+      <li><strong>Two agent runtimes, one orbit.</strong> BeeAI (IBM) and Llama Stack (Meta + Red Hat) overlap. Pick one — framework-in-code or API-server — not both.</li>
+      <li><strong>Two guardrail paths.</strong> Granite-Guardian (model) vs TrustyAI Orchestrator (K8s service wrapping the same models). Same detectors, different packaging.</li>
+      <li><strong>Two protocols that were three.</strong> MCP, A2A, and ACP — now merged in.</li>
+      <li><strong>BeeAI risk.</strong> Pre-1.0 (0.1.x) with an explicit IBM notice that they may not maintain it. "Production-ready" in the README is marketing. Mitigated by Apache-2.0 + LF governance — you can fork and own it — but budget for that.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>Licensing and trademark reality</h3>
+    <ul class="tight">
+      <li>You can use vLLM, Granite, BeeAI freely. You cannot call your product "Red Hat" anything, and Red Hat's container images and RHEL bits carry subscription and trademark constraints — what CentOS/Rocky/Alma had to strip.</li>
+      <li>Use <strong>UBI or CentOS Stream</strong> base images, not entitled RHEL images.</li>
+      <li>Post-June-2023, CentOS Stream is the sole public repository for RHEL-related source; RHEL source proper is behind the paid Customer Portal and the subscription agreement discourages redistribution. This affects your OS base decision, not your AI stack.</li>
+      <li><strong>Open in name only:</strong> Red Hat AI Inference Server (support needs a subscription; the vLLM underneath is free), RHEL AI (Granite is Apache-2.0, the platform and indemnification are paid), Ansible Lightspeed (connect-service is self-hostable, the hosted model is commercial).</li>
+    </ul>
+    <div class="flag" style="margin-top:6px"><span class="lbl">Note</span><span>Treat the paid tiers as
+      a blueprint for <em>your own</em> future product, not something to consume. vLLM → Red Hat AI
+      Inference Server and Granite → RHEL AI are literal templates for "take OSS, harden, certify,
+      indemnify, subscribe."</span></div>
+  </div>
+</section>
+
+<section id="modular">
+  <div class="sec-head">
+    <span class="eyebrow">14</span>
+    <h2>Modularity rules</h2>
+    <p class="note">One job → one seam → one live implementation. Wrapper depth of exactly one.
+      Anything ALTERNATIVE sits behind the same contract as the primary, never alongside it. Factory
+      tools never ship. MCP and A2A are projections of your contracts, not layers under them.</p>
+  </div>
+
+  <div class="col stack">
+    <h3>The nine collisions found in the current stack</h3>
+    <ol class="tight">
+      <li><strong>Model routing is four shells deep.</strong> <code>model-router → litellm → ollama → llama.cpp</code>. Ollama <em>is</em> a wrapper over llama.cpp — two redundant hops. Go <code>model-router → litellm → {llama.cpp | vLLM}</code>; ollama stays on dev machines.</li>
+      <li><strong>Three ways to tap a button.</strong> mobile-mcp wraps uiautomator2/adb, Maestro wraps adb, Artemis is a separate agent. One AndroidExecutor contract; <strong>uiautomator2 is the only runtime implementation on the box.</strong> Maestro, trailblaze, appium-inspector are factory-only. mobile-mcp is an MCP projection. Artemis is evaluated as a <em>replacement</em>, not an addition.</li>
+      <li><strong>Two agent runtimes.</strong> Hermes and BeeAI do the same job. The contract makes the other swappable; running both makes neither.</li>
+      <li><strong>Two gateways.</strong> ContextForge is <em>transport</em> (MCP/A2A/API federation). Agent Gateway is the <em>policy envelope</em>. Say it explicitly or they collide.</li>
+      <li><strong>Two identity systems.</strong> Zitadel vs Keycloak. Tiebreaker: Backstage ships a Keycloak integration.</li>
+      <li><strong>Two authorization engines.</strong> SpiceDB vs OpenFGA — both Zanzibar.</li>
+      <li><strong>Two event buses.</strong> NATS on the box, Kafka only if cloud volume forces it. Never both on a node.</li>
+      <li><strong>Four search/vector stores.</strong> pgvector for embeddings, Meilisearch for public text, qdrant stays out until vector load justifies a second store, OpenSearch is cloud log scale only.</li>
+      <li><strong>Three update-trust layers.</strong> bootc is <em>delivery</em>, cosign+rekor is <em>signature</em> — different slots. TUF vs cosign genuinely overlaps; TUF earns its place only for key rotation and role delegation. Mender vs bootc is the same slot and has been open across three document generations.</li>
+    </ol>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>The thirteen wires — everything plugs into one</h3>
+    <p class="note">Nothing gets forked and nothing gets picked. Everything below already speaks one
+      of these, which is why they connect without integration work.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Wire</th><th>What speaks it</th></tr></thead>
+      <tbody>
+        <tr><td class="k">OpenAI-compatible HTTP</td><td>llama.cpp server, vLLM, ollama, LocalAI, llama-swap, litellm, Llama Stack, TGI — plus every cloud provider</td></tr>
+        <tr><td class="k">MCP</td><td>ContextForge, playwright-mcp, mobile-mcp, docling-mcp, Composio, Activepieces, MCP Registry, your VAPPs, CyberCheck's public surface</td></tr>
+        <tr><td class="k">A2A</td><td>A2A project, BeeAI (Agent Cards), Hermes, OpenJarvis, external agents, someone else's ChatGPT or Claude</td></tr>
+        <tr><td class="k">ADB</td><td>uiautomator2, Maestro, scrcpy, Appium, trailblaze, Artemis, mobile-mcp, DroidRun — <strong>all on the same connection to the same handset, simultaneously</strong></td></tr>
+        <tr><td class="k">CDP</td><td>Playwright, browser-use, browser-harness, Stagehand, Browserbase, Steel</td></tr>
+        <tr><td class="k">AT-SPI</td><td>computer-use-linux, cua, ydotool, wtype</td></tr>
+        <tr><td class="k">Wyoming</td><td>openWakeWord, silero-vad, faster-whisper, whisper.cpp, Kokoro, HA Assist, pipecat</td></tr>
+        <tr><td class="k">OCI registry</td><td>Quay, zot, Harbor, skopeo, buildah, oras, cosign, rekor, bootc, Flatpak (OCI mode), your flow packs, your VAPPs</td></tr>
+        <tr><td class="k">OIDC / OAuth2</td><td>Zitadel, Keycloak, Backstage, Cockpit, Grafana — run either or both, federated</td></tr>
+        <tr><td class="k">Postgres wire</td><td>Postgres, pgvector, Supabase, Drizzle, Pulp, Candlepin, Keycloak, ContextForge, Temporal, Backstage</td></tr>
+        <tr><td class="k">Events / CloudEvents</td><td>NATS, Kafka, Event-Driven Ansible, Temporal, Activepieces, Composio</td></tr>
+        <tr><td class="k">Zanzibar check API</td><td>SpiceDB, OpenFGA — same check semantics</td></tr>
+        <tr><td class="k">systemd + Quadlet</td><td>every container above, as a unit. Podman. No Kubernetes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col stack" style="margin-top:22px">
+    <h3>The eight seams</h3>
+    <p class="note">If a new repo doesn't plug into exactly one of these, it doesn't go in.</p>
+    <pre>AgentRuntime   Hermes or BeeAI or OpenJarvis — one at a time
+ModelRouter    litellm → llama.cpp / vLLM
+Executor       android · browser · linux · api · workflow · human
+Capability     your names and schemas; implementations are executors
+Verifier       Playwright assertions, pixelmatch/odiff, ffprobe, qpdf
+Policy         Constitution → SpiceDB → Zitadel
+Package        VAPP manifest → wasmtime / Podman / Flatpak
+Delivery       cosign → Quay/Pulp → Candlepin → bootc</pre>
+    <div class="flag stop" style="margin-top:10px"><span class="lbl">Never leak</span><span>The moment
+      a VAPP manifest names Playwright or a resource-id, the executor stops being swappable and you're
+      back to stacked shells. <strong>Capabilities name <em>what</em>. Executors decide <em>how</em>.</strong></span></div>
+  </div>
+</section>
+
+<section id="open">
+  <div class="sec-head">
+    <span class="eyebrow">15</span>
+    <h2>Open decisions</h2>
+    <p class="note">Each of these has stayed open across multiple document generations. Not choosing
+      means building and maintaining two integrations forever — the contracts let you <em>swap</em>
+      later, they don't let you run both for free.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Decision</th><th>Recommendation</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Mender vs bootc</td><td><strong>bootc</strong></td><td>Your own IBM assessment points the same way — Podman + quadlet, no Kubernetes. Mender's server-side fleet model fights the no-access posture.</td></tr>
+        <tr><td class="k">Ubuntu Core</td><td><strong>drop</strong></td><td>Snaps add a second packaging system and Canonical's store in your update path.</td></tr>
+        <tr><td class="k">Zitadel vs Keycloak</td><td>pick one</td><td>Backstage in → Keycloak (Red Hat ships the integration). Backstage out → Zitadel is lighter.</td></tr>
+        <tr><td class="k">SpiceDB vs OpenFGA</td><td>pick one</td><td>Same Zanzibar model. V2 ledger says SpiceDB — close it there.</td></tr>
+        <tr><td class="k">Hermes vs BeeAI</td><td>pick one</td><td>BeeAI is pre-1.0 with an IBM "may not maintain" notice. Your runtime contract makes either swappable — running both makes neither.</td></tr>
+        <tr><td class="k">NATS vs Kafka</td><td>NATS on box</td><td>Kafka only if cloud volume forces it. Never both on a node.</td></tr>
+        <tr><td class="k">TUF alongside cosign</td><td>only if needed</td><td>TUF earns its place for key rotation and role delegation cosign doesn't give. Real yes/no, not a both.</td></tr>
+        <tr><td class="k">Temporal vs Restate</td><td>Temporal</td><td>Your own ledger already says evaluate, not run alongside.</td></tr>
+        <tr><td class="k">Payments: own the rail?</td><td>own it for bookings you create</td><td>Or take zero transaction revenue and price the subscription higher. Don't try to invoice for money you never touch.</td></tr>
+        <tr><td class="k">Open core vs Red Hat model</td><td><strong>Red Hat model</strong></td><td>Nothing withheld. Open core creates a two-tier product and undercuts the credibility that's your strongest asset. Your moat isn't in a repository.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col stack" style="margin-top:20px">
+    <p>Two collisions worth naming because they're wrapper-on-wrapper, not choices:</p>
+    <ul class="tight">
+      <li><strong>ollama wraps llama.cpp.</strong> <code>model-router → litellm → ollama → llama.cpp</code> is two redundant hops. Ollama is a dev tool; don't ship it on the box.</li>
+      <li><strong>mobile-mcp wraps uiautomator2/adb.</strong> It's an MCP projection of your executor, not a second executor. Maestro, trailblaze and appium-inspector are factory-only.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="ip">
+  <div class="sec-head">
+    <span class="eyebrow">16</span>
+    <h2>IP, credit and priority</h2>
+    <p class="note">Positioning and recordkeeping only. Scope, strength and timing of filings are
+      counsel's call, not covered here.</p>
+  </div>
+
+  <div class="col stack">
+    <h3>Credit and protection are different goals with opposite tactics</h3>
+    <p>Protection wants quiet until filings are locked. Credit wants loud, early and dated. You get
+      both by splitting what from how — the same split as the stealth question, pointed at attribution
+      instead of competition.</p>
+    <div class="callout" style="margin-top:6px">
+      <h3>Publish the what</h3>
+      <p>"A business's own phone, their own SIM, their own logins, operating the real apps they
+        already use — and it shows you a screenshot proving it worked."</p>
+    </div>
+    <p style="margin-top:12px"><strong>Keep the how quiet:</strong> the accessibility service
+      architecture, the fingerprint gate, the repair loop, the flow format, the
+      verification-on-a-different-path rule. Those are what take someone from "interesting" to "I can
+      build that."</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Dated priority — mechanisms</h3>
+    <ul class="tight">
+      <li><strong>Cryptographic timestamping.</strong> Hash the document, anchor the hash publicly. OpenTimestamps (free, Bitcoin-anchored) or rekor — already in your stack. Produces "this exact file existed on this date," unforgeable, un-backdateable. Ten minutes, costs nothing.</li>
+      <li><strong>Signed git commits and tags.</strong> A dated technical record in a repo you already have.</li>
+      <li><strong>The videos.</strong> Dated, public, you on camera — which is the plan anyway.</li>
+      <li><strong>Third-party coverage.</strong> A journalist writing about it on a date is evidence you didn't create.</li>
+      <li><strong>The 2013 email chain.</strong> Preserve properly — original headers, don't forward it around, archive somewhere with integrity.</li>
+    </ul>
+    <div class="flag" style="margin-top:6px"><span class="lbl">Counsel</span><span>Whether and when to
+      publish detail interacts with filings in ways that vary by jurisdiction and timing. The
+      recordkeeping above is a documentation question; the publishing decision isn't.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Demonstrations date better than descriptions</h3>
+    <p>A written description of an idea is easy for someone to claim they had independently.
+      <strong>A dated video of it working on a real business account is not</strong> — the artifact is
+      too specific. Another argument for the thirty-second unbroken take being the first thing you
+      make: it's marketing, proof of concept, and dated public record at once.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>The honest perspective</h3>
+    <p>Credit doesn't go to whoever said it first. It goes to whoever shipped it and got customers.
+      Xerox PARC invented the GUI; Apple got the credit. Sun said "the network is the computer" a
+      decade before anyone cared.</p>
+    <p>If someone announces phone-based remote control next year and you have 200 businesses running
+      it plus a dated video from this month, you win the attribution fight without arguing it. With a
+      blog post and no customers, you don't — regardless of who posted first.</p>
+    <div class="flag go" style="margin-top:6px"><span class="lbl">Conclusion</span><span>The strongest
+      protection for credit is the same thing that's strongest for everything else: ship it.</span></div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Brand-mark exposure</h3>
+    <p>Apple acquired NeXT in 1997 including the marks, and Paul Rand's cube is still owned IP. The
+      cost of a dispute isn't legal fees — it's <strong>sunk brand equity</strong>: boxes badged,
+      packaging printed, chamber deals signed under the name, a filing that gets opposed and blocks
+      your own registration. And it arrives at whatever moment is worst — mid-raise, mid-production,
+      mid-season.</p>
+    <p><strong>Keep the brand cheap to change until you know.</strong> Run the homage where it's
+      reversible — website, story, deck, videos. Hold the permanent, expensive surfaces — hardware
+      badging, packaging, the filing — until counsel gives a read. Same provocation, none of the
+      switching cost.</p>
+  </div>
+</section>
+
+<section id="founder">
+  <div class="sec-head">
+    <span class="eyebrow">17</span>
+    <h2>Founder assets</h2>
+    <p class="note">The things that are hard to acquire and easy to underuse.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag">Distribution</span>
+      <h3>Twenty years of sales</h3>
+      <p>Car sales, door to door, trained reps out of rental operations. Small-business software dies
+        on CAC because you can't afford a salesperson for a $200/mo customer and they won't
+        self-serve. A founder who can actually sell this buyer is the thing most teams in this
+        category can't buy at any price.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Proof</span>
+      <h3>The 2013 email chain</h3>
+      <p>Dated evidence you had the thesis before it was obvious. Converts "guy with an idea" into
+        "guy who's been right and waiting." Deck opener: the email on screen with the date
+        highlighted, then scroll into what you built.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Narrative</span>
+      <h3>The denial letters</h3>
+      <p>Gatekeepers who said no, plus the MIT rejection. Framed on the wall is a photograph that
+        ends up in an article. Free, and it can't be manufactured.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Channel</span>
+      <h3>On camera</h3>
+      <p>Most people who can build this won't get in front of a lens; most people who make content
+        aren't building anything. Being both is a genuine niche, and it's how a company with no ad
+        budget gets distribution.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Network</span>
+      <h3>Local operators</h3>
+      <p>30A and Destin relationships, and a path to a multi-unit franchisor. Money with no portfolio
+        conflict, who are customers and references as well as capital, and who will never tell you to
+        go partner with Toast.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Method</span>
+      <h3>Playing dumb</h3>
+      <p>Asking someone to explain what you already understand tells you what they know, how they
+        think, and whether they're honest about their limits. People reveal more teaching than
+        defending. Most useful tool you'll have interviewing CTOs.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>How to position it</h3>
+    <p>Be careful with "I know more than tech people." A strong engineer finds the gaps in ten
+      minutes — everyone has them — and if you've claimed otherwise you've spent credibility you
+      didn't need to spend. The stronger line, and the true one:</p>
+    <div class="callout">
+      <p>"I'm not an engineer. I know this business, this customer, and how every piece fits together
+        better than anyone. I need someone who knows the systems better than I do."</p>
+    </div>
+    <p class="note" style="margin-top:12px">Same rule with the prediction ledger: <strong>specificity
+      beats magnitude.</strong> Three dated, checkable predictions land harder than "I predicted 90%
+      of it." You have receipts — receipts beat claims, and you don't need the claim once you show
+      the receipt.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Focus, resolved</h3>
+    <p>"Focus on one thing" and "the pieces only work together" are both right — they're about
+      different things.</p>
+    <ul class="tight">
+      <li><strong>The architecture has to be broad.</strong> Email ingestion without execution is a parser. Execution without verification is a liability. That's design, not scope creep.</li>
+      <li><strong>The go-to-market has to be narrow.</strong> Amazon sold books. AWS launched with S3. Both had the whole thing in mind and neither led with it.</li>
+    </ul>
+    <p>Build the platform, sell one sentence. You keep the entire vision; focus only has to happen in
+      the sales call, which is the one place you're already better than anyone.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <div class="flag" style="border-left-color:var(--warn)"><span class="lbl" style="color:var(--warn)">Self-knowledge</span><span>The
+      instinct to avoid the comfortable six figures is real and rare. But the risk doesn't go away
+      when this works — it gets bigger, right after the first good quarter. What protects against it
+      isn't discipline, it's obligation: employees whose rent depends on you, agencies with books of
+      business, businesses that would be stranded. Build those in early and they'll hold you to it
+      when you don't feel like being held.</span></div>
+  </div>
+</section>
+
+<section id="risks">
+  <div class="sec-head">
+    <span class="eyebrow">18</span>
+    <h2>Risks</h2>
+  </div>
+  <div class="col qa">
+    <div class="qa-item">
+      <h4>App anti-automation detection</h4>
+      <p><b>Test week one</b>Some apps — banking especially, via Play Integrity — refuse to run with an
+        active accessibility service. This is the only item that could be a hard wall rather than a
+        hard problem, and it costs a weekend and one phone. It determines your addressable market.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Flow brittleness</h4>
+      <p><b>Replay, then verify</b>Pure vision agents land 60–85% on novel multi-step tasks — fine for
+        hours, unacceptable for invoices. Recorded deterministic paths plus mandatory end-state
+        verification gets to ~98%, and a failed verification is a fleet signal rather than a customer
+        complaint.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Scope</h4>
+      <p><b>Ship P2 before P4</b>Immutable OS, model orchestrator, GUI agent, data plane, marketplace,
+        directory, hardware — each is a company. Only one sells. Software on the customer's own
+        hardware buys revenue and evidence before you commit to inventory you can't return. And the
+        documents have started auditing each other — 643 repos catalogued, no customer in any of them.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Email template churn</h4>
+      <p><b>Same machine</b>FareHarbor redesigns its confirmation and your parser breaks. Fingerprint
+        the format, fail loudly rather than parse wrong, re-map once, push to everyone.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Phone as a wear item</h4>
+      <p><b>Certify, don't ship</b>A random $40 Android reintroduces the hardware matrix. Publish a
+        supported device list — Moto G, Nokia/HMD, Samsung A-series, refurb Pixel. <strong>Avoid Xiaomi
+        MIUI, Oppo ColorOS, Vivo</strong> — aggressive battery management silently kills the
+        accessibility service, the single most likely failure mode in the design. And duty-cycle USB
+        power in the cradle: charge to 80%, cut, drift to 60%. A phone pinned at 100% swells.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Overselling</h4>
+      <p><b>Never claim smarter</b>Local models trail frontier models and customers notice in a week.
+        Same mistake with the free app store — self-hosted alternatives are worse than the paid thing.
+        Frame both as generosity, not replacement. Sell private, flat-fee, offline-capable, yours.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Single-vendor concentration</h4>
+      <p><b>Two verticals early</b>If 80% of flows live inside one POS vendor, their roadmap is your
+        roadmap. Same for payment volume — no vertical past ~35%.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Support cost</h4>
+      <p><b>White label</b>Consumers and small businesses generate 10–50× the tickets of enterprise
+        admins. Agencies owning tier-1 is the structural answer; the approval queue and a one-button
+        Recover are the product answers.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Data protection without a pile</h4>
+      <p><b>Customer-held backup</b>A business running invoicing on your box will call you when a drive
+        fails. Encrypted backup to a destination <em>they</em> choose — their NAS, their bucket — with
+        a key you never hold. Protected, and you still can't read anything.</p>
+    </div>
+    <div class="qa-item">
+      <h4>Fleet blindness</h4>
+      <p><b>Cert rack + opt-in ring</b>No telemetry means no canary signal. Replace it with your own
+        certification rack and a voluntary early-access ring. Don't pretend it's free.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <div class="callout">
+      <h3>The test that makes "decentralized" true</h3>
+      <p><strong>If you shut down tomorrow, does the box still work?</strong> Local data, local
+        execution, last-known-good flows cached, no phone-home required to function. If yes, the claim
+        holds and nobody else in the category can make it. If no, it's marketing and someone will find
+        out.</p>
+      <p>Say it in the sales call — <em>"if I go out of business, your machine keeps working"</em> —
+        it answers the biggest objection a small business has about buying from a company they've
+        never heard of.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section id="next">
+  <div class="sec-head">
+    <span class="eyebrow">19</span>
+    <h2>What to do next</h2>
+  </div>
+
+  <div class="col stack">
+    <h3>This week</h3>
+    <ol class="tight">
+      <li>Buy one unlocked mid-range Android and a working SIM. One mini PC, 32GB+.</li>
+      <li>Install the real apps a Destin charter or restaurant uses. Turn on an accessibility service. <strong>See what still runs.</strong> That answer determines everything else.</li>
+      <li>scrcpy mirroring, adb sending input. One afternoon.</li>
+      <li>Dump the UI tree as structured text.</li>
+      <li>Pick one flow — business hours in Google Business Profile. Record a human doing it.</li>
+      <li>Replay it. Screenshot the result. Read it back and confirm the hours changed.</li>
+      <li>Film it in one unbroken take, thirty seconds, no edits.</li>
+    </ol>
+    <div class="callout" style="margin-top:18px">
+      <h3>That video is the company</h3>
+      <p>Your first ten customers, your first hire, your fundraise. Someone says "update my hours"
+        out loud and a real business's real listing changes on a real account, with proof. Nobody has
+        to be told what it means.</p>
+      <p>Build it before you buy inventory, file a trademark, or design a screen.</p>
+    </div>
+  </div>
+
+  <div class="col stack" style="margin-top:30px">
+    <h3>Phases</h3>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th></th><th>When</th><th>Goal</th><th>Done when</th></tr></thead>
+      <tbody>
+        <tr><td class="k">P0</td><td class="num">Wk 1–4</td><td>Prove remote control on one flow</td><td>You say "update my hours to 9 to 5" and get a screenshot proving it happened.</td></tr>
+        <tr><td class="k">P1</td><td class="num">Wk 5–12</td><td>Flow library + approval board</td><td>Three businesses run five flows each, unattended, two straight weeks.</td></tr>
+        <tr><td class="k">P2</td><td class="num">Wk 13–20</td><td>Ship software, not hardware</td><td>Twenty-five businesses paying monthly, zero boxes shipped.</td></tr>
+        <tr><td class="k">P3</td><td class="num">Wk 21–32</td><td>The churn machine</td><td>A real app redesign detected, re-mapped and pushed fleet-wide inside 24 hours, no tickets.</td></tr>
+        <tr><td class="k">P4</td><td class="num">Wk 33–48</td><td>The appliance</td><td>100 units pass the certification suite, shipped to existing software customers first.</td></tr>
+        <tr><td class="k">P5</td><td class="num">Year 2</td><td>Widen</td><td>Model catalog, voice, regulated tier, multi-location fleet SKU where the customer holds the keys.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>The weekly loop that is the subscription</h3>
+    <pre>Mon        fleet health — which verifications failed over the weekend
+Tue–Wed    re-map broken flows, test on the certification rack
+Thu        build and sign the flow pack, canary 5%, watch
+Fri        staged rollout, changelog written for a restaurant owner
+Ongoing    onboard new apps, add models, grow the shared library</pre>
+    <p class="note">If this loop runs, the business works. If it stops for a month, customers find
+      broken flows before you do — and that's the only way this product dies.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>Hiring the CTO</h3>
+    <ul class="tight">
+      <li><strong>Not</strong> a cloud/SaaS architect (wrong instincts — they'll rebuild what you're attacking), not an ML researcher (the agent is deliberately dumb), not a big-company CTO (they manage; you need hands on).</li>
+      <li><strong>Yes:</strong> a systems and infrastructure engineer who has <strong>shipped physical product with software on it.</strong> bootc, Yocto, Buildroot, Home Assistant OS. Fluent in Linux, containers, systemd, OTA. Thinks in assembly, not invention.</li>
+      <li><strong>Where:</strong> Home Assistant, Fedora IoT, Universal Blue and bootc contributor communities — they've already solved your OS problem for fun. Locally, Eglin and Hurlburt have a real concentration of embedded Linux engineers.</li>
+      <li><strong>What makes it work:</strong> their job is to say no, and yours is to accept it sometimes. A CTO who can't slow you down is useless; a founder who won't be slowed will churn through three of them.</li>
+    </ul>
+  </div>
+
+  <div class="col stack" style="margin-top:26px">
+    <h3>The one sentence</h3>
+    <div class="callout">
+      <p>"Your website shows what's actually available, right now, across every platform you're on —
+        so people can book you direct instead of through the site taking twenty percent."</p>
+    </div>
+    <p class="note" style="margin-top:12px">Every charter, marina, salon and rental operator on the
+      Gulf Coast understands that immediately, and most of them are already angry about the
+      commission. The architecture has to be broad; the sales call has to be narrow. You get to keep
+      the whole vision — focus only has to happen in the one place you're already better than anyone.</p>
+  </div>
+</section>
+
+<section id="refs">
+  <div class="sec-head">
+    <span class="eyebrow">20</span>
+    <h2>Code and companions</h2>
+  </div>
+  <div class="col stack">
+    <h3>What exists in the repo</h3>
+    <p>Branch <code>claude/redhat-model-hardware-sales-iejnvo</code> on <code>the-ghost-ai-</code>.
+      Main is untouched.</p>
+    <pre>ghost/flow.py       the script format — selectors not coordinates,
+                    {{variables}}, content-hashed identity
+ghost/runner.py     fingerprint pre-flight → steps → read-back verify
+                    → run record with screenshots
+ghost/device.py     adb: read the screen as nodes, tap, type, screenshot
+ghost/recorder.py   map a flow by doing the task once
+ghost/pack.py       bundle flows as OCI artifacts, cosign-signed,
+                    oras push/pull, refuses unverified installs
+platform/           assembly map + Podman quadlets for the foundation
+                    spine (Postgres, Keycloak, zot, ContextForge)</pre>
+    <p class="note"><strong>Honest note on that code:</strong> <code>device.py</code> and
+      <code>recorder.py</code> duplicate <code>uiautomator2</code> and Maestro Studio and should be
+      replaced by them. What's worth keeping is the layer Maestro doesn't have — refuse-to-act
+      gating, read-back as proof rather than assertion, the run record, and pack/sign/push. That thin
+      layer is the owned contracts; everything under it is borrowed.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:24px">
+    <h3>Flow format</h3>
+    <pre>flow: google_business.update_hours
+version: 1
+app: com.google.android.apps.town.businessmessaging
+requires: [day, open, close]
+
+fingerprint:                    # must be true before we touch anything
+  - text: "Business hours"
+
+steps:
+  - tap: {text: "{{day}}"}
+  - clear: {id: open_time}
+  - type: {id: open_time, value: "{{open}}"}
+  - tap: {text: "Save"}
+
+verify:                         # must be true after, read off the screen
+  - contains: "{{open}}"</pre>
+    <p class="note">Verbs: launch · stop · tap · type · clear · wait · sleep · back · home · scroll ·
+      assert. Deliberately small — a flow anyone can read is a flow anyone can fix at 2am when an app
+      redesigns. Selectors: text (exact), contains, id (resource-id short name), desc, cls, clickable.</p>
+  </div>
+
+  <div class="col stack" style="margin-top:24px">
+    <h3>Companion documents</h3>
+    <ul class="tight">
+      <li><strong>Build Plan</strong> — phases P0–P5 with done-when gates, the weekly ops loop, economics, risk register, first thirty days.</li>
+      <li><strong>Parts Catalog</strong> — the full component list by layer with use / study / careful / skip verdicts on each, including licenses that matter for shipping hardware.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Working record, revision two — adds the six unsolved problems, IBM/Red Hat findings, modularity
+    rules and the thirteen wires, IP and credit posture, founder assets, and the code reference.</p>
+  <p style="margin-top:10px">Revision one notes. Phase durations assume a small team and will move; the dependency
+    order should not. Vendor claims, pricing and product details should be re-verified against
+    first-party sources before being used in legal, investment or public marketing contexts.</p>
+</footer>
+
+</div>
+
+</body>
+</html>

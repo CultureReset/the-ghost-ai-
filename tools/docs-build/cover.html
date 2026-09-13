@@ -1,0 +1,59 @@
+<title>A NEXT GENT — Complete Working Record</title>
+<style>
+  :root{
+    --ground:#F3F4F1; --surface:#FFFFFF; --ink:#181B19; --ink-2:#474C48;
+    --muted:#757B74; --rule:#D7DAD3; --rule-strong:#B9BDB4; --accent:#A4601A;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+       font-family:'Source Serif 4',Charter,Georgia,serif;font-size:11pt;line-height:1.5}
+  .page{max-width:7.1in;margin:0 auto;padding:0.2in 0 0}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:8.5pt;letter-spacing:.16em;
+           text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-family:'Archivo',Arial,sans-serif;font-size:46pt;line-height:1.02;
+     letter-spacing:-.02em;margin:.18in 0 .1in;font-weight:700}
+  .sub{font-size:14pt;color:var(--ink-2);max-width:5.2in;line-height:1.45;margin:0 0 .34in}
+  .rule{height:1px;background:var(--rule-strong);margin:.26in 0}
+  .meta{display:flex;gap:.42in;flex-wrap:wrap;margin:.1in 0 .3in}
+  .meta div{min-width:1.1in}
+  .meta .k{display:block;font-family:'JetBrains Mono',monospace;font-size:7.5pt;
+           letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  .meta .v{font-family:'Archivo',Arial,sans-serif;font-size:11pt;font-weight:600}
+  h2{font-family:'Archivo',Arial,sans-serif;font-size:13pt;margin:.3in 0 .12in;font-weight:700}
+  ol{list-style:none;counter-reset:p;margin:0;padding:0}
+  ol li{counter-increment:p;display:flex;gap:.16in;padding:.11in 0;
+        border-bottom:1px solid var(--rule);break-inside:avoid}
+  ol li::before{content:counter(p,decimal-leading-zero);
+        font-family:'JetBrains Mono',monospace;font-size:9pt;font-weight:700;
+        color:var(--accent);padding-top:2px;min-width:.28in}
+  .t{font-family:'Archivo',Arial,sans-serif;font-size:11.5pt;font-weight:700;margin-bottom:2px}
+  .b{font-size:10pt;color:var(--ink-2);line-height:1.42}
+  .foot{margin-top:.3in;font-size:9.5pt;color:var(--muted);border-top:1px solid var(--rule);
+        padding-top:.12in}
+  .foot code{font-family:'JetBrains Mono',monospace;font-size:8.5pt}
+</style>
+<div class="page">
+  <span class="eyebrow">Working Record · Revision 3</span>
+  <h1>A NEXT<br>GENT</h1>
+  <p class="sub">A Linux computer made simple — and the business around it. Six parts: the honest
+    assessment, the playbook, the platform spec, the build plan, the parts catalog, and the app store.</p>
+  <div class="rule"></div>
+  <div class="meta">
+    <div><span class="k">Compiled</span><span class="v">13 Sep 2026</span></div>
+    <div><span class="k">Parts</span><span class="v">Six</span></div>
+    <div><span class="k">Words</span><span class="v">27,100</span></div>
+    <div><span class="k">Thesis</span><span class="v">Churn absorption</span></div>
+    <div><span class="k">Buyer</span><span class="v">Small business</span></div>
+  </div>
+  <h2>Contents</h2>
+  <ol>
+    <li><div><div class="t">An Honest Read</div><div class="b">What it is, what to bet on, the kiosk, what worries me, what I'd do, and the odds on each outcome.</div></div></li>
+    <li><div><div class="t">The Playbook</div><div class="b">Thesis, products, architecture, the data plane, economics, go-to-market, brand, IP posture, founder assets, risks.</div></div></li>
+    <li><div><div class="t">The Build Spec</div><div class="b">Data placement, the business record, ingestion, capabilities, the app contract, surfaces, the pipeline, isolation, repo layout, build order.</div></div></li>
+    <li><div><div class="t">The Build Plan</div><div class="b">Phases P0 through P5 with done-when gates, the weekly ops loop, unit economics, the risk register, the first thirty days.</div></div></li>
+    <li><div><div class="t">The Parts Catalog</div><div class="b">Every open-source component by layer, each with a use / study / careful / skip verdict and the catch attached.</div></div></li>
+    <li><div><div class="t">The App Store Layer</div><div class="b">Agent Plugins and Agent Skills, index-not-store distribution, the trust ladder, the installer, three targets per app, nine deployable units, Grok Bot, Apple.</div></div></li>
+  </ol>
+  <p class="foot">Each part also exists as its own PDF, Word document and web page.
+    The plain-text source of the whole record is <code>A-NEXT-GENT-Complete-Record.md</code>.</p>
+</div>
