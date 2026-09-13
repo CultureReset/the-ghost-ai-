@@ -10,12 +10,20 @@ Same reason app maps are data and not Python.
 import json, os, re, glob
 from .model import Booking, SalesSummary, Result, PARSED, DRIFTED, UNMATCHED
 
-MAPS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "maps")
+def maps_dir():
+    """Vendor maps are pulled artifacts, not source. A FareHarbor template fix
+    lands here as a signed bundle; it is not a code checkout."""
+    for c in (os.environ.get("ANEXTGENT_MAPS"),
+              "/var/lib/anextgent/maps",
+              os.path.join(os.path.dirname(os.path.abspath(__file__)), "maps")):
+        if c and os.path.isdir(c):
+            return c
+    raise SystemExit("no vendor maps found. Set ANEXTGENT_MAPS.")
 
 
 def load_maps(d=None):
     maps = []
-    for f in sorted(glob.glob(os.path.join(d or MAPS_DIR, "*.json"))):
+    for f in sorted(glob.glob(os.path.join(d or maps_dir(), "*.json"))):
         m = json.load(open(f, encoding="utf-8"))
         m["_file"] = os.path.basename(f)
         maps.append(m)

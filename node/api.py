@@ -19,12 +19,27 @@ import argparse, json, os, sqlite3, sys, uuid, hashlib, re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, HERE)
+def contracts_dir():
+    """Where the capability registry lives.
+
+    Configured, never assumed. On a box the contracts arrive as a signed bundle
+    under /usr/lib/anextgent; in a checkout they sit beside this module. Either
+    way node does not require contracts to be its sibling, which is what lets
+    the two be separate repositories.
+    """
+    for c in (os.environ.get("ANEXTGENT_CONTRACTS"),
+              "/usr/lib/anextgent/contracts",
+              os.path.join(os.path.dirname(os.path.dirname(
+                  os.path.abspath(__file__))), "contracts")):
+        if c and os.path.isdir(os.path.join(c, "capabilities")):
+            return c
+    raise SystemExit(
+        "no capability registry found. Set ANEXTGENT_CONTRACTS to the "
+        "contracts directory, or install a bundle at /usr/lib/anextgent/contracts.")
 
 
 def load_capabilities():
-    caps, d = {}, os.path.join(HERE, "contracts", "capabilities")
+    caps, d = {}, os.path.join(contracts_dir(), "capabilities")
     for f in sorted(os.listdir(d)):
         if f.endswith(".json"):
             c = json.load(open(os.path.join(d, f), encoding="utf-8"))
@@ -33,6 +48,7 @@ def load_capabilities():
 
 
 CAPS = load_capabilities()
+CONTRACTS = contracts_dir()
 
 
 class Denied(Exception):

@@ -18,6 +18,21 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from executor import appmap
 from executor.drivers import get as get_driver
 
+
+def contracts_dir():
+    """Configured, never assumed — see the same function in node. A capability
+    definition is content that arrives from a channel, not a file that happens
+    to be checked out next door."""
+    for c in (os.environ.get("ANEXTGENT_CONTRACTS"),
+              "/usr/lib/anextgent/contracts",
+              os.path.join(os.path.dirname(os.path.dirname(
+                  os.path.abspath(__file__))), "contracts")):
+        if c and os.path.isdir(os.path.join(c, "capabilities")):
+            return c
+    raise SystemExit(
+        "no capability registry found. Set ANEXTGENT_CONTRACTS to the "
+        "contracts directory, or install a bundle at /usr/lib/anextgent/contracts.")
+
 EV_DIR = os.environ.get("ANEXTGENT_EVIDENCE", "/tmp/anextgent-evidence")
 
 
@@ -71,9 +86,11 @@ def run(db, action_id, driver_name="android", verifier_name=None, maps_dir=None,
     if lifecycle == "FINISHED":
         raise SystemExit(f"{action_id} already finished")
 
-    cap = json.load(open(os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "contracts", "capabilities", f"{capability}.json"), encoding="utf-8"))
+    cap_file = os.path.join(contracts_dir(), "capabilities", f"{capability}.json")
+    if not os.path.exists(cap_file):
+        return _finish(db, action_id, "FAILED", 0, 1,
+                       f"no capability definition for {capability}")
+    cap = json.load(open(cap_file, encoding="utf-8"))
     surfaces = cap["postcondition"]["surfaces"]
 
     m = appmap.find(capability, executor=kind, d=maps_dir)

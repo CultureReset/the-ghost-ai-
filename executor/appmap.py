@@ -7,7 +7,18 @@ new row, not a corrupted one.
 """
 import json, os, glob, re
 
-DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "appmaps")
+def _dir():
+    """App maps are pulled artifacts in production, not source files, so the
+    location is configuration."""
+    for c in (os.environ.get("ANEXTGENT_APPMAPS"),
+              "/var/lib/anextgent/appmaps",
+              os.path.join(os.path.dirname(os.path.abspath(__file__)), "appmaps")):
+        if c and os.path.isdir(c):
+            return c
+    raise SystemExit("no app maps found. Set ANEXTGENT_APPMAPS.")
+
+
+DIR = None      # resolved lazily so the env var is read at call time
 
 DRIFTED, OK, FAILED, TOOK_OVER = "DRIFTED", "OK", "FAILED", "TOOK_OVER"
 
@@ -16,7 +27,7 @@ VERBS = {"launch", "tap", "type", "clear", "wait", "scroll", "back", "assert", "
 
 def load_all(d=None):
     out = []
-    for f in sorted(glob.glob(os.path.join(d or DIR, "*.json"))):
+    for f in sorted(glob.glob(os.path.join(d or _dir(), "*.json"))):
         if os.path.basename(f).startswith("_"):
             continue          # fixtures and screens files, not maps
         m = json.load(open(f, encoding="utf-8"))
